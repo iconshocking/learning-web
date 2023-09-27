@@ -1,0 +1,14 @@
+{
+  "allowJs": true,
+  "checkJs": false,
+  "compilerOptions": {
+    "lib": ["es5", "es6", "dom"],
+    "module": "ES6",
+    "strict": true,
+    "checkJs": false,
+    "allowJs": true,
+    "outDir": "./built-js",
+    "rootDir": ".",
+  },
+  "exclude": ["./node_modules", "./built-js"]
+}
