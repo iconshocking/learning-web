@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>tables</title>
+    <style>
+      table,
+      th,
+      td {
+        border: 1px solid black;
+        border-collapse: collapse;
+      }
+
+      th {
+        text-align: left;
+      }
+    </style>
+  </head>
+  <body>
+    <table>
+      <thead style="background-color: blanchedalmond">
+        <tr>
+          <th></th>
+          <th scope="col">BILGE</th>
+          <th scope="col">BILGE</th>
+          <th scope="col">BILGE</th>
+          <th scope="col">BILGE</th>
+        </tr>
+      </thead>
+      <tbody style="font-style: oblique">
+        <tr>
+          <th scope="row">Gunther</th>
+          <td>cell #1</td>
+          <td>cell #2</td>
+          <td>cell #3</td>
+          <td>cell #4</td>
+        </tr>
+        <tr>
+          <th scope="row">Jethro</th>
+          <td>cell two #1</td>
+          <td>cell two #2</td>
+          <td>cell two #3</td>
+          <td>cell two #4</td>
+        </tr>
+      </tbody>
+
+      <tfoot>
+        <tr style="text-align: center">
+          <td colspan="5">USELESS</td>
+        </tr>
+      </tfoot>
+    </table>
+
+    <h1>Animals table</h1>
+    <table>
+      <caption>
+        Animals
+      </caption>
+      <colgroup>
+        <col style="background-color: red" />
+        <col style="background-color: yellow" />
+      </colgroup>
+      <tr>
+        <th colspan="2">Animals</th>
+      </tr>
+      <tr>
+        <th colspan="2">Hippopotamus</th>
+      </tr>
+      <tr>
+        <th rowspan="2">Horse</th>
+        <td>Mare</td>
+      </tr>
+      <tr>
+        <td>Stallion</td>
+      </tr>
+      <tr>
+        <th colspan="2">Crocodile</th>
+      </tr>
+      <tr>
+        <th rowspan="2">Chicken</th>
+        <td>Hen</td>
+      </tr>
+      <tr>
+        <td>Rooster</td>
+      </tr>
+    </table>
+  </body>
+</html>
