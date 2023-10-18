@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <style>
+      /* 
+      Cascade order:
+        1. Origin: User-agent, user, author origin.
+            - This order is inverted for important styles, with author important styles having the lowest precedence.
+        2. Layers: Within each of the six origin importance buckets, sort by cascade layer.
+            The layer order for normal declarations is from the first layer created to the last,
+            followed by unlayered normal styles.
+            - This order is inverted for important styles, with unlayered important styles having the lowest precedence.
+        3. Specificity: For competing styles in the same layer, sort declarations by specificity.
+        4. Order of appearance: When two selectors have the same specificity,
+            the property value from the last declared selector with the highest specificity wins.
+        * NOTE: Inline styles override all normal styles, and inline important styles override all important styles.
+        * NOTE: Animating styles have precedence over all normal (including inline) styles,
+                and transitioning styles have predence over all important (including inline) styles.
+        NOTE: The parent-level layer takes has MORE precedence than any of its child layers, even if they are defined later.
+        */
+
+      @layer A, B;
+
+      h1 {
+        color: orange;
+        background-color: green;
+        text-decoration: overline pink !important;
+        box-shadow: 5px 5px lightgreen !important;
+      }
+
+      @layer A {
+        h1 {
+          color: grey;
+          background-color: black !important;
+          text-decoration: line-through grey;
+          box-shadow: -5px -5px lightblue !important;
+          font-style: normal;
+          font-weight: normal !important;
+        }
+      }
+
+      @layer B {
+        h1 {
+          color: aqua;
+          background: yellow !important;
+          text-decoration: underline aqua;
+          box-shadow: -5px 5px magenta !important;
+          font-style: italic;
+          font-weight: bold !important;
+        }
+      }
+
+      @layer components {
+        :root {
+          --theme: red;
+          font-family: serif;
+        }
+      }
+      @layer components.narrow {
+        :root {
+          --theme: blue;
+          font-family: sans-serif;
+        }
+      }
+      @layer components.wide {
+        :root {
+          --theme: purple;
+          font-family: cursive;
+        }
+      }
+      @layer components.wide.widest {
+        :root {
+          --theme: green;
+          font-family: Impact;
+        }
+      }
+      @layer components.wide.less-wide {
+        :root {
+          --theme: orange;
+          font-family: 'Gill Sans';
+        }
+      }
+
+      p {
+        background-color: var(--theme);
+      }
+    </style>
+  </head>
+  <body>
+    <div>
+      <h1 style="color: yellow; background-color: maroon !important">Inline styles</h1>
+      <p>LAYERING TEST</p>
+    </div>
+  </body>
+</html>
