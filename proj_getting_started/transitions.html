@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        .box {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: flex-end;
+            align-content: flex-start;
+            color: white;
+            border-style: solid;
+            border-width: 1px;
+            width: 100px;
+            height: 100px;
+            background-color: #0000ff;
+            transition:
+                width 2s,
+                height 2s,
+                background-color 2s,
+                rotate 2s;
+        }
+
+        p {
+            border: 1px solid green;
+            margin: 0px;
+            padding: 0px;
+            text-align: center;
+        }
+
+        .box:hover {
+            background-color: #ffcccc;
+            width: 200px;
+            height: 200px;
+            rotate: 180deg;
+        }
+
+        nav {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        a {
+            flex: 1;
+            background-color: #333;
+            color: #fff;
+            border: 1px solid;
+            padding: 0.5rem;
+            text-align: center;
+            text-decoration: none;
+            transition: all 0.5s ease-out;
+        }
+
+        a:hover,
+        a:focus {
+            background-color: #fff;
+            color: #333;
+        }
+
+        .ball {
+            border-radius: 25px;
+            width: 50px;
+            height: 50px;
+            background: #c00;
+            position: absolute;
+            top: 0;
+            left: 0;
+            transition: transform 0.4s 500ms;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="box">
+        <p>i spin</p>
+        <p style="height: 40px; padding: auto">me too</p>
+        <p>oh yes</p>
+        <p>and me</p>
+        <p>i'm last</p>
+    </div>
+
+    <nav>
+        <a href="#">Home</a>
+        <a href="#">About</a>
+        <a href="#">Contact Us</a>
+        <a href="#">Links</a>
+    </nav>
+
+    <p>Click anywhere to move the ball</p>
+    <div id="foo" class="ball"></div>
+
+    <script>
+        const f = document.getElementById("foo");
+        document.addEventListener(
+            "click",
+            (ev) => {
+                f.style.transform = `translateY(${ev.clientY - 25}px)`;
+                f.style.transform += `translateX(${ev.clientX - 25}px)`;
+            },
+            false,
+        );
+
+        f.addEventListener("transitionrun", () => console.log("transition run"), true);
+        f.addEventListener("transitionstart", () => console.log("transition begin"), true);
+        f.addEventListener("transitionend", () => console.log("transition end"), true);
+    </script>
+</body>
+
+</html>
