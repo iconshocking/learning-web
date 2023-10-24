@@ -1,0 +1,43 @@
+@import url(../fonts/downloaded/stylesheet.css);
+
+/* General setup */
+
+html {
+  font-size: 10px;
+  margin: 0;
+  font-family: sans-serif;
+}
+
+body {
+  width: 80%;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+/* Typography */
+
+h1 {
+  font-size: 3.2rem;
+}
+
+h2 {
+  font-size: 2.4rem;
+}
+
+p {
+  font-size: 1.4rem;
+  line-height: 1.6;
+  word-spacing: 0.6rem;
+}
+
+h1 {
+  font-family: "3dumbregular";
+}
+
+h2 {
+  font-family: "Inconsolata";
+}
+
+p {
+  font-family: "1942_report";
+}
