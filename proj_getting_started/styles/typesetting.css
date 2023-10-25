@@ -1,0 +1,106 @@
+/* General setup */
+
+* {
+  box-sizing: border-box;
+}
+
+:root {
+  font-size: 10px;
+}
+
+body {
+  margin: 0 auto;
+  min-width: 1000px;
+  max-width: 1400px;
+  line-height: 1.5;
+  word-spacing: 0.5px;
+}
+
+h1 {
+  font-size: 3rem;
+  text-align: center;
+  letter-spacing: 0.5px;
+}
+
+h2 {
+  font-size: 2.5rem;
+  letter-spacing: 0.3px;
+}
+
+p,
+li {
+  font-size: 1.6rem;
+}
+
+/* Layout */
+
+section {
+  float: left;
+  width: 50%;
+}
+
+aside {
+  float: left;
+  width: 30%;
+}
+
+nav {
+  float: left;
+  width: 20%;
+  /* subtraction accounts for margin collapse on other columns */
+  margin-top: calc(3.75rem + 2 * 2.075rem - 1rem);
+}
+
+footer {
+  clear: both;
+}
+
+header,
+section,
+aside,
+nav,
+footer {
+  padding: 20px;
+}
+
+/* header and footer */
+
+header,
+footer {
+  border-top: 5px solid #a66;
+  border-bottom: 5px solid #a66;
+}
+
+section h2 + p {
+  text-indent: 3rem;
+}
+
+a {
+  &:link {
+    color: #a66;
+  }
+  &:visited {
+    color: #066;
+  }
+  &:focus,
+  &:hover {
+    color: #a6f;
+    text-decoration: none;
+    outline: none;
+  }
+  &:active {
+    color: black;
+    font-weight: bold;
+    background-color: yellow;
+  }
+}
+
+a[href^="http"] {
+  background: url(../images/external-link-52.png) no-repeat right center;
+  background-size: 1.2rem 1.2rem;
+  padding-right: 1.5rem;
+}
+
+li {
+  list-style: upper-roman;
+}
