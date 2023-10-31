@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        body {
+            background-color: #fff;
+            color: #333;
+            font:
+                1.2em / 1.5 Helvetica Neue,
+                Helvetica,
+                Arial,
+                sans-serif;
+            padding: 1em;
+            margin: 0;
+        }
+
+        .grid,
+        .grid2,
+        .grid3 {
+            margin-bottom: 100px;
+
+            >* {
+                background-color: #4d7298;
+                border: 2px solid #77a6b6;
+                border-radius: 0.5em;
+                color: #fff;
+                padding: 0.5em;
+            }
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 20px;
+        }
+
+        .grid2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr 1fr;
+            grid-template-rows: 100px 100px 100px;
+            gap: 10px;
+        }
+
+        .item1 {
+            order: 1;
+            background-color: rgba(74, 102, 112, 0.7);
+            grid-column: 1 / span 3;
+            grid-row: 1 / span 2;
+        }
+
+        .item2 {
+            background-color: rgba(214, 162, 173, 0.7);
+            grid-column: 2 / span 3;
+            grid-row: 2 / span 2;
+        }
+
+        .grid3 {
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 10px;
+            grid-template-areas: "one one one"
+                "two three three"
+                ". four four";
+
+            .one {
+                grid-area: one;
+            }
+
+            .two {
+                grid-area: two;
+            }
+
+            .three {
+                grid-area: three;
+            }
+
+            .four {
+                grid-area: four;
+            }
+        }
+
+        .grid-and-flex {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 10px;
+        }
+
+        .card {
+            display: grid;
+            grid-template-rows: 200px min-content;
+        }
+
+        .card>img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .tags {
+            margin: 0;
+            padding: 0;
+            list-style: none;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-content: center;
+            align-items: center;
+        }
+
+        .tags>* {
+            background-color: #999;
+            color: #fff;
+            padding: 0.2em 0.8em;
+            border-radius: 0.2em;
+            font-size: 80%;
+            margin: 5px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="grid">
+        <div>One</div>
+        <div>Two</div>
+        <div>Three</div>
+        <div>Four</div>
+        <div>Five</div>
+        <div>Six</div>
+        <div>Seven</div>
+
+    </div>
+
+    <div class="grid2">
+        <div class="item1">One</div>
+        <div class="item2">Two</div>
+    </div>
+
+    <div class="grid3">
+        <div class="one">One</div>
+        <div class="two">Two</div>
+        <div class="three">Three</div>
+        <div class="four">Four</div>
+    </div>
+
+    <div class="grid-and-flex">
+        <div class="card">
+            <img src="images/balloons1.jpg" alt="a single red balloon" />
+            <ul class="tags">
+                <li>balloon</li>
+                <li>red</li>
+                <li>sky</li>
+                <li>blue</li>
+                <li>Hot air balloon</li>
+            </ul>
+        </div>
+        <div class="card">
+            <img src="images/balloons2.jpg" alt="balloons over some houses" />
+            <ul class="tags">
+                <li>balloons</li>
+                <li>houses</li>
+                <li>train</li>
+                <li>harborside</li>
+            </ul>
+        </div>
+        <div class="card">
+            <img src="images/balloons3.jpg" alt="close-up of balloons inflating" />
+            <ul class="tags">
+                <li>balloons</li>
+                <li>inflating</li>
+                <li>green</li>
+                <li>blue</li>
+            </ul>
+        </div>
+        <div class="card">
+            <img src="images/balloons4.jpg" alt="a balloon in the sun" />
+            <ul class="tags">
+                <li>balloon</li>
+                <li>sun</li>
+                <li>sky</li>
+                <li>summer</li>
+                <li>bright</li>
+            </ul>
+        </div>
+    </div>
+</body>
+
+</html>
