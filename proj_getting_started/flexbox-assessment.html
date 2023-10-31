@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="en-us">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width" />
+    <title>Flexbox: Task 1</title>
+
+    <style>
+        body {
+            background-color: #fff;
+            color: #333;
+            font:
+                1.2em / 1.5 Helvetica Neue,
+                Helvetica,
+                Arial,
+                sans-serif;
+            padding: 1em;
+            margin: 0;
+        }
+
+        ul {
+            max-width: 700px;
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        nav a:link,
+        nav a:visited {
+            background-color: #4d7298;
+            border: 2px solid #77a6b6;
+            border-radius: 0.5em;
+            color: #fff;
+            padding: 0.5em;
+            display: inline-block;
+            text-decoration: none;
+        }
+
+        li {
+            background-color: #4d7298;
+            border: 2px solid #77a6b6;
+            border-radius: 0.5em;
+            color: #fff;
+            padding: 0.5em;
+        }
+
+        .parent {
+            border: 2px solid #77a6b6;
+            border-radius: 0.5em;
+            width: 400px;
+            height: 300px;
+        }
+
+        .child {
+            background-color: #4d7298;
+            color: #fff;
+            padding: 0.5em;
+            width: 150px;
+        }
+
+        .assessment4 li {
+            margin: 0.5em;
+        }
+    </style>
+</head>
+
+<body>
+    <nav>
+        <ul style="display: flex; justify-content: space-between;">
+            <li><a href="/">Home</a></li>
+            <li><a href="/about">About Us</a></li>
+            <li><a href="/products">Our Products</a></li>
+            <li><a href="/contact">Contact Us</a></li>
+        </ul>
+    </nav>
+
+    <ul style="display: flex; margin-top: 20px;">
+        <li style="flex: 1 1 0;">I am small</li>
+        <li style="flex: 1 1 0;">I have more content than the very small item.</li>
+        <li style="flex: 1 1 0;">I have lots of content. So much content that I don't know where it is all going to go.
+            I'm glad that CSS is
+            pretty good at dealing with situations where we end up with more words than expected!</li>
+    </ul>
+
+    <div class="parent" style="margin-top: 20px; display: flex; flex-wrap: wrap;
+    justify-content: center; align-items: center;">
+        <div class="child" style="">Center me.</div>
+    </div>
+
+    <ul class="assessment4" style="margin-top: 20px; width: 450px;
+    display: flex; flex-wrap: wrap; justify-content: space-between;">
+        <li style="flex: 1 0 auto;">Turnip</li>
+        <li style="flex: 1 0 auto;">greens</li>
+        <li style="flex: 1 0 auto;">yarrow</li>
+        <li style="flex: 1 0 auto;">ricebean</li>
+        <li style="flex: 1 0 auto;">rutabaga</li>
+        <li style="flex: 1 0 auto;">endive</li>
+        <li style="flex: 1 0 auto;">cauliflower</li>
+        <li style="flex: 1 0 auto;">sea lettuce</li>
+        <li style="flex: 1 0 auto;">kohlrabi</li>
+        <li style="flex: 1 0 auto;">amaranth</li>
+    </ul>
+</body>
+
+</html>
