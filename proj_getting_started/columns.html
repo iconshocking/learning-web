@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width">
+    <title>Multicol starting point</title>
+    <style>
+        body {
+            width: 90%;
+            max-width: 900px;
+            margin: 2em auto;
+            font: .9em/1.2 Arial, Helvetica, sans-serif;
+        }
+
+        .container {
+            column-width: 200px;
+            column-gap: 2rem;
+            column-rule: 4px dotted rgb(79, 185, 227);
+        }
+
+        .card {
+            break-inside: avoid;
+            background-color: rgb(207, 232, 220);
+            border: 2px solid rgb(79, 185, 227);
+            padding: 10px;
+            margin: 0 0 1em 0;
+        }
+
+        .test1 {
+            columns: 3;
+            column-gap: 50px;
+        }
+
+        .test2 {
+            columns: 200px;
+            column-gap: 25px;
+            column-rule: 5px solid gray;
+        }
+
+        .test3 {
+
+            column-count: 3;
+
+            .box {
+                background-color: aqua;
+                margin: 1em 0;
+                width: 100%;
+            }
+
+            /* when an element is set as a flexbox or grid, any non-element content (like text)
+            and ::before/::after pseudo-elements will be added as flex/grid items */
+            .box {
+                & h2 {
+                    margin: 0;
+                    display: grid;
+                    grid-template-columns: 1fr auto 1fr;
+                    column-gap: 0.5em;
+                    align-items: center;
+
+                    &::before,
+                    &::after {
+                        content: "";
+                        border-bottom: 5px dotted #ccc;
+                        background-color: aquamarine;
+                    }
+                }
+            }
+
+            /* .box {
+                & h2 {
+                    margin: 0;
+                    display: flex;
+                    align-items: center;
+
+                    &::before,
+                    &::after {
+                        flex: 1 0 0;
+                        content: "";
+                        border-bottom: 5px dotted #ccc;
+                        background-color: aquamarine;
+                        margin: 0em 0.5em;
+                    }
+                }
+            } */
+
+            .subhead {
+                font-style: italic;
+            }
+
+            .box {
+                column-span: all;
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>Simple multicol example</h1>
+
+        <p> Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla luctus aliquam dolor, eu lacinia lorem
+            placerat vulputate.
+            Duis felis orci, pulvinar id metus ut, rutrum luctus orci. Cras porttitor imperdiet nunc, at ultricies
+            tellus
+            laoreet sit amet. Sed auctor cursus massa at porta. Integer ligula ipsum, tristique sit amet orci vel,
+            viverra
+            egestas ligula. Curabitur vehicula tellus neque, ac ornare ex malesuada et. In vitae convallis lacus.
+            Aliquam
+            erat volutpat. Suspendisse ac imperdiet turpis. Aenean finibus sollicitudin eros pharetra congue. Duis
+            ornare
+            egestas augue ut luctus. Proin blandit quam nec lacus varius commodo et a urna. Ut id ornare felis, eget
+            fermentum
+            sapien.</p>
+
+        <p style="width: 100%; text-align: center; column-span: all;">SPANNING SUBHEAD</p>
+
+        <p>Nam vulputate diam nec tempor bibendum. Donec luctus augue eget malesuada ultrices. Phasellus turpis est,
+            posuere
+            sit amet dapibus ut, facilisis sed est. Nam id risus quis ante semper consectetur eget aliquam lorem.
+            Vivamus
+            tristique elit dolor, sed pretium metus suscipit vel. Mauris ultricies lectus sed lobortis finibus. Vivamus
+            eu
+            urna eget velit cursus viverra quis vestibulum sem. Aliquam tincidunt eget purus in interdum. Cum sociis
+            natoque
+            penatibus et magnis dis parturient montes, nascetur ridiculus mus.</p>
+    </div>
+
+    <div class="container" style="margin-top: 100px;">
+        <div class="card">
+            <h2>I am the heading</h2>
+            <p>
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla luctus
+                aliquam dolor, eu lacinia lorem placerat vulputate. Duis felis orci,
+                pulvinar id metus ut, rutrum luctus orci. Cras porttitor imperdiet nunc,
+                at ultricies tellus laoreet sit amet. Sed auctor cursus massa at porta.
+                Integer ligula ipsum, tristique sit amet orci vel, viverra egestas ligula.
+            </p>
+        </div>
+
+        <div class="card">
+            <h2>I am the heading</h2>
+            <p>
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla luctus
+                aliquam dolor, eu lacinia lorem placerat vulputate. Duis felis orci,
+                pulvinar id metus ut, rutrum luctus orci. Cras porttitor imperdiet nunc,
+                at ultricies tellus laoreet sit amet. Sed auctor cursus massa at porta.
+                Integer ligula ipsum, tristique sit amet orci vel, viverra egestas ligula.
+            </p>
+        </div>
+
+        <div class="card">
+            <h2>I am the heading</h2>
+            <p>
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla luctus
+                aliquam dolor, eu lacinia lorem placerat vulputate. Duis felis orci,
+                pulvinar id metus ut, rutrum luctus orci. Cras porttitor imperdiet nunc,
+                at ultricies tellus laoreet sit amet. Sed auctor cursus massa at porta.
+                Integer ligula ipsum, tristique sit amet orci vel, viverra egestas ligula.
+            </p>
+        </div>
+        <div class="card">
+            <h2>I am the heading</h2>
+            <p>
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla luctus
+                aliquam dolor, eu lacinia lorem placerat vulputate. Duis felis orci,
+                pulvinar id metus ut, rutrum luctus orci. Cras porttitor imperdiet nunc,
+                at ultricies tellus laoreet sit amet. Sed auctor cursus massa at porta.
+                Integer ligula ipsum, tristique sit amet orci vel, viverra egestas ligula.
+            </p>
+        </div>
+
+        <div class="card">
+            <h2>I am the heading</h2>
+            <p>
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla luctus
+                aliquam dolor, eu lacinia lorem placerat vulputate. Duis felis orci,
+                pulvinar id metus ut, rutrum luctus orci. Cras porttitor imperdiet nunc,
+                at ultricies tellus laoreet sit amet. Sed auctor cursus massa at porta.
+                Integer ligula ipsum, tristique sit amet orci vel, viverra egestas ligula.
+            </p>
+        </div>
+
+        <div class="card">
+            <h2>I am the heading</h2>
+            <p>
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla luctus
+                aliquam dolor, eu lacinia lorem placerat vulputate. Duis felis orci,
+                pulvinar id metus ut, rutrum luctus orci. Cras porttitor imperdiet nunc,
+                at ultricies tellus laoreet sit amet. Sed auctor cursus massa at porta.
+                Integer ligula ipsum, tristique sit amet orci vel, viverra egestas ligula.
+            </p>
+        </div>
+
+        <div class="card">
+            <h2>I am the heading</h2>
+            <p>
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla luctus
+                aliquam dolor, eu lacinia lorem placerat vulputate. Duis felis orci,
+                pulvinar id metus ut, rutrum luctus orci. Cras porttitor imperdiet nunc,
+                at ultricies tellus laoreet sit amet. Sed auctor cursus massa at porta.
+                Integer ligula ipsum, tristique sit amet orci vel, viverra egestas ligula.
+            </p>
+        </div>
+    </div>
+
+    <div class="test1" style="margin-top: 100px;">
+        <p>Veggies es bonus vobis, proinde vos postulo essum magis kohlrabi welsh onion daikon amaranth tatsoi tomatillo
+            melon azuki bean garlic.</p>
+
+        <p>Gumbo beet greens corn soko endive gumbo gourd. Parsley shallot courgette tatsoi pea sprouts fava bean
+            collard
+            greens dandelion okra wakame tomato. Dandelion cucumber earthnut pea peanut soko zucchini.</p>
+
+        <p>Turnip greens yarrow ricebean rutabaga endive cauliflower sea lettuce kohlrabi amaranth water spinach avocado
+            daikon napa cabbage asparagus winter purslane kale. Celery potato scallion desert raisin horseradish spinach
+            carrot soko. Lotus root water spinach fennel kombu maize bamboo shoot green bean swiss chard seakale pumpkin
+            onion chickpea gram corn pea. </p>
+
+    </div>
+
+    <div class="test2" style="margin-top: 100px;">
+        <p>Veggies es bonus vobis, proinde vos postulo essum magis kohlrabi welsh onion daikon amaranth tatsoi tomatillo
+            melon azuki bean garlic.</p>
+
+        <p>Gumbo beet greens corn soko endive gumbo gourd. Parsley shallot courgette tatsoi pea sprouts fava bean
+            collard
+            greens dandelion okra wakame tomato. Dandelion cucumber earthnut pea peanut soko zucchini.</p>
+
+        <p>Turnip greens yarrow ricebean rutabaga endive cauliflower sea lettuce kohlrabi amaranth water spinach avocado
+            daikon napa cabbage asparagus winter purslane kale. Celery potato scallion desert raisin horseradish spinach
+            carrot soko. Lotus root water spinach fennel kombu maize bamboo shoot green bean swiss chard seakale pumpkin
+            onion chickpea gram corn pea. </p>
+
+    </div>
+
+    <div class="test3" style="margin-top: 100px;">
+        <p>Veggies es bonus vobis, proinde vos postulo essum magis kohlrabi welsh onion daikon amaranth tatsoi tomatillo
+            melon azuki bean garlic.</p>
+
+        <p>Gumbo beet greens corn soko endive gumbo gourd. Parsley shallot courgette tatsoi pea sprouts fava bean
+            collard
+            greens dandelion okra wakame tomato. Dandelion cucumber earthnut pea peanut soko zucchini.</p>
+        <div class="box">
+            <h2>I am a level 2 heading</h2>
+            <div class="subhead">Lotus root water spinach fennel</div>
+        </div>
+        <p>Turnip greens yarrow ricebean rutabaga endive cauliflower sea lettuce kohlrabi amaranth water spinach avocado
+            daikon napa cabbage asparagus winter purslane kale. Celery potato scallion desert raisin horseradish spinach
+            carrot soko. Lotus root water spinach fennel kombu maize bamboo shoot green bean swiss chard seakale pumpkin
+            onion chickpea gram corn pea. </p>
+
+    </div>
+</body>
+
+</html>
