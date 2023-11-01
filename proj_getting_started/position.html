@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width">
+    <title>Basic document flow</title>
+
+    <style>
+        body {
+            position: relative;
+            width: 500px;
+            /* scrollbars are drawn because html element always adopts scrollbars if height of content is greater than viewport -
+            no other element appears to do this */
+            height: 1400px;
+            margin: 40px auto;
+            overflow: auto;
+        }
+
+        p {
+            background: aqua;
+            border: 3px solid blue;
+            padding: 10px;
+            margin: 10px;
+            overflow: auto;
+        }
+
+        span {
+            background: red;
+            border: 1px solid black;
+        }
+
+        p:nth-of-type(1) {
+            position: absolute;
+            background: lime;
+            top: 10px;
+            right: 30px;
+            z-index: 1;
+        }
+
+        .positioned {
+            position: relative;
+            top: 10px;
+            left: 30px;
+        }
+
+        dt {
+            background-color: black;
+            color: white;
+            padding: 10px;
+            position: sticky;
+            top: 0;
+            left: 0;
+            margin: 1em 0;
+            opacity: 0.25;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Basic document flow</h1>
+
+    <p>I am a basic block level element. My adjacent block level elements sit on new lines below me.
+    </p>
+
+    <p class="positioned">By default we span 100% of the width of our parent element, and our height is as tall as our
+        child content. Our
+        total width and height is our content + padding + border width/height.</p>
+
+    <p>We are separated by our margins. Because of margin collapsing, we are separated by the width of one of our
+        margins, not both.</p>
+
+    <p>inline elements <span>like this one</span> and <span>this one</span> sit on the same line as one another, and
+        adjacent text nodes, if there is space on the same line. Overflowing inline elements <span>wrap onto a new line
+            if possible — like this one containing text</span>, or just go on to a new line if not, much like this image
+        will do: <img src="long.jpg" alt="a wide but short section of a photo of several fabrics"></p>
+
+
+    <h1>Sticky positioning</h1>
+
+    <dl>
+        <dt>A</dt>
+        <dd>Apple</dd>
+        <dd>Ant</dd>
+        <dd>Altimeter</dd>
+        <dd>Airplane</dd>
+        <dt>B</dt>
+        <dd>Bird</dd>
+        <dd>Buzzard</dd>
+        <dd>Bee</dd>
+        <dd>Banana</dd>
+        <dd>Beanstalk</dd>
+        <dt>C</dt>
+        <dd>Calculator</dd>
+        <dd>Cane</dd>
+        <dd>Camera</dd>
+        <dd>Camel</dd>
+        <dt>D</dt>
+        <dd>Duck</dd>
+        <dd>Dime</dd>
+        <dd>Dipstick</dd>
+        <dd>Drone</dd>
+        <dt>E</dt>
+        <dd>Egg</dd>
+        <dd>Elephant</dd>
+        <dd>Egret</dd>
+    </dl>
+</body>
+
+</html>
