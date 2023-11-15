@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script defer src="../built-js/scripts/events.js"></script>
+    <style>
+        .tile {
+            height: 100px;
+            width: 25%;
+            float: left;
+            border: 2px solid black;
+        }
+    </style>
+</head>
+
+<body>
+    <button>Color SWAP *skrrt*</button>
+    <button class="remove">REMOVE BG LISTENER</button>
+    <button class="abort">ABORT ALL LISTENERS</button>
+
+    <div id="container">
+        <div class="tile"></div>
+        <div class="tile"></div>
+        <div class="tile"></div>
+        <div class="tile"></div>
+        <div class="tile"></div>
+        <div class="tile"></div>
+        <div class="tile"></div>
+        <div class="tile"></div>
+        <div class="tile"></div>
+        <div class="tile"></div>
+        <div class="tile"></div>
+        <div class="tile"></div>
+        <div class="tile"></div>
+        <div class="tile"></div>
+        <div class="tile"></div>
+        <div class="tile"></div>
+    </div>
+
+    <div class="extra">Extra event listeners</div>
+
+    <input type="checkbox" id="passive" name="passive" checked />
+    <label for="passive">passive</label>
+</body>
+
+</html>
