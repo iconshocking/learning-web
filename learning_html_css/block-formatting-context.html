@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <!--
+    All BFC creation triggers:
+    - The root element of the document (<html>).
+    - Floats (elements where float isn't none).
+    - Absolutely positioned elements (elements where position is absolute or fixed).
+    - Inline-blocks (elements with display: inline-block).
+    - Table cells (elements with display: table-cell, which is the default for HTML table cells).
+    - Table captions (elements with display: table-caption, which is the default for HTML table captions).
+    - Anonymous table cells implicitly created by the elements with display: table, table-row, table-row-group,
+    table-header-group, table-footer-group (which is the default for HTML tables, table rows, table bodies, table headers,
+    and table footers, respectively), or inline-table.
+    - Block elements where overflow has a value other than visible and clip.
+    - display: flow-root.
+    - Elements with contain: layout, content, or paint.
+    - Flex items (direct children of the element with display: flex or inline-flex) if they are neither flex nor grid nor
+    table containers themselves.
+    - Grid items (direct children of the element with display: grid or inline-grid) if they are neither flex nor grid nor
+    table containers themselves.
+    - Multicol containers (elements where column-count or column-width isn't auto, including elements with column-count: 1).
+    - column-span: all should always create a new formatting context, even when the column-span: all element isn't contained
+    by a multicol container (Spec change, Chrome bug).
+    
+    Flex & Grid containers similarly establish Flex/Grid formatting contexts
+
+    They:
+    - contain internal floats
+    - exclude external floats.
+    - suppress margin collapsing. -->
+</body>
+
+</html>
