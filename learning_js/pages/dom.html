@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        .highlight {
+            color: white;
+            background-color: black;
+            padding: 10px;
+            width: 250px;
+            text-align: center;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="personal-wrapper">
+        <button id="whoops">WHOOPS BUTTON</button>
+        <button id="copied">COPIED BUTTON</button>
+        <br>
+        <!-- There is text node after every element (and comment node) that is only visible in the browser DevTools
+         if there is text within the element body; it is otherwise hidden -->
+        <div id="text-node-practice">
+            first
+            <!-- comment node + invisible text node after -->
+            <p>paragraph 1</p>
+            second
+            <p>paragraph 2</p>
+        </div>
+        <br>
+    </div>
+
+    <div id="practice-assessment">
+        <h1>My shopping list</h1>
+        <label for="new-item">Enter a new item:</label>
+        <input id="new-item" type="text">
+        <button>Add item</button>
+        <ul></ul>
+    </div>
+</body>
+
+<!-- scripts directly in HTML cannot use defer/async, so put at the bottom -->
+<script>
+    const div = document.querySelector("#text-node-practice");
+    let counter = 0;
+    // div.children would only return the <p> element
+    div.childNodes.forEach((node) => {
+        console.log(node.nodeName);
+        if (node.TEXT_NODE === node.nodeType) {
+            node.textContent = `${node.textContent} (text node #${++counter})`;
+        }
+    });
+</script>
+
+<script>
+    const wrapper = document.querySelector("#personal-wrapper");
+    const whoops = document.querySelector("#whoops");
+    // this shifts the button itself to the end of the body; it does not copy it
+    wrapper.appendChild(whoops);
+
+    const copied = document.querySelector("#copied");
+    // boolean parameter indicates whether to copy the subtree of the node; otherwise, only attributes are copied
+    // (note: listeners are not copied)
+    wrapper.appendChild(copied.cloneNode()); // does not copy its text node
+    wrapper.appendChild(copied.cloneNode(true));
+
+    // can also use copied.parentNode.removeChild(copied), but that is only needed for legacy browsers;
+    copied.remove();
+</script>
+
+<script>
+    // can manipulate CSS via style property, which inlines the styling in the style attribute on that element
+    document.body.style.backgroundColor = "lightblue";
+    // can also get/set attributes (swapping classes like this is a common way of changing styling dynamically)
+    document.body.querySelectorAll("p").forEach((el) => el.setAttribute("class", "highlight"));
+</script>
+
+<!-- Note: NodeList can be live or static:
+    - .childNodes is live and will reflect relevant DOM updates
+    - querySelectorAll() is static and will not  -->
+
+<script>
+    const assessment = document.querySelector("#practice-assessment");
+    const input = assessment.querySelector("input");
+    const button = assessment.querySelector("button");
+    const ul = assessment.querySelector("ul");
+    // "keypress" is deprecated
+    input.addEventListener("keydown", (event) => {
+        if (event.key === "Enter") {
+            button.click();
+        }
+    });
+    button.addEventListener("click", () => {
+        const itemText = input.value.trim();
+        if (!itemText) {
+            return;
+        }
+        input.value = "";
+        const li = document.createElement("li");
+        li.textContent = itemText;
+        const removeButton = document.createElement("button")
+        removeButton.textContent = "Delete";
+        removeButton.addEventListener("click", () => { li.remove(); input.focus(); });
+        li.appendChild(removeButton);
+        ul.appendChild(li);
+        input.focus();
+    })
+</script>
+
+</html>
