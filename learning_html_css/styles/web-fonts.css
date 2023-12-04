@@ -1,4 +1,5 @@
-@import url(../fonts/downloaded/stylesheet.css);
+/* Always HTML link over CSS @import since @import runs sequentially */
+/* @import url(../fonts/downloaded/stylesheet.css); */
 
 /* General setup */
 
