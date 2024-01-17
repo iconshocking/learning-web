@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Form Styling</title>
+  <style>
+    .unstyled {
+      * {
+        display: block;
+      }
+    }
+
+    .styled {
+
+      & button,
+      input,
+      select,
+      textarea {
+        display: block;
+        font-family: inherit;
+        font-size: 100%;
+        width: 175px;
+        padding: 0;
+        margin: 0;
+        box-sizing: border-box;
+      }
+
+      & fieldset {
+        position: relative;
+      }
+
+      & legend {
+        position: absolute;
+        bottom: 0;
+        right: 0;
+      }
+
+      /* fixes Safari preventing search from respecting height and font-size - can be set on other
+      inputs but do on a case-by-case basis since some important styling is done automatically by
+      the OS */
+      & input[type="search"] {
+        appearance: none;
+        height: 2rem;
+      }
+    }
+
+    .harder {
+      & input[type="checkbox"]#checkbox-styled {
+        appearance: none;
+
+        display: inline-block;
+        position: relative;
+        width: 1em;
+        height: 1em;
+        border: 1px solid gray;
+        vertical-align: -2px;
+        color: green;
+
+        &::before {
+          content: "✔";
+          position: absolute;
+          font-size: 1.2em;
+          right: -1px;
+          top: -0.3em;
+          visibility: hidden;
+        }
+
+        &:checked::before {
+          visibility: visible;
+        }
+      }
+
+    }
+
+    .hardest {
+      font-family: sans-serif;
+
+
+      & select {
+        appearance: none;
+        height: 30px;
+      }
+
+      .select-wrapper {
+        width: fit-content;
+        position: relative;
+      }
+
+      .select-wrapper::after {
+        content: "▼";
+        font-size: 1rem;
+        top: 6px;
+        right: 10px;
+        position: absolute;
+      }
+
+      & input[type="range"] {
+        appearance: none;
+        background: red;
+        height: 2px;
+        padding: 0;
+        outline: 1px solid transparent;
+      }
+
+      & input[type="color"] {
+        border: 0;
+        padding: 0;
+      }
+
+      & input[type="file"] {
+        position: absolute;
+        left: -9999px;
+      }
+
+      & label[for="file"] {
+        box-shadow: 1px 1px 3px #ccc;
+        background: linear-gradient(to bottom, #eee, #ccc);
+        border: 1px solid rgb(169, 169, 169);
+        border-radius: 5px;
+        text-align: center;
+        line-height: 1.5;
+
+        &:hover {
+          background: linear-gradient(to bottom, #fff, #ddd);
+        }
+
+        &:active {
+          box-shadow: inset 1px 1px 3px #ccc;
+        }
+      }
+
+    }
+  </style>
+</head>
+
+<body>
+  <form action="./form-styling.html" method="get">
+    <h3>Only these form elements are easy to style. Generally use a library if you need extenseive
+      form field custom styling.</h3>
+
+    <h4>UNSTYLED</h4>
+    <div class="unstyled">
+      <label for="radio1">Radio 1</label>
+      <input type="radio" id="radio1">
+      <label for="checkbox1">Checkbox 1</label>
+      <input id="checkbox1" type="checkbox">
+      <input type="range" min="0" max="100" value="50">
+      <input type="text" placeholder="text">
+      <input type="date">
+      <select>
+        <option>one</option>
+        <option>two</option>
+      </select>
+      <input type="button" value="INPUT BUTTON TEXT">
+      <button>BUTTON TEXT</button>
+      <textarea>TEXT</textarea>
+      <fieldset>
+        <legend>legend</legend>
+        <input type="text" value="taking up space">
+      </fieldset>
+      <input type="search" placeholder="search">
+    </div>
+
+    <h4>INHERIT + STYLED</h4>
+    <ul style="padding: 1rem;">
+      NOTES:
+      <li>Inheriting font and font size is a matter of taste</li>
+      <li>Be careful with consistent sizing since it can look weird, including causing weird centering</li>
+    </ul>
+    <div class="styled">
+      <input type="radio" value="radio 1">
+      <input type="checkbox" value="checkbox 1">
+      <input type="range" min="0" max="100" value="50">
+      <input type="text" placeholder="text">
+      <input type="date">
+      <select>
+        <option>one</option>
+        <option>two</option>
+      </select>
+      <input type="button" value="INPUT BUTTON TEXT">
+      <button>BUTTON TEXT</button>
+      <textarea id="textarea">TEXT</textarea>
+      <fieldset>
+        <legend>legend</legend>
+        <input type="text" value="taking up space">
+      </fieldset>
+    </div>
+
+    <h3>HARDER TO STYLE ELEMENTS</h3>
+    <section class="styled harder">
+      <input type="search" placeholder="search">
+      <input type="checkbox" id="checkbox-styled">
+      <label for="checkbox-styled">Checkbox styled</label>
+    </section>
+
+    <h3>VERY HARD TO STYLE ELEMENTS (ONLY SIMPLE THINGS RECOMMENDED)</h3>
+    <section class="styled hardest">
+      <p>Cannot style the dropdown arrow (can workaround) or popup box of options for
+        select/datalist elements (no workaround)</p>
+      <label for="select">Select a fruit</label>
+      <div class="select-wrapper">
+        <select id="select" name="select">
+          <option>Banana</option>
+          <option>Cherry</option>
+          <option>Lemon</option>
+        </select>
+      </div>
+      <p>Date/time inputs can't style the icon or the popup</p>
+      <p>Range inputs can slightly style the track but nothing else</p>
+      <input type="range" value="5">
+      <p>Color pickers can only really remove the border</p>
+      <input type="color">
+      <p>File pickers must style the label instead of the input</p>
+      <label for="file">
+        Custom file picker
+        <input type="file" name="file" id="file">
+      </label>
+      <p>Meter/progress bars have lots of difficulties</p>
+    </section>
+  </form>
+</body>
+
+</html>
