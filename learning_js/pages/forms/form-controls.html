@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Form Controls</title>
+  <link rel="stylesheet" href="./form-controls.css">
+  <script src="./form-controls.js" defer></script>
+</head>
+
+<body>
+  <p><strong>NOTE:</strong> Can use <code>autofocus</code> on any element but be cautious since it can be disruptive to
+    sighted and non-sighted
+    users</p>
+
+  <h2>Text Input</h2>
+  <section>
+    <p>Input cannot be styled. Must create a fully custom widget to do so.</p>
+    <!-- enctype text/plain is useful for debugging, but should not be relied upon for actual submission -->
+    <form action="./form-controls.html" method="get" spellcheck="false" enctype="text/plain">
+      <ul>
+        <li><input type="text" placeholder="placeholder"></li>
+        <li><input type="text" value="default value"></li>
+        <li>
+          <p>Default size does not adjust according to placeholder value</p>
+          <input type="text" size="9" placeholder="size is 9">
+        </li>
+        <li>
+          <p>Note that an empty value skirts the minlength restriction, so set input to required if it must be populated
+          </p>
+          <input type="text" placeholder="max is 5 & min is 3" maxlength="5" minlength="3">
+        </li>
+        <li>
+          <p>Spellcheck can be handled by 3rd-party services (such as via global settings in Chrome/Edge), so ALWAYS put
+            'spellcheck="false"' at the top of any form and only enable spellcheck on non-sensitive fields.</p>
+          <input type="text" placeholder="spellcheck" spellcheck="true">
+        </li>
+        <li>
+          <label for="ex1">Required (must have value for submit to succeed):</label>
+          <input type="text" name="ex1" id="ex1" required value="something">
+        </li>
+        <li>
+          <label for="ex2">Readonly (no default styling, focusable, non-editable): </label>
+          <input type="text" name="ex2" id="ex2" readonly value="your info">
+        </li>
+        <li>
+          <label for="ex3">Readonly + required (required does nothing here even if value is empty):</label>
+          <input type="text" name="ex3" id="ex3" required readonly>
+        </li>
+        <li>
+          <label for="ex4">Disabled (default styling, non-editable, NOT focusable, and does NOT get submitted): </label>
+          <input type="text" name="ex4" id="ex4" disabled value="your info">
+        </li>
+        <li>
+          <p>Password inputs add no security over the wire, so always send over HTTPS</p>
+          <input type="password" placeholder="password">
+        </li>
+        <li>
+          <p>May have mobile keyboard adjustments that assist with entering email addresses</p>
+          <input name="emails" type="email" multiple placeholder="email pattern validation"
+            value="iconshock@yahoo.com, shockconrad@gmail.com" size="100">
+        </li>
+        <li><input type="search" placeholder="search has clear button" size="30"></li>
+        <li>
+          <p>Number input validates number falls within a range (does not prevent entering invalid options though)</p>
+          <p>Number type has step attribute - <strong>BEWARE:</strong> the step defines what is valid! For example, if
+            step is 0.1 and min is 1, then 1.01 is not valid.</p>
+          <input type="number" min="1" max="10" step="0.1" placeholder="1-10" />
+          <p>To avoid this issue, set step to 'any' (will now just jump integers, so hide arrows if desired)</p>
+          <input class="hide-step" type="number" min="-10" max="10" step="any" placeholder="-10 to 10" />
+        </li>
+        <li>
+          <p>Telephone type performs no validation or character restriction but does prompt telephone keyboards on
+            mobile
+          </p>
+          <input type="tel" placeholder="telephone" autocomplete="tel">
+        </li>
+        <li>
+          <p>URL only checks (and requires) 'scheme+path' pattern matching (doesn't check for .xxx), so I don't
+            recommend using it</p>
+          <input type="url" placeholder="https://somewhere">
+        </li>
+        <li>
+          <p>Textareas are multiline, draggable, and preserve new lines in the text value</p>
+          <textarea name="multiline" id="multiline" cols="30" rows="10" wrap="hard" style="resize: vertical;">
+            Can use wrap="hard" (defualt is "soft") to make rendering wraps also appear in the submitted form value.
+
+            Can also restrict resizing to one axis with 'resize' CSS property.
+          </textarea>
+        </li>
+        <li>
+          <p>'autocomplete' is for password managers, etc. (can be set at the form level as well)</p>
+          <input type="text" name="name-autocomplete" id="name-autocomplete" placeholder="autocomplete name"
+            autocomplete="name">
+          <input type="text" name="address-autocomplete" id="address-autocomplete" placeholder="autocomplete address"
+            autocomplete="street-address">
+        </li>
+        <p>Hidden inputs are not visible, do not receive focus, and are not editable, so can be used to send
+          under-the-hood data (though you can just do this via JS too)</p>
+        <li>
+          <input type="hidden" id="hidden" name="hidden" value="hidden secret" />
+        </li>
+      </ul>
+      <button type="submit">Submit</button>
+    </form>
+    <br>
+  </section>
+
+  <h2>Checkable Items</h2>
+  <section>
+    <form action="./form-controls.html" method="get">
+      <fieldset>
+        <legend>Veggies</legend>
+        <ul>
+          <li>
+            <p>Checked items are sent individually as 'name=value' strings in the form data (not as a single
+              collection), so no value is sent if no option is checked
+            </p>
+            <p>Checked items on HTML load are matched by :default CSS selector, even if they become unchecked</p>
+            <label for="carrots">Carrots</label>
+            <input type="checkbox" id="carrots" name="vegetable" value="carrots" checked />
+          </li>
+          <li>
+            <label for="peas">Peas</label>
+            <input type="checkbox" id="peas" name="vegetable" value="peas" />
+          </li>
+          <li>
+            <label for="cabbage">Cabbage</label>
+            <input type="checkbox" id="cabbage" name="vegetable" value="cabbage" />
+          </li>
+        </ul>
+      </fieldset>
+
+      <fieldset>
+        <legend>What is your favorite meal?</legend>
+        <p>All items must have same name to associate as same field</p>
+        <p>No value is sent if no option is checked</p>
+        <ul>
+          <li>
+            <label for="soup">Soup</label>
+            <input type="radio" id="soup" name="meal" value="soup" />
+          </li>
+          <li>
+            <label for="curry">Curry</label>
+            <input type="radio" id="curry" name="meal" value="curry" />
+          </li>
+          <li>
+            <label for="pizza">Pizza</label>
+            <input type="radio" id="pizza" name="meal" value="pizza" />
+          </li>
+        </ul>
+      </fieldset>
+
+      <button type="submit">Submit</button>
+    </form>
+  </section>
+
+  <h2>Buttons</h2>
+  <section>
+    <!-- this enctype is the default value (i.e., name1=value1&name2=value2&...) -->
+    <form action="./form-controls.html" method="get" enctype="application/x-www-form-urlencoded">
+      <p>Can use input with relevant types to also create buttons, but there is no benefit or supported styling other
+        than text styling</p>
+      <button type="submit">Submit this form</button>
+      <button type="reset">Reset this form</button>
+      <button type="button">type="button", aka <strong>Do Nothing</strong> <em>without</em> <span
+          style="text-decoration: underline; color: blueviolet;">Javascript</span>
+      </button>
+      <input type="text" name="test" id="test" value="reset me!">
+
+      <p>Image buttons submit the form along with the x,y coordinates of where the image was clicked (useful for a heat
+        map)</p>
+      <input type="image" alt="Click me!" src="../../media/alice.svg" width="80" height="80" />
+    </form>
+    </form>
+  </section>
+
+  <h2>File picker</h2>
+  <section>
+    <!-- must use 'multipart/form-data' for forms with file pickers in them -->
+    <form method="post" enctype="multipart/form-data">
+      <p>Cannot change default text, so hide button and associate a label or forward from another button for custom
+        text/styling (if using the label approach, use opacity to hide file selector since screen readers will ignore it
+        if using 'visibility: hidden' or 'display: none')</p>
+      <p>Value is only first file preprended by C:\fakepath\ for security reasons (some legacy user agents would include
+        full path), so prefer using .files via JS to see all files with only real names
+      </p>
+      <p>'accept' atribute does not validate, only provides a hint for the external picker, so validate server-side</p>
+      <p>'change' event will fire if selection changes BUT NOT if the selection remains the same (e.g., cancels w/ no
+        selection or selects same files again)</p>
+      <ul>
+        <li>
+          <label for="mediapicker">Media Picker</label>
+          <input type="file" id="mediapicker" accept="image/*,video/*,audio/*">
+        </li>
+        <li>
+          <label for="docpicker">Document Picker</label>
+          <input type="file" id="docpicker"
+            accept=".doc,.docx,.xml,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+            value="Docs" />
+        </li>
+        <li>
+          <label for="multiple">Pick multiple</label>
+          <input type="file" name="multiple" id="multiple" accept="image/png,.jpg" multiple>
+        </li>
+        <p>Capture only works on mobile; must use separate API if attempting capture on desktop.</p>
+        <p>Be CAREFUL using the 'capture' attribute - only on some devices does it correctly choose front/back camera,
+          and it always forces open the camera, not video, so only ever pair it with intended image capture.</p>
+        <li>
+          <label for="pic">Capture image</label>
+          <input type="file" id="pic" accept="image/*;capture=camera" />
+        </li>
+        <li>
+          <label for="vid">Capture video</label>
+          <input type="file" id="vid" accept="video/*;capture=camcorder" />
+        </li>
+        <li>
+          <label for="mic">Capture microphone</label>
+          <input type="file" id="mic" accept="audio/*;capture=microphone" />
+        </li>
+      </ul>
+
+      <button type="submit">Submit</button>
+
+      <p style="white-space: pre-line;">
+        <strong class="collapsable">Example multipart/form-data request:</strong>
+        <code style=" font-size: 0.65rem;" class="hidden">
+        POST / HTTP/1.1
+        ...
+        Content-Type: multipart/form-data; boundary=12345
+        
+        --12345
+        Content-Disposition: form-data; name="text"
+        
+        text default
+        --12345
+        Content-Disposition: form-data; name="file1"; filename="a.txt"
+        Content-Type: text/plain
+        
+        Content of a.txt.
+        
+        --12345
+        Content-Disposition: form-data; name="file2"; filename="a.html"
+        Content-Type: text/html
+        
+        &lt;!DOCTYPE html&gt;
+        &lt;title&gt;Content of a.html.&lt;/title&gt;
+        
+        --12345--
+        </code>
+      </p>
+    </form>
+
+    <h3>File picker w/ previews</h3>
+    <form method="post" enctype="multipart/form-data">
+      <p><code>display:none</code> and <code>visibility:hidden</code> will cause assistive technology to consider
+        that element not interactive, so use other strategies (opacity or absolute position) to make input
+        non-visible if you would like to style the label instead (more consistent styling options)</p>
+      <div>
+        <label for="image_uploads">Choose images to upload (PNG, JPG)</label>
+        <input type="file" id="image_uploads" name="image_uploads" accept=".jpg, .jpeg, .png" multiple
+          style="position: absolute; left: -100%;" />
+      </div>
+      <div class="preview">
+        <p>No files currently selected for upload</p>
+      </div>
+      <div>
+        <button>Submit</button>
+      </div>
+    </form>
+  </section>
+
+  <h2>Sliders</h2>
+  <section>
+    <p>Range sliders have no visual for the current value by default, so must create one.</p>
+    <p>Can do so by listening to 'input' events on input elements and updating an output element (not sure about
+      usability reason but is the semantically correct element)</p>
+    <label for="price">Choose a maximum house price: </label>
+    <input type="range" name="price" id="price" min="50000" max="500000" step="100" value="250_000" />
+    <output class="price-output" for="price"></output>
+  </section>
+
+  <h2>Date/Time Pickers</h2>
+  <section>
+    <form action="./form-controls.html" method="get">
+      <p>Note time value will always be in ISO format for whichever fields are included: YYYY-MM-DDThh-mm-ss</p>
+      <p><strong>BEWARE:</strong> this includes no time zone, so make sure to incorporate timezone via a selector input,
+        hidden input, or JS</p>
+      <p>Recommend not setting a default date/time to avoid the default being submitted</p>
+      <p>Content can slightly overlap with the picker icon, so can hardcode width to be large enough</p>
+      <ul>
+        <li>
+          <label for="meeting-time">Choose a date AND time:</label>
+          <input type="datetime-local" id="meeting-time" name="meeting-time" required min="2018-06-07T00:00"
+            max="2018-06-14T00:00" />
+        </li>
+        <li><strong>Recommended not to use 'month' input because browser support is lacking</strong></li>
+        <li>
+        <li><strong>Recommended not to use 'week' input because browser support is lacking (and it's freaking
+            weird???)</strong></li>
+        </li>
+        <li>
+          <label for="start">Start date:</label>
+          <input type="date" id="start" name="trip-start" min="2018-01-01" max="2018-12-31" required />
+        </li>
+        <li>
+          <p>Setting step to 1 (1 second) will allow for seconds entry (usually not needed and not the most clear on a
+            form by default)</p>
+          <p>min and max may not work in all browsers if they wrap across midnight, so will need to perform backup local
+            verification in such cases</p>
+          <label for="appt">Choose a time:</label>
+          <input type="time" id="appt" name="appt" min="09:00" max="18:00" required />
+        </li>
+      </ul>
+      <button type="submit">Submit</button>
+    </form>
+  </section>
+
+  <h2>Color Picker</h2>
+  <section>
+    <form action="./form-controls.html" method="get">
+      <p>Value is always in hex</p>
+      <input type="color" name="color" id="color" />
+      <output class="color-output"></output>
+    </form>
+  </section>
+
+  <h2>Dropdown Controls</h2>
+  <section>
+    <form action="./form-controls.html" method="get">
+      <p>Select controls are difficult to style, so if something specific is required, defer to a library over trying to
+        write yourself</p>
+      <p>'value' attribute will override rendered text in form submission</p>
+      <p>Setting <code>size</code> changes dropdown to scrollable area and determines how many select options are
+        visible at a time</p>
+      <select id="simple-select" name="simple-select">
+        <option value="banan">Banana</option>
+        <option value="chayry" selected>Cherry</option>
+        <option value="lom">Lemon</option>
+      </select>
+      <p>'multiple' removes dropdown functionality (same as 'size'). Selecting multiple options is not intuitive on
+        desktop but is more clear on mobile</p>
+      <select id="groups-select" name="groups-select" multiple size="8">
+        <optgroup label="Fruits">
+          <option>Banana</option>
+          <option selected>Cherry</option>
+          <option>Lemon</option>
+        </optgroup>
+        <optgroup label="Vegetables">
+          <option>Carrot</option>
+          <option disabled>Eggplant</option>
+          <option>Potato</option>
+        </optgroup>
+      </select>
+      <button type="submit" style="margin-top: 1rem;">Submit</button>
+
+    </form>
+  </section>
+
+  <h2>Datalist</h2>
+  <section>
+    <form action="./form-controls.html" method="get"></form>
+    <p>Can use datalist to provide suggestions for inputs, but it does not force using the provided
+      options</p>
+    <p>The styling and accessibility of datalists can be bad, so do not rely solely on them for any important
+      information</p>
+    <label for="myFruit">What's your favorite fruit?</label>
+    <input type="text" name="myFruit" id="myFruit" list="mySuggestion" />
+    <datalist id="mySuggestion">
+      <option>Apple</option>
+      <option>Banana</option>
+      <option>Blackberry</option>
+      <option>Blueberry</option>
+      <option>Lemon</option>
+      <option>Lychee</option>
+      <option>Peach</option>
+      <option>Pear</option>
+    </datalist>
+    <p>Datalist can be used with a few other inputs but their behavior across browsers can differ</p>
+
+    <input type="time" list="popularHours" />
+    <datalist id="popularHours">
+      <option value="12:00"></option>
+      <option value="13:00"></option>
+      <option value="14:00"></option>
+    </datalist>
+
+    <input type="date" list="popularDates" />
+    <datalist id="popularDates">
+      <option value="2024-06-06"></option>
+      <option value="2024-06-07"></option>
+      <option value="2024-12-05"></option>
+    </datalist>
+
+    <input type="datetime-local" list="popularDateTimes" />
+    <datalist id="popularDateTimes">
+      <option value="2024-06-06T19:00"></option>
+      <option value="2024-06-07T13:00"></option>
+      <option value="2024-12-05T05:00"></option>
+    </datalist>
+
+    <p>Range shows tick marks (datalist does not display by default so need to use CSS to show value labels - requires
+      some hardcoding, so can be finicky)</p>
+    <input type="range" id="tempB" name="temp" list="values" />
+    <datalist id="values"
+      style="display: flex; flex-direction: column; writing-mode: vertical-lr; width: 135px; justify-content: space-between; margin-bottom: 1rem;">
+      <option value="0" label="very cold!"></option>
+      <option value="25" label="cool"></option>
+      <option value="50" label="medium"></option>
+      <option value="75" label="getting warm!"></option>
+      <option value="100" label="hot!"></option>
+    </datalist>
+
+    <label for="colors">Pick a color (preferably a red tone):</label>
+    <input type="color" list="redColors" id="colors" />
+    <datalist id="redColors">
+      <option value="#800000"></option>
+      <option value="#8B0000"></option>
+      <option value="#A52A2A"></option>
+      <option value="#DC143C"></option>
+    </datalist>
+
+    <button type="submit" style="margin-top: 1rem;">Submit</button>
+    </form>
+  </section>
+
+  <h2>Meters/Progress Bars</h2>
+  <section>
+    <p>Include value in content too for assistive technology support on browsers that don't support these elements</p>
+    <p><strong>Meter</strong> shows red/yellow/green depending on if you are in the optimum, average, or worst part of
+      the range (defiend by
+      closeness to 'optimum' value)</p>
+    <meter min="0" max="100" value="74" low="25" high="75" optimum="100">74</meter>
+
+    <p>Progress bars are what you'd expect (and the min is always 0)</p>
+    <progress max="100" value="75">75/100</progress>
+    <p>Progress bar without a value is considered indeterminate</p>
+    <div>
+      <progress id="indeterminate" aria-busy="true" max="100">loading</progress>
+    </div>
+  </section>
+
+  <h2>Form target types (what browser context the form submits its navigation get/post to)</h2>
+  <section>
+    <p>Must allow form, top navigation, and popup sandbox permissions for all target types to work</p>
+    <form action="./form-controls.html" method="get">
+      <button type="submit" formtarget="_self">Submit self (same context/tab, default)</button>
+      <button type="submit" formtarget="_blank">Submit blank (new tab)</button>
+      <button type="submit" formtarget="_parent">Submit parent (if iframe, otherwise same tab, BUT nested iframe will
+        fail since parent frame =/= top frame)</button>
+      <button type="submit" formtarget="_top">Submit top (if iframe, otherwise same tab)</button>
+    </form>
+
+    <p>Note: there is an iframe nesting depth (may vary depending on if URL is identical or not)</p>
+    <iframe src="./form-controls.html"
+      sandbox="allow-forms allow-scripts allow-top-navigation-by-user-activation allow-popups a"
+      style="width: 100%; height: 80vh"></iframe>
+  </section>
+
+</body>
+
+</html>

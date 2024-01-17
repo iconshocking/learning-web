@@ -1,0 +1,76 @@
+button {
+  display: block;
+}
+
+input {
+  display: block;
+}
+
+ul {
+  list-style: none;
+}
+
+li {
+  margin-bottom: 1rem;
+}
+
+input[type="hidden"] {
+  background-color: aqua;
+  display: block !important;
+}
+input {
+  display: block;
+}
+
+ul {
+  list-style: none;
+}
+
+li {
+  margin-bottom: 1rem;
+}
+
+/* specifically set checkable types because inputs as buttons will also be matched by :default */
+input[type="checkbox"],
+input[type="radio"] {
+  &:default {
+    outline: 1px solid red;
+  }
+  &:checked {
+    outline: 3px solid green;
+  }
+}
+
+.hidden {
+  display: block;
+  height: 1rem;
+  visibility: hidden;
+  &::before {
+    content: "hidden";
+    visibility: visible;
+    color: red;
+  }
+}
+
+label[for="image_uploads"] {
+  background-color: rgb(134, 79, 79);
+  border-radius: 0.2rem;
+  color: white;
+  cursor: pointer;
+  padding: 0.5rem;
+}
+
+.hide-step {
+  -moz-appearance: textfield;
+  /* Firefox */
+  &::-webkit-outer-spin-button,
+  &::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+}
+
+select {
+  display: block;
+  margin-top: 1rem;
+}
