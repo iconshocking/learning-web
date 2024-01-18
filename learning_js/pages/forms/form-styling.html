@@ -72,6 +72,77 @@
         }
       }
 
+      input[type="checkbox"]#checkbox-toggle {
+        position: relative;
+        appearance: none;
+        width: 44px;
+        height: 24px;
+        border-radius: 12px;
+        border: 2px solid black;
+        background: #eee;
+        transition: all 0.4s;
+
+        &::before {
+          width: 16px;
+          height: 16px;
+          border-radius: 9px;
+          background-color: black;
+          position: absolute;
+          content: "";
+          top: 2px;
+          left: 10%;
+          transition: all 0.4s;
+        }
+
+        &:checked {
+          background-color: #ffaa00;
+          transition: all 0.4s;
+
+          &::before {
+            left: calc(90% - 16px);
+            transition: all 0.4s;
+          }
+        }
+
+        input[type="checkbox"]:checked::before {
+          left: 35%;
+          transition: all 0.4s;
+        }
+      }
+
+
+      input[type="radio"] {
+        appearance: none;
+      }
+
+      & input[type="radio"] {
+        width: 20px;
+        height: 20px;
+        border-radius: 10px;
+        border: 2px solid gray;
+        /* Adjusts the position of the checkboxes on the text baseline */
+        vertical-align: -2px;
+        outline: none;
+      }
+
+      input[type="radio"]::before {
+        display: block;
+        content: " ";
+        width: 10px;
+        height: 10px;
+        border-radius: 6px;
+        background-color: red;
+        font-size: 1.2em;
+        transform: translate(3px, 3px) scale(0);
+        transform-origin: center;
+        transition: all 0.3s ease-in;
+      }
+
+      input[type="radio"]:checked::before {
+        transform: translate(3px, 3px) scale(1);
+        transition: all 0.3s cubic-bezier(0.25, 0.25, 0.56, 2);
+      }
+
     }
 
     .hardest {
@@ -191,8 +262,18 @@
     <h3>HARDER TO STYLE ELEMENTS</h3>
     <section class="styled harder">
       <input type="search" placeholder="search">
+
       <input type="checkbox" id="checkbox-styled">
       <label for="checkbox-styled">Checkbox styled</label>
+
+      <input type="checkbox" id="checkbox-toggle">
+      <label for="checkbox-toggle">Checkbox toggle</label>
+
+      <input type="radio" name="radio" id="radiostyled1" value="radiostyled1">
+      <label for="radiostyled1">Radio styled 1 </label>
+      <input type="radio" name="radio" id="radiostyled2" value="radiostyled2">
+      <label for="radiostyled2">Radio styled 2</label>
+
     </section>
 
     <h3>VERY HARD TO STYLE ELEMENTS (ONLY SIMPLE THINGS RECOMMENDED)</h3>
