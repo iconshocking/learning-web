@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Form Sending</title>
+</head>
+
+<body>
+  <h2>GET</h2>
+  <form method="get">
+    <label for="name">Name:</label>
+    <input type="text" id="name" name="name" />
+    <label for="last">Last:</label>
+    <input type="text" id="last" name="last" />
+    <button type="submit">SUBMIT</button>
+  </form>
+  <h4>Example request:</h4>
+  <samp style="white-space: pre-line;">GET /?name=Conrad&last=Shock HTTP/2.0
+    Host: http://localhost:8000/pages/forms/form-sending.html
+  </samp>
+
+  <h2>POST</h2>
+  <p>Always use POST to send sensitive information (since GET reveals field values in the URL) and/or large amounts of
+    data since URLS often have a maximum enforced by servers/browsers
+  </p>
+  <form method="post" enctype="application/x-www-form-urlencoded">
+    <label for="name">Name:</label>
+    <input type="text" id="name" name="name" />
+    <label for="last">Last:</label>
+    <input type="text" id="last" name="last" />
+    <button type="submit">SUBMIT</button>
+  </form>
+  <h4>Example request:</h4>
+  <samp style="white-space: pre-line;">POST / HTTP/2.0
+    Host: http://localhost:8000/pages/forms/form-sending.html
+    Content-Type: application/x-www-form-urlencoded
+    Content-Length: 22
+
+    name=Conrad&last=Shock
+  </samp>
+
+  <h3>File upload</h3>
+  <form method="post" enctype="multipart/form-data" action="./form-sending/file-upload">
+    <label for="name">Name:</label>
+    <input type="text" id="name" name="name" />
+    <label for="last">Last:</label>
+    <input type="text" id="last" name="last" />
+    <input type="file" name="file" id="file">
+    <button style="display: block;" type="submit">SUBMIT</button>
+  </form>
+
+  <h4>Programmatic Form</h4>
+  <button id="programmatic-submit" type="button">SUBMIT VIA JS</button>
+
+  <h4>Submit via JS w/o Nav</h4>
+  <form id="id-for-js">
+    <input type="text" name="name" id="name" placeholder="name">
+    <input type="text" name="last" id="last" placeholder="last">
+    <button type="submit">SUBMIT</button>
+  </form>
+
+</body>
+
+<script>
+  const programmaticSubmit = document.getElementById('programmatic-submit');
+  programmaticSubmit.addEventListener('click', async () => {
+    const formData = new FormData();
+    formData.append("name", "Pomegranate");
+    formData.append("last", "Jones");
+    const selection = await window.showOpenFilePicker();
+    if (selection.length > 0) {
+      const file = await selection[0].getFile();
+      formData.append("file", file);
+    }
+    try {
+      // note: fetch() automatically sets correct 'Content-Type' header for FormData
+      const response = await fetch(window.location + "/file-upload", {
+        method: "POST",
+        body: formData,
+      });
+      console.log(await response.json());
+    } catch (e) {
+      console.error(e);
+    }
+  }
+  )
+</script>
+
+<script>
+  const form = document.querySelector("#id-for-js");  // same as document.forms["id-for-js"]
+
+  form.addEventListener("submit", async (event) => {
+    event.preventDefault();
+    // ingest form data from HTML form
+    const formData = new FormData(form);
+    try {
+      const response = await fetch(window.location + "/file-upload", {
+        method: "POST",
+        body: formData,
+      });
+      console.log(await response.json());
+    } catch (e) {
+      console.error(e);
+    }
+  });
+</script>
+
+</html>
