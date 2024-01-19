@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Form Validation</title>
+  <style>
+    input:invalid {
+      color: red;
+    }
+  </style>
+</head>
+
+<body>
+  <h1>Form validation</h1>
+
+  <h2>Patterns</h2>
+  <form action="./form-validation.html" method="get">
+    <p>
+      <!-- describe the pattern in text for accessibility and clarity -->
+      <label>
+        Enter your phone number in the format (123) - 456 - 7890
+        (<input name="tel1" type="tel" pattern="[0-9]{3}" placeholder="###" aria-label="3-digit area code"
+          title="3-digit area code" size="3" />) -
+        <input name="tel2" type="tel" pattern="[0-9]{3}" placeholder="###" aria-label="3-digit prefix"
+          title="3-digit prefix" size="3" /> -
+        <input name="tel3" type="tel" pattern="[0-9]{4}" placeholder="####" aria-label="4-digit number"
+          title="4-digit number" size="4" />
+      </label>
+    </p>
+    <button type="submit">SUBMIT</button>
+  </form>
+
+  <h2>Custom error messages</h2>
+  <section>
+    <p>Note: the default API is unstylable and won't be translated</p>
+    <form action="./form-validation.html" method="get">
+      <label for="mail">
+        I would like you to provide me with an email address:
+      </label>
+      <input type="email" id="mail" name="mail" />
+      <button type="submit">SUBMIT</button>
+    </form>
+  </section>
+
+  <h2>Using <code>novalidate</code></h2>
+  <section>
+    <h3>BEWARE: <code>novalidate</code> disables validation, not just the error messages/styling</h3>
+    <form action="./form-validation.html" method="get" name="novalidate" novalidate>
+      <p>
+        <label for="mail2">
+          <span>Please enter an email address:</span>
+          <input type="email" id="mail2" name="mail2" required minlength="8" />
+          <span class="error" aria-live="polite"></span>
+        </label>
+      </p>
+      <button type="submit">Submit</button>
+    </form>
+  </section>
+
+</body>
+
+<script>
+  // simple custom error
+  {
+    const email = document.getElementById("mail");
+    email.addEventListener("input", (event) => {
+      if (email.validity.typeMismatch) {
+        email.setCustomValidity("I am expecting an email address!");
+      } else {
+        email.setCustomValidity("");
+      }
+    });
+  }
+
+  // custom error with styling
+  const form = document.forms.novalidate;
+  const email = document.getElementById("mail2");
+  const emailError = document.querySelector("#mail2 + span.error");
+
+  email.addEventListener("input", (event) => {
+    emailError.textContent = "";
+    emailError.className = "error";
+  });
+
+  email.addEventListener("blur", (event) => {
+    if (email.validity.valid) {
+      emailError.textContent = "";
+      emailError.className = "error";
+    } else {
+      showError();
+    }
+  });
+
+  form.addEventListener("submit", (event) => {
+    if (!email.validity.valid) {
+      showError();
+      event.preventDefault();
+    }
+  });
+
+  function showError() {
+    if (email.validity.valueMissing) {
+      emailError.textContent = "You need to enter an email address.";
+    } else if (email.validity.typeMismatch) {
+      emailError.textContent = "Entered value needs to be an email address.";
+    } else if (email.validity.tooShort) {
+      emailError.textContent = `Email should be at least ${email.minLength} characters; you entered ${email.value.length}.`;
+    }
+
+    emailError.className = "error active";
+  }
+</script>
+
+</html>
