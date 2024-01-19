@@ -1,0 +1,108 @@
+button {
+  &:hover {
+    background-color: aquamarine;
+  }
+  &:focus {
+    background-color: blue;
+  }
+  &:active {
+    background-color: rebeccapurple;
+  }
+}
+
+input:not(input[type="radio"], input[type="checkbox"]) {
+  &:required {
+    border: 2px solid black;
+  }
+  /* not usually useful since fields are optional by default */
+  &:optional {
+    border: 2px solid silver;
+  }
+  /* trick to only show styling for non-empty fields - works with empty placeholder */
+  &:is(:not(:placeholder-shown), .submitted) {
+    &:invalid {
+      border: 2px solid red;
+    }
+    &:out-of-range {
+      border: 2px solid purple;
+    }
+    &:valid {
+      border: 2px solid green;
+    }
+  }
+}
+
+input[type="radio"] {
+  appearance: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1rem;
+  height: 1rem;
+
+  &::before {
+    content: "X";
+    visibility: hidden;
+    text-align: center;
+    flex: 1 1 0;
+  }
+  &:checked::before {
+    visibility: visible;
+  }
+
+  /* will only match buttons with the required attribute, so set on all if styling with this selector */
+  &:required {
+    border: 1px solid red;
+  }
+  &:optional {
+    border: 1px solid green;
+  }
+}
+
+div:has(#othername) {
+  margin-top: 2.5rem;
+
+  & input + span {
+    position: relative;
+  }
+
+  /* generated content is ignored by screen readers, so it can be useful to avoid adding redundant
+  info for them*/
+  & input:required + span::after {
+    position: absolute;
+    /* must put generated content on span because form elements work similar to replaced elements,
+    which don't allow for that */
+    content: "required";
+    color: white;
+    background-color: black;
+    padding: 5px 10px;
+    right: 0px;
+    top: -2rem;
+  }
+}
+
+input[type="number"] {
+  width: 150px;
+}
+
+label:has(+ input:disabled) {
+  color: gray;
+}
+
+div#readonly-readwrite {
+  & input:read-only {
+    box-shadow: none;
+    background-color: white;
+  }
+
+  /* not generally useful since this is the default state */
+  & input:read-write {
+    border: 0;
+    box-shadow: inset 1px 1px 3px #ccc;
+    border-radius: 5px;
+  }
+}
+
+label:focus-within {
+  background-color: #0fdb20;
+}

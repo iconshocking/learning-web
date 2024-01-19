@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pseduo-classes</title>
+  <link rel="stylesheet" href="./pseudo-classes.css" />
+</head>
+
+<body>
+  <form action="./pseudo-classes.html" method="get">
+
+    <div>
+      <label for="fname">First name: </label>
+      <input id="fname" name="fname" type="text" required placeholder="" />
+    </div>
+    <div>
+
+      <label for="lname">Last name: </label>
+      <input id="lname" name="lname" type="text" required placeholder="" />
+    </div>
+
+    <div>
+      <label for="email">
+        Email address (include if you want a response):
+      </label>
+      <input id="email" name="email" type="email" placeholder="" />
+    </div>
+
+    <div>
+      <label for="radios" required>Required Radios</label>
+      <input type="radio" name="radios" id="radios" value="radio1" required checked>
+      <input type="radio" name="radios" id="radios" value="radio2" required>
+    </div>
+
+    <div>
+      <label for="radios" required>Optional Radios</label>
+      <input type="radio" name="radios" id="radios" value="radio1">
+      <input type="radio" name="radios" id="radios" value="radio2">
+    </div>
+
+    <div>
+      <label for="othername">Other name: </label>
+      <input id="othername" name="othername" type="text" required placeholder="required at top-right" />
+      <span></span>
+    </div>
+
+    <div>
+      <label for="range">Range (1-12)</label>
+      <input type="number" name="range" id="range" min="1" max="12" step="1" placeholder="highlights out of range">
+    </div>
+
+    <div>
+      <fieldset id="shipping">
+        <legend>
+          Shipping Address
+        </legend>
+        <div><label for="shipping-street">Street</label><input type="text" name="shipping-street" id="shipping-street"
+            placeholder="1234 Place Ave"></div>
+      </fieldset>
+      <fieldset id="billing">
+        <legend>
+          Billing Address
+        </legend>
+        <label for="same-address">Same address?</label>
+        <input type="checkbox" name="same-address" id="same-address">
+        <div><label for="billing-street">Street</label><input type="text" name="billing-street" id="billing-street"
+            placeholder="1234 Place Ave"></div>
+      </fieldset>
+    </div>
+
+    <div id="readonly-readwrite">
+      <label for="readonly">Readonly</label>
+      <input type="text" id="readonly" name="readonly" readonly value="your info for checking">
+
+      <label for="writable">Writable</label>
+      <input type="text" id="writable" name="writable" placeholder="would you like to make any changes?" size="100">
+    </div>
+
+    <p>Indeterminate state for check box is usually only useful for a styling higher-level checkbox that contains nested
+      checkboxes to show that only some of the checkbox is checked</p>
+
+    <div><label for="focus-within">Focus is on or within element
+        <input type="text" name="focus-within" id="focus-within">
+      </label></div>
+
+    <button type="button">Submit</button>
+  </form>
+</body>
+
+<script>
+  /* set submitted class in order to select any empty, invalid fields via CSS */
+  const button = document.querySelector('button');
+  button.addEventListener('click', () => {
+    for (const field of document.forms[0].elements) {
+      field.classList.add('submitted');
+    }
+  })
+
+  document.querySelector("input#same-address").addEventListener('change', (e) => {
+    const input = document.querySelector("input#billing-street")
+    /* get rid of placeholder */
+    input.value = " ";
+    input.disabled = e.target.checked;
+    document.querySelector("label[for='billing-street']").disabled = e.target.checked;
+  })
+</script>
+
+</html>
