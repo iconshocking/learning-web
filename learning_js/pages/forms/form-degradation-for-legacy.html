@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Form Degradation for Legacy Browsers</title>
+  <style>
+    /* declaration syntax usess parenthesis and requires a value with the property */
+    /* can use only 'and/or' without wrapping parens, but must use parens when using both to define
+    operation order - otherwise the rule is ignored */
+    @supports ((transform-origin: 5% 5%) and (not (transform: rotate(90deg)))) or (translate: rotate(90deg)) {}
+
+    /* font technology - not sure if this is very useful */
+    @supports font-tech(color-COLRv1) {}
+
+    /* font format - though should just generally use fallbacks via CSS and don't need to check this */
+    @supports font-format(opentype) {}
+  </style>
+</head>
+
+<body>
+  <form>
+    <ul>
+      <li>Unrecognized <code>type</code> values for <code>input</code> elements degrade to the <code>text</code> type
+      </li>
+      <li>Generally use as little CSS styling as possible for form fields since they are so difficult and inconsistent
+        to style.</li>
+      <li>Follow unobtrusive JS principles where the site should still function as much as possible if a script breaks.
+      </li>
+      <li>Polyfills can be slow on legacy browsers, so be wary of using too many or ones that are too heavy.</li>
+      <li>Use <code>@supports</code> for feature queries.</li>
+    </ul>
+  </form>
+</body>
+
+</html>
