@@ -1,0 +1,43 @@
+/* Descendant */
+body h1 {
+  appearance: none;
+}
+/* matches
+<body>
+  <div>
+    <h1></h1>
+  </div>
+</body>
+*/
+
+/* Direct child */
+body > h1 {
+  appearance: none;
+}
+/* does NOT match
+<body>
+  <div>
+    <h1></h1>
+  </div>
+</body>
+*/
+
+/* Next sibling */
+h1 + p {
+  appearance: none;
+}
+/* does NOT match
+<h1></h1>
+<img>
+<p></p>
+*/
+
+/* Subsequent sibling */
+h1 ~ p {
+  appearance: none;
+}
+/* does match
+<h1></h1>
+<img>
+<p></p>
+*/
