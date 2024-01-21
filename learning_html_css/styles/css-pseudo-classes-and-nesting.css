@@ -1,0 +1,88 @@
+/* PSEUDO-CLASS FUNCTIONS */
+
+/* NOTE: be careful using pseudo-class functions because they are more recent and so have
+non-complete support. */
+
+/* All pseudo-class functions (EXCEPT :where()) take on the specificity of the highest-specificity
+selector in its arguments */
+h1:has(p, .class1.class2.class3.class4) {
+  appearance: none;
+  /* a match of 'h1 p' still has the high specificity of 0-4-1 */
+}
+
+/* NOTE: DO NOT nest :has() inside other :has() or the rule will be ignored (could create cyclical
+querying) */
+
+h1:has(+ p) {
+  appearance: none;
+  /* Selects an h1 heading with a paragraph element that immediately follows the h1 */
+}
+body:has(video, audio) {
+  appearance: none;
+  /* styles to apply if the content contains audio OR video */
+}
+body:has(video):has(audio) {
+  appearance: none;
+  /* styles to apply if the content contains both audio AND video */
+}
+
+h1:not(.class1, .class2) {
+  appearance: none;
+}
+
+/* NOTE: :is() and :where() have 'forgiving selector lists' that always handle any valid selectors
+they are given, even if some are invalid. This is NOT true of normal CSS selector lists or when
+using :has/not()*/
+.valid,
+:invalid-pseudo-class {
+  appearance: none; /* fails */
+}
+:has(.valid, :invalid-pseudo-class) {
+  appearance: none; /* fails */
+}
+:is(.valid, :invalid-pseudo-class) {
+  appearance: none; /* still works for .valid */
+}
+
+/* NATIVE NESTING */
+/* NOTE: native nesting is VERY new, so use SASS or a CSS preprocessor for now to achieve what it
+provides */
+
+/* Equivalent to ':is(.foo, #bar) .baz', which has specificity 1-1-0  */
+.foo,
+#bar {
+  .baz {
+    appearance: none;
+  }
+}
+/* When using SASS, this is equivalent to '.foo .baz, #bar .baz' which has specificity dependent on
+the particular case being matched */
+
+/* Equivalent to '.green-theme :is(.foo .bar)', which WOULD match the following (since .bar is
+within a .foo element):
+<div class=foo>
+  <div class="green-theme">
+    <p class=bar>
+  </div>
+</div>
+The SASS expansion '.green-theme .foo .bar' would not match this.
+*/
+.foo .bar {
+  .green-theme & {
+    appearance: none;
+  }
+}
+
+/* Native nesting doesn't support this (it does something very weird, so don't do it); SASS outputs
+.foo-bar, performing a suffix operation */
+.foo {
+  &-bar {
+    appearance: none;
+  }
+}
+/* Native nesting does support this though, producing .foo:hover, which SASS would also produce */
+.foo {
+  &:hover {
+    appearance: none;
+  }
+}

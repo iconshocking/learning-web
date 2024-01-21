@@ -22,7 +22,12 @@ html {
 
 /* Selectors to be matched up with rulesets */
 
-/* 0-1-2
+/* Specificity:
+- IDs add 1 to highest specificity tier
+- Classes, pseudo-classes, and attribute selectors add 1 to middle specificity tier
+- Elements and pseudo-elements add 1 to lowest specificity tier
+
+0-1-2
 .card article img
 0-1-1
 .card footer
