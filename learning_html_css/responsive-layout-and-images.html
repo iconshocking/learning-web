@@ -63,7 +63,7 @@
             width="874" height="1072">
         <!-- all CSS and styling must be done on the img element - the other elements fo not
         actually take up space in the DOM -->
-        <img id="mona-lisa" src="images/mona-higher-res.png" alt="The Mona Lisa">
+        <img class="mona-lisa" src="images/mona-higher-res.png" alt="The Mona Lisa">
     </picture>
 
     <h3>Always set <code><strong>width</strong></code>, <code><strong>height</strong></code>, and
@@ -75,7 +75,7 @@
     </h3>
     <p>This variant shows how space is always preserved in the DOM when following this advice.</p>
     <!-- <img>, like <source>, also supports 'srcset' and 'sizes' attributes -->
-    <img id="mona-lisa" src="fake.png" alt="The Mona Lisa" srcset="fake.png 1980w, fake 990w, fake 495w"
+    <img class="mona-lisa" src="fake.png" alt="The Mona Lisa" srcset="fake.png 1980w, fake 990w, fake 495w"
         sizes="(min-width: 1600px) 75vw, (min-width: 1200px) 50vw, 30vw" width="1976" height="2940">
     </img>
 
@@ -87,7 +87,17 @@
             sizes="(min-width: 1600px) 75vw, (min-width: 1200px) 50vw, 30vw" width="1976" height="2940">
         <source media="(max-width: 799px)" srcset="images/mona-high-res-crop.png 2x, images/mona-low-res-crop.png 1x"
             width="874" height="1072">
-        <img id="mona-lisa" class="smooth" src="images/mona-higher-res.png" alt="The Mona Lisa">
+        <img class="mona-lisa smooth" src="images/mona-higher-res.png" alt="The Mona Lisa">
+    </picture>
+
+    <p>The <code>picture</code> element can also support fallbacks for unsupported images types (same as the
+        <code>video</code> element for video).
+    </p>
+    <!-- note that we still use 'srcset' on <source> since there is no 'src' attribute for it -->
+    <picture>
+        <source type="image/webp" srcset="images/mona-mid-res.webp" />
+        <source type="image/png" srcset="images/mona-mid-res.png" />
+        <img src="images/mona-mid-res.png" alt="The Mona Lisa" style="height: auto; width: 25%;" />
     </picture>
 </body>
 

@@ -48,7 +48,7 @@ h1 {
   font-size: calc(1.5rem + 3vw);
 }
 
-#mona-lisa {
+.mona-lisa {
   display: block;
   max-width: 100%;
   height: auto;
