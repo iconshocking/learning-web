@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="styles/responsive-layout-and-images.css">
+</head>
+
+<body>
+    <div class="wrapper">
+        <div class="col1">
+            <h1>Watch my size!</h1>
+            <p>
+                This layout is responsive. See what happens if you make the browser
+                window wider or narrow.
+            </p>
+        </div>
+        <div class="col2">
+            <p>
+                One November night in the year 1782, so the story runs, two brothers
+                sat over their winter fire in the little French town of Annonay,
+                watching the grey smoke-wreaths from the hearth curl up the wide
+                chimney. Their names were Stephen and Joseph Montgolfier, they were
+                papermakers by trade, and were noted as possessing thoughtful minds
+                and a deep interest in all scientific knowledge and new discovery.
+            </p>
+            <p>
+                Before that night—a memorable night, as it was to prove—hundreds of
+                millions of people had watched the rising smoke-wreaths of their fires
+                without drawing any special inspiration from the fact.”
+            </p>
+        </div>
+    </div>
+
+    <a href="https://www.smashingmagazine.com/2014/05/responsive-images-done-right-guide-picture-srcset/">Reference
+        for this code</a>
+
+    <p>This shows different resolution/widths of single image, and changes to a different image (due to art direction)
+        depending on screen width, with the resolution of the cropped image depending on device pixel ratio (DPR).</p>
+
+    <!--
+    - <picture> is a container for multiple (usually) source elements and one REQUIRED img element
+    - 'media' defines the breakpoints for each source 
+    - 'srcset' defines images with their native widths or via device-pixel-ratio (DPR), which maps
+      physical pixels to CSS pixels (NOTE: the 'sizes' attribute cannot be used when using DPR)
+    - 'sizes' matches media queries with the intended DOM render size of image (which must be set
+      via CSS), but the last value does NOT have a media query and is treated as the default. (NOTE:
+      these values do NOT affect the DOM in any way - they only give hints to the browser about
+      which image to serve for the current viewport.)
+    - 'src' is fallback if 1) srcset attribute not supported or 2) when viewport falls outside
+      defined breakpoints 
+    - 'width' and 'height' provide the image's aspect ratio that the CSS engine uses to size the
+      placeholder height of the image when it is not loaded if the CSS-defined width is responsive
+      -->
+
+    <picture>
+        <source media="(min-width: 800px)"
+            srcset="images/mona-higher-res.png 1980w, images/mona-mid-res.png 990w, images/mona-lower-res.png 495w"
+            sizes="(min-width: 1600px) 75vw, (min-width: 1200px) 50vw, 30vw" width="1976" height="2940">
+        <source media="(max-width: 799px)" srcset="images/mona-high-res-crop.png 2x, images/mona-low-res-crop.png 1x"
+            width="874" height="1072">
+        <!-- all CSS and styling must be done on the img element - the other elements fo not
+        actually take up space in the DOM -->
+        <img id="mona-lisa" src="images/mona-higher-res.png" alt="The Mona Lisa">
+    </picture>
+
+    <h3>Always set <code><strong>width</strong></code>, <code><strong>height</strong></code>, and
+        <code><strong>display:inline-block/block</strong></code> on images in HTML to calculate
+        aspect ratio to preserve placeholder region for image 1) before loading and 2) if image fails to
+        load.
+        <br>
+        (Added to browsers around 2021)
+    </h3>
+    <p>This variant shows how space is always preserved in the DOM when following this advice.</p>
+    <!-- <img>, like <source>, also supports 'srcset' and 'sizes' attributes -->
+    <img id="mona-lisa" src="fake.png" alt="The Mona Lisa" srcset="fake.png 1980w, fake 990w, fake 495w"
+        sizes="(min-width: 1600px) 75vw, (min-width: 1200px) 50vw, 30vw" width="1976" height="2940">
+    </img>
+
+    <p>This variant removes the width changes within a single image to show how it can create a
+        smooth transition when only used to adjust resolution.</p>
+    <picture>
+        <source media="(min-width: 800px)"
+            srcset="images/mona-higher-res.png 1980w, images/mona-mid-res.png 990w, images/mona-lower-res.png 495w"
+            sizes="(min-width: 1600px) 75vw, (min-width: 1200px) 50vw, 30vw" width="1976" height="2940">
+        <source media="(max-width: 799px)" srcset="images/mona-high-res-crop.png 2x, images/mona-low-res-crop.png 1x"
+            width="874" height="1072">
+        <img id="mona-lisa" class="smooth" src="images/mona-higher-res.png" alt="The Mona Lisa">
+    </picture>
+</body>
+
+</html>
