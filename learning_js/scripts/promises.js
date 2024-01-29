@@ -188,7 +188,7 @@ function promiseState(promise) {
 // }
 
 // Promises guarantees around timing:
-// - `then()` callbacks will never be invoked before the completion of the current run of the JavaScript event loop.
+// - `then()` callbacks will never be invoked before the completion of the current run of the JavaScript microtask.
 // - The callbacks will be invoked even if they were added after the success or failure that the promise represents.
 // - Multiple callbacks may be added by calling `then()` several times. They will be invoked sequentially, in order.
 //
