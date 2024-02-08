@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tooling</title>
+  <style>
+    section {
+      border: solid black 1px;
+      padding: 0.5rem
+    }
+  </style>
+</head>
+
+<body>
+  <h1>Tooling</h1>
+  <h2>Development (Safety Net & Convenience)</h2>
+  <section>
+    <h3>Linters</h3>
+    <p>Detect possible bugs and issues in your code.</p>
+    <p>- <strong>ESLint</strong> is the defacto JS linter.</p>
+    <p>- <strong>Stylelint</strong> is the most common CSS linter (can be extended to support SCSS, CSS-in-JS, etc.).
+    </p>
+    <p>- <strong>webhint</strong> to address common issues in general web-facing code.</p>
+
+    <h3>Formatters</h3>
+    <p>Format code according to generally agreed-upon ruleset.</p>
+    <p>- <strong>Prettier</strong> is common for web-facing files. Anything is good and stick to the default unless you
+      have a very good reason not to in order to avoid bikeshedding.</p>
+
+    <h3>Bundlers</h3>
+    <p>Package code/assets for deployment, tree shake so that only necessary code is bundled, can
+      run local dev server with live reloads.</p>
+    <p>- For most projects: <strong>Vite</strong> is focused on developer speed and runs two
+      different internal bundlers for prod vs dev. This means it is very fast, but the bundle created
+      is different between dev and prod, which can be a problem for testing complex applications.</p>
+    <p>- For very large, complex applications: <strong>Webpack</strong> has the largest ecosystem and most flexibility
+      but
+      it can be quite a burden to use and is losing favorability.</p>
+
+    <h3>Random Useful Librarires</h3>
+    <ul>
+      <li><strong>Lodash</strong> - JS convenience functions BUT a lot of these can be achieved effectively natively
+      </li>
+      <li><strong>RxJS</strong> - when a reactive library is needed (some frameworks/librarie, like React,already have
+        their own reactive patterns, so do not layer RxJS on top)</li>
+      <li><strong>Redux (maybe w/ Redux Toolkit)</strong> - for complex application state management</li>
+      <li><strong>Immer</strong> - convenience for immutable state management/updates</li>
+      <li><strong>Day.js</strong> - date/timestamp management</li>
+      <li><strong>Zod</strong> - schema validation and runtime type checking</li>
+      <li><strong>Chart.js (D3 if lots of customization required)</strong> - for rendering charts</li>
+      <li><strong>Express</strong> - Node backend routing</li>
+      <li><strong>Mapbox GL (or Maplibre GL for OSS)</strong> - Displaying maps</li>
+      <li><strong>Axios</strong> - making HTTP requests (not really necessary anymore unless you
+        can't use Node 18+, which supports <code>fetch</code> API, or you just want to not write/find
+        your own wrappers)</li>
+      <li><strong>Tailwind / CSSModules</strong> - CSS organizational libraries (some prefer to just use vanilla CSS or
+        CC-in-JS)</li>
+    </ul>
+  </section>
+
+  <h2>Transformation (??? -> JS/CSS/HTML)</h2>
+  <section>
+    <h3>Backporting Language Features</h3>
+    <p>Allow for using up-to-date JS/CSS features but for all browsers. A <dfn>polyfill</dfn> is generated that turns
+      modern JS/CSS into code that effectively reproduces the behavior (note: sometimes this may not performant).</p>
+    <ul>
+      <li>For JS: <strong>Babel</strong></li>
+      <li>For CSS: <strong>PostCSS</strong> (generates JS polyfill if older CSS cannot reproduce behavior)</li>
+    </ul>
+
+    <h3>Transpilers/Frameworks</h3>
+    <p>Allow for writing code that is not native, valid JS/CSS, but that generates into valid syntax that can be run in
+      the browser.</p>
+    <ul>
+      <li>For CSS: <strong>SCSS</strong> allows for more code-like operations (functions, substitutions (called mixins),
+        etc.) and convenient syntax that are not currently supported (or at least widely supported) in CSS.</li>
+      <li>For JS: <strong>Typescript</strong> is a superset of JS in that all JS is valid TS, but TS provides
+        type-safety during development but <em>not in the browser</em>. TS types are only for development and have no
+        resulting effect on the output JS.</li>
+      <li>For frameworks/libraries:
+        <ul>
+          <li>For new projects that can afford some growing pains: <strong>Svelte</strong> (possibly
+            with <strong>SvelteKit</strong>) ships smaller bundles, better performance in browser, and
+            good DX.</li>
+          <li>For standard projects: <strong>React</strong> (possibly with <strong>Next.js</strong>)
+            has the largest ecosystem and most developers have some knowledge of it.</li>
+          <li>For very large projects or legacy projects: <strong>Angular</strong> is an opinonated
+            framework with a lot of built-in tooling that allows for consistency across projects.</li>
+        </ul>
+      </li>
+    </ul>
+  </section>
+
+  <h2>Post-Development (Testing/Deployment)</h2>
+  <section>
+    <p>This part of development should ideally be as automated as possible.</p>
+
+    <h3>Testing</h3>
+    <ul>
+      <li>General scanning tools for web page issues: <strong>Lighthouse & webhint extensions.</strong></li>
+      <li>Unit testing: <strong>Vitest</strong> works out-of-the-box with Vite and supports
+        <dfn>ESM</dfn>, ECMAScript Modules. <small>NOTE: Some awareness of <strong>Jest</strong> is
+          good since it is more popular.</small>
+      </li>
+      <li>E2E testing: <strong>Playwright</strong> is relatively new but language agnostic.</li>
+    </ul>
+
+    <h3>CI/CD (Continuous Integration/Delivery/Deployment)</h3>
+    <p>For CI: <strong>GitHub Actions</strong> or (<strong>GitLab CI</strong> if hosting on GitLab)
+      is the closest to the repos and so easiest to integrate with git commits/merges.</p>
+    <p>For CD (also possibly for CI): <strong>whatever SAAS controls your deploys (Vercel/Azure/AWS/etc.)</strong></p>
+  </section>
+</body>
+
+</html>
