@@ -1,0 +1,22 @@
+{
+  "name": "package-manager-practice",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "precustom": "echo 'I run before'",
+    "custom": "echo 'I am a custom script'",
+    "postcustom": "echo 'I run after'",
+    "dev": "vite",
+    "build": "vite build",
+    "local": "vite preview"
+  },
+  "type": "module",
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "date-fns": "^3.3.1",
+    "vite": "^5.1.1"
+  }
+}
