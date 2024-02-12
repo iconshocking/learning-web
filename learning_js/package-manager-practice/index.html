@@ -4,13 +4,22 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Package Manager Practice</title>
+    <style>
+      li + li {
+        margin-top: 1rem;
+      }
+    </style>
   </head>
   <body>
     <script src="./index.js" type="module"></script>
     <h2>PNPM Useful Commands</h2>
     <ul>
-      <li><code>init</code></li>
-      <li><code>add</code></li>
+      <li><code>init</code>: create default <code>package.json</code></li>
+      <li><code>install</code>: install all dependencies listed in <code>package.json</code></li>
+      <li>
+        <code>add</code>: add dependency; add <code>-D</code> option to save only to
+        <code>devDependencies</code>
+      </li>
       <li>
         <code>update</code>: version numbers in pnpm config work as such: <code>^</code> up to the
         next major version, <code>~</code> means up to the next minor version, and no symbol means
