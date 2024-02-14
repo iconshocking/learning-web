@@ -137,6 +137,47 @@
           </ul>
         </li>
       </ul>
+
+      <h3>Non-Client-Side Frameworks</h3>
+      <ul>
+        <li>
+          <strong><dfn title="Content Management System">CMS</dfn></strong
+          >: good when content is simple, will be created mainly by non-programmers, and/or can fit
+          into certain templates with limited flexibility (sometimes referred to as
+          <dfn>WYSIWYG</dfn>, "what you see is what you get").
+          <p>
+            - There is a variant called <strong>Headless CMS</strong>, which is for content storage,
+            but replaces the presentation layer with an API that allows a different framework to
+            composit the page itself (require more programming language than monolithic CMS).
+          </p>
+          <p>Best options are dependent on non-technical users' requirements.</p>
+        </li>
+        <li>
+          <strong><dfn title="Server-Side Rendering">SSR</dfn></strong> frameworks: optimizes the
+          initial loading of the page (since content fetched is closer to the source, which avoids
+          DNS hops, and it avoids the initial round trip of downloading a stub HTML file) and best
+          supports SEO (since links are not easy to crawl via CSR apps rendered entirely via an
+          initial JS).
+          <p>
+            Common options are <strong>Next.js</strong> or <strong>Remix</strong> for React and
+            <strong>SvelteKit</strong> for Svelte.
+          </p>
+        </li>
+        <li>
+          <strong><dfn title="Static Site Generators">SSG</dfn></strong
+          >: via serving HTML that is generated at build time, it is good for content that is always
+          the same for all users and/or doesn't change often.
+          <p>Common options are <strong>Next.js</strong> and <strong>Astro</strong>.</p>
+        </li>
+        <li>
+          <strong><dfn title="Content Deliver Networks">CDN</dfn></strong
+          >: cache assets on distributed servers to serve to users as fast as possible.
+          <p>
+            Common options are <strong>Cloudflare</strong> and <strong>Cloudfront</strong> and some
+            larger S/IAAS products include this.
+          </p>
+        </li>
+      </ul>
     </section>
 
     <h2>Post-Development (Testing/Deployment)</h2>
