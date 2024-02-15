@@ -406,6 +406,10 @@
           <li>aria-setsize, aria-posinset</li>
             </code>
         </ul>
+        <p>NOTE: sometimes removing certain CSS properties for an element will cause the browser to
+        remove its default associated ARIA role (e.g., when setting <code>list-style: none</code>),
+        so set roles explicitly when there are significant CSS changes that might cause
+        accessibility roles to be stripped.</p>
       </li>
       <li><strong>Properties</strong> - Provide extra meaning/semantics (<code>aria-label, aria-labelledby</code>,
         etc.).
@@ -413,6 +417,7 @@
           <li><code>aria-owns, aria-controls</code>: relays relationship to another element when the
             DOM structure itself doesn't</li>
           <li><code>aria-expanded</code>: states whether nested elements should be considered currently accessible</li>
+          <li><code>aria-pressed</code>: signifies the state of a toggle button, which may only be clear visually otherwise</li>
         </ul>
       </li>
       <li><strong>States</strong> - Can change throughout the lifecycle of the page
