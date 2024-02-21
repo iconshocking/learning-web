@@ -20,16 +20,16 @@
             Initial Planning (determine important constraints)
             <ul>
               <li>
-                expected user base (should the page be flashy? just functional? what are
-                expectations?)
+                expected user base (should the page be flashy? just functional?
+                what are expectations?)
               </li>
               <li>
-                expected device/network capability (do we need to be planning around low network as
-                a primary use-case?)
+                expected device/network capability (do we need to be planning
+                around low network as a primary use-case?)
               </li>
               <li>
-                browser support range needed (how many versions back on popular browsers? IE11???
-                😱)
+                browser support range needed (how many versions back on popular
+                browsers? IE11??? 😱)
               </li>
             </ul>
           </li>
@@ -38,13 +38,14 @@
             <ul>
               <li>Focus on functionality first.</li>
               <li>
-                Accept some things won't work exactly the same between browsers (and communicate
-                these differences and the cost/time of bringing them more in line with each other to
-                stakeholders).
+                Accept some things won't work exactly the same between browsers
+                (and communicate these differences and the cost/time of bringing
+                them more in line with each other to stakeholders).
               </li>
               <li>
-                Do not do ALL tests on non-production assets. Make sure that validation of important
-                functionality will be done on the distributable actually being served to users.
+                Do not do ALL tests on non-production assets. Make sure that
+                validation of important functionality will be done on the
+                distributable actually being served to users.
               </li>
             </ul>
           </li>
@@ -57,10 +58,11 @@
                   <li>
                     Test in your usual development browser.
                     <p style="font-size: 0.9em">
-                      NOTE: Often a preview version is helpful to see if new bug fixes / features
-                      are coming out. <br /><br />
-                      An alternative strategy is to always use the browser with the most issues
-                      first, which is generally Safari now that IE is deprecated.
+                      NOTE: Often a preview version is helpful to see if new bug
+                      fixes / features are coming out. <br /><br />
+                      An alternative strategy is to always use the browser with
+                      the most issues first, which is generally Safari now that
+                      IE is deprecated.
                     </p>
                     <ul>
                       <li>Mobile-format first</li>
@@ -68,8 +70,12 @@
                     </ul>
                   </li>
                   <li>Test in other common browsers.</li>
-                  <li>Test on physical mobile device (Android & iOS if you can).</li>
-                  <li>Test accessibility (keyboard only, screen reader, etc.).</li>
+                  <li>
+                    Test on physical mobile device (Android & iOS if you can).
+                  </li>
+                  <li>
+                    Test accessibility (keyboard only, screen reader, etc.).
+                  </li>
                 </ol>
               </li>
               <li>
@@ -77,8 +83,8 @@
                 <ul>
                   <li>Perform automated E2E tests.</li>
                   <li>
-                    If needed, pay for a service (like BrowserStack) to perform some of the above
-                    (on real/simulated devices).
+                    If needed, pay for a service (like BrowserStack) to perform
+                    some of the above (on real/simulated devices).
                   </li>
                 </ul>
               </li>
@@ -88,16 +94,18 @@
             Fixes
             <ol>
               <li>
-                Try to repro the bug in a few browsers/versions to see if the bug is a browser
-                issue. If so, determine if the bug is fixed in the most recent version, and if it
-                isn't, file a bug report with with the pertinent browser.
+                Try to repro the bug in a few browsers/versions to see if the
+                bug is a browser issue. If so, determine if the bug is fixed in
+                the most recent version, and if it isn't, file a bug report with
+                with the pertinent browser.
               </li>
               <li>
-                If the bug is a browser issue, develop a workaround. If it is not, fix your own code
-                as necessary for priority and debugging/time cost.
+                If the bug is a browser issue, develop a workaround. If it is
+                not, fix your own code as necessary for priority and
+                debugging/time cost.
                 <p>
-                  NOTE: sometimes specific browsers require specific fixes that can be triggered via
-                  user agent detection.
+                  NOTE: sometimes specific browsers require specific fixes that
+                  can be triggered via user agent detection.
                 </p>
               </li>
             </ol>
@@ -110,10 +118,13 @@
         <p>Generally, support should be split into 3 tiers:</p>
         <ol style="list-style: upper-alpha">
           <li>Modern browsers - receive the full experience</li>
-          <li>Older/limited browsers - simplified, but still as good expereince as possible</li>
           <li>
-            Old browsers - don't test, but provide general enough fallbacks that site is still
-            usable
+            Older/limited browsers - simplified, but still as good expereince as
+            possible
+          </li>
+          <li>
+            Old browsers - don't test, but provide general enough fallbacks that
+            site is still usable
           </li>
         </ol>
 
@@ -121,16 +132,20 @@
         <ol>
           <li>Define expected regions and user profiles of importance</li>
           <li>
-            Get statistics about those expected regions / user profiles (such as via
+            Get statistics about those expected regions / user profiles (such as
+            via
             <a href="https://gs.statcounter.com/">Statcounter</a>)
           </li>
           <li>
             Set up your own analytics once the site is launched (such as via
-            <a href="https://marketingplatform.google.com/about/analytics/">Google Analytics</a>),
-            or retrieve analytics from another site your company already has.
+            <a href="https://marketingplatform.google.com/about/analytics/"
+              >Google Analytics</a
+            >), or retrieve analytics from another site your company already
+            has.
             <p>
-              NOTE: Test your browser on any browsers that you would expect more users for because
-              they might not be using the site if the site is broken for them.
+              NOTE: Test your browser on any browsers that you would expect more
+              users for because they might not be using the site if the site is
+              broken for them.
             </p>
           </li>
         </ol>
@@ -147,8 +162,9 @@
         </ul>
 
         <p>
-          Emulation via browser tools (or heavier tools) is usually enough for development, but a
-          final pass and/or suite of tests should be run on-device if possible.
+          Emulation via browser tools (or heavier tools) is usually enough for
+          development, but a final pass and/or suite of tests should be run
+          on-device if possible.
         </p>
 
         <p>Recommended physical devices for testing:</p>
@@ -158,43 +174,48 @@
         </ul>
 
         <p>
-          VMs can be useful for testing multiple OSes when you don't have the physical devices and
-          emulators are not an option, such as testing Edge on Windows.
+          VMs can be useful for testing multiple OSes when you don't have the
+          physical devices and emulators are not an option, such as testing Edge
+          on Windows.
         </p>
         <p>
-          (Note: Edge does not allow for multiple version installations, so you would need multiple
-          VMs to test multiple versions.)
+          (Note: Edge does not allow for multiple version installations, so you
+          would need multiple VMs to test multiple versions.)
         </p>
 
         <p>
-          Use a blank profile or a private browsing session when doing in-person testing to avoid
-          extensions, cookies, or caching from influencing testing.
+          Use a blank profile or a private browsing session when doing in-person
+          testing to avoid extensions, cookies, or caching from influencing
+          testing.
         </p>
       </section>
 
       <h2>General Tips</h2>
       <ul>
         <li>
-          (Very uncommon these days unless using very new elements) Provide HTML fallbacks for
-          unsupported elements
+          (Very uncommon these days unless using very new elements) Provide HTML
+          fallbacks for unsupported elements
         </li>
         <li>
-          Provide either CSS fallbacks for new values for properties OR feature queries to determine
-          branching rules
+          Provide either CSS fallbacks for new values for properties OR feature
+          queries to determine branching rules
           <p>
-            REMEMBER: ONLY use selectors with lacking support or vendor prefixes (though do not use
-            vendor-prefixes if at all possible) when they are by themselves or within a forgiving
-            selector, <code>:is()</code> or <code>:where()</code>.
+            REMEMBER: ONLY use selectors with lacking support or vendor prefixes
+            (though do not use vendor-prefixes if at all possible) when they are
+            by themselves or within a forgiving selector, <code>:is()</code> or
+            <code>:where()</code>.
           </p>
         </li>
         <li>
-          Libraries (and drop-in polyfills) can be used to easily handle cross-browser differences
-          automatically. You should gate loading these libraries/polyfills with feature detection.
+          Libraries (and drop-in polyfills) can be used to easily handle
+          cross-browser differences automatically. You should gate loading these
+          libraries/polyfills with feature detection.
         </li>
         <li>
-          You should NOT use vendor-prefixed JS objects in production code, but if you must, you can
-          define falbacks like
-          <pre>const AudioContext = window.AudioContext || window.webkitAudioContext;
+          You should NOT use vendor-prefixed JS objects in production code, but
+          if you must, you can define falbacks like
+          <pre>
+const AudioContext = window.AudioContext || window.webkitAudioContext;
 const audioCtx = new AudioContext();
           </pre>
         </li>

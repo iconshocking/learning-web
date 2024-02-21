@@ -2,7 +2,7 @@ body {
   background: #6c373f;
   display: flex;
   justify-content: center;
-  }
+}
 
 #alice-container {
   width: 90vh;

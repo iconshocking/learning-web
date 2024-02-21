@@ -5,8 +5,11 @@ self.addEventListener("install", (e) => {
   e.waitUntil(
     caches.open("video-store").then((cache) =>
       // fetches the responses and then adds them
-      cache.addAll(["/pages/offline/offline.html", "/pages/offline/offline.js"])
-    )
+      cache.addAll([
+        "/pages/offline/offline.html",
+        "/pages/offline/offline.js",
+      ]),
+    ),
   );
 });
 
@@ -14,5 +17,7 @@ self.addEventListener("install", (e) => {
 self.addEventListener("fetch", (e) => {
   console.log(e.request.url);
   // check cache for match or fetch from network
-  e.respondWith(caches.match(e.request).then((response) => response || fetch(e.request)));
+  e.respondWith(
+    caches.match(e.request).then((response) => response || fetch(e.request)),
+  );
 });

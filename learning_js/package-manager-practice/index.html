@@ -15,29 +15,37 @@
     <h2>PNPM Useful Commands</h2>
     <ul>
       <li><code>init</code>: create default <code>package.json</code></li>
-      <li><code>install</code>: install all dependencies listed in <code>package.json</code></li>
       <li>
-        <code>add</code>: add dependency; add <code>-D</code> option to save only to
+        <code>install</code>: install all dependencies listed in
+        <code>package.json</code>
+      </li>
+      <li>
+        <code>add</code>: add dependency; add <code>-D</code> option to save
+        only to
         <code>devDependencies</code>
       </li>
       <li>
-        <code>update</code>: version numbers in pnpm config work as such: <code>^</code> up to the
-        next major version, <code>~</code> means up to the next minor version, and no symbol means
-        the exact version
+        <code>update</code>: version numbers in pnpm config work as such:
+        <code>^</code> up to the next major version, <code>~</code> means up to
+        the next minor version, and no symbol means the exact version
       </li>
       <li><code>audit</code>: check for vulnerabilities</li>
       <li>
-        <code>ls [dependency]</code>: describe dependencies and any transitive dependencies (add
-        <code>--depth</code> option to see transitive deps); call just <code>ls</code> to run the
-        command on the project
+        <code>ls [dependency]</code>: describe dependencies and any transitive
+        dependencies (add <code>--depth</code> option to see transitive deps);
+        call just <code>ls</code> to run the command on the project
       </li>
-      <li><code>run [script-name]</code>: (can exclude script name to list all scripts instead)</li>
+      <li>
+        <code>run [script-name]</code>: (can exclude script name to list all
+        scripts instead)
+      </li>
     </ul>
 
     <h2>Package Manager Scripts</h2>
     <p>
-      Define any script in <code>scripts</code> inside <code>package.json</code> to be able to
-      invoke it via <code>pnpm run [script-name]</code>
+      Define any script in <code>scripts</code> inside
+      <code>package.json</code> to be able to invoke it via
+      <code>pnpm run [script-name]</code>
     </p>
   </body>
 </html>

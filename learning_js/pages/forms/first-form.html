@@ -1,139 +1,146 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <style>
+      /* PROVIDED STYLING START */
 
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Document</title>
-  <style>
-    /* PROVIDED STYLING START */
+      form {
+        /* Center the form on the page */
+        margin: 0 auto;
+        width: 400px;
+        /* Form outline */
+        padding: 1em;
+        border: 1px solid #ccc;
+        border-radius: 1em;
+      }
 
-    form {
-      /* Center the form on the page */
-      margin: 0 auto;
-      width: 400px;
-      /* Form outline */
-      padding: 1em;
-      border: 1px solid #ccc;
-      border-radius: 1em;
-    }
+      ul {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+      }
 
-    ul {
-      list-style: none;
-      padding: 0;
-      margin: 0;
-    }
+      form li + li {
+        margin-top: 1em;
+      }
 
-    form li+li {
-      margin-top: 1em;
-    }
+      label {
+        /* Uniform size & alignment */
+        display: inline-block;
+        width: 90px;
+        text-align: right;
+      }
 
-    label {
-      /* Uniform size & alignment */
-      display: inline-block;
-      width: 90px;
-      text-align: right;
-    }
-
-    input,
-    textarea {
-      /* To make sure that all text fields have the same font settings
+      input,
+      textarea {
+        /* To make sure that all text fields have the same font settings
      By default, textareas have a monospace font */
-      font: 1em sans-serif;
+        font: 1em sans-serif;
 
-      /* Uniform text field size */
-      width: 300px;
-      box-sizing: border-box;
+        /* Uniform text field size */
+        width: 300px;
+        box-sizing: border-box;
 
-      /* Match form field borders */
-      border: 1px solid #999;
-    }
+        /* Match form field borders */
+        border: 1px solid #999;
+      }
 
-    input:focus,
-    textarea:focus {
-      /* Additional highlight for focused elements */
-      border-color: #000;
-    }
+      input:focus,
+      textarea:focus {
+        /* Additional highlight for focused elements */
+        border-color: #000;
+      }
 
-    textarea {
-      /* Align multiline text fields with their labels */
-      vertical-align: top;
+      textarea {
+        /* Align multiline text fields with their labels */
+        vertical-align: top;
 
-      /* Provide space to type some text */
-      height: 5em;
-    }
+        /* Provide space to type some text */
+        height: 5em;
+      }
 
-    .button {
-      /* Align buttons with the text fields */
-      padding-left: 90px;
-      /* same size as the label elements */
-    }
+      .button {
+        /* Align buttons with the text fields */
+        padding-left: 90px;
+        /* same size as the label elements */
+      }
 
-    button {
-      /* This extra margin represent roughly the same space as the space
+      button {
+        /* This extra margin represent roughly the same space as the space
      between the labels and their text fields */
-      margin-left: 0.5em;
-    }
+        margin-left: 0.5em;
+      }
 
-    /* PROVIDED STYLING END */
-  </style>
-</head>
+      /* PROVIDED STYLING END */
+    </style>
+  </head>
 
-<body>
-  <!-- action is the URL for data submission - remember that ./ is current dirctory where / is the origin -->
-  <!-- providing a nonexistent URL that hits our service worker -->
-  <form action="./non-existent" method="post" id="primary-form" style="border: 1px gray dotted;">
-    Form
-    <ul>
-      <li>
-        <!-- label element provides: 1) click forwarding to the input and 2) accessibility text -->
-        <label for="name">Name:</label>
-        <!-- input is a void element, so setting/reading .textContent / text nodes must use the value attribute instead -->
-        <input type="text" id="name" name="user_name" value="default value" />
-      </li>
-      <li>
-        <label for="mail">Email:</label>
-        <!-- name defines the property key for the associated value in the form submission data -->
-        <input type="email" id="mail" name="user_email" />
-      </li>
-      <li>
-        <label for="msg">Message:</label>
-        <!-- textareas are simple multi-line inputs essentially -->
-        <!-- not a void element, so can handle standard text operations -->
-        <textarea id="msg" name="user_message">
+  <body>
+    <!-- action is the URL for data submission - remember that ./ is current dirctory where / is the origin -->
+    <!-- providing a nonexistent URL that hits our service worker -->
+    <form
+      action="./non-existent"
+      method="post"
+      id="primary-form"
+      style="border: 1px gray dotted"
+    >
+      Form
+      <ul>
+        <li>
+          <!-- label element provides: 1) click forwarding to the input and 2) accessibility text -->
+          <label for="name">Name:</label>
+          <!-- input is a void element, so setting/reading .textContent / text nodes must use the value attribute instead -->
+          <input type="text" id="name" name="user_name" value="default value" />
+        </li>
+        <li>
+          <label for="mail">Email:</label>
+          <!-- name defines the property key for the associated value in the form submission data -->
+          <input type="email" id="mail" name="user_email" />
+        </li>
+        <li>
+          <label for="msg">Message:</label>
+          <!-- textareas are simple multi-line inputs essentially -->
+          <!-- not a void element, so can handle standard text operations -->
+          <textarea id="msg" name="user_message">
           <!-- all content inside a textarea renders as a string, including elements and comments, and indents -->
           <p>renders as text</p>
           default value
-        </textarea>
-      </li>
-      <li class="button">
-        <!-- type values:
+        </textarea
+          >
+        </li>
+        <li class="button">
+          <!-- type values:
           - "submit" (default - does nothing if not associated with a form)
           - "reset" (clears all form elements (requires associated form) - generally avoid this type)
           - "button" (no default behavior) -->
-        <button type="submit">Submit from within form</button>
-        <!-- following also work, but only supports plain text and styling, so generally not preferred over a button -->
-        <!-- <input type="submit"> -->
-      </li>
-    </ul>
-  </form>
-  <!-- buttons default to inline, so set display properly when centering -->
-  <button type="submit" form="primary-form" style="display: block; margin: 0 auto; width: fit-content;">
-    Submit from outside form
-  </button>
-</body>
+          <button type="submit">Submit from within form</button>
+          <!-- following also work, but only supports plain text and styling, so generally not preferred over a button -->
+          <!-- <input type="submit"> -->
+        </li>
+      </ul>
+    </form>
+    <!-- buttons default to inline, so set display properly when centering -->
+    <button
+      type="submit"
+      form="primary-form"
+      style="display: block; margin: 0 auto; width: fit-content"
+    >
+      Submit from outside form
+    </button>
+  </body>
 
-<script>
-  if ("serviceWorker" in navigator) {
-    // service worker registrations last forever, but the service worker thread will be ended upon navigating away from the origin
-    // (unless the service worker is in use by other pages)
-    navigator.serviceWorker
-      // service workers can have a reduced scope via options parameter, but it cannot be higher than the directory the file is in
-      // (can only be done with 'service-worker-allowed' header)
-      .register("/pages/forms/first-form-worker.js") // URL is relative to origin, not this script's file location
-      .then(() => console.log("Service Worker Registered"));
-  }
-
-</script>
-
+  <script>
+    if ("serviceWorker" in navigator) {
+      // service worker registrations last forever, but the service worker thread will be ended upon navigating away from the origin
+      // (unless the service worker is in use by other pages)
+      navigator.serviceWorker
+        // service workers can have a reduced scope via options parameter, but it cannot be higher than the directory the file is in
+        // (can only be done with 'service-worker-allowed' header)
+        .register("/pages/forms/first-form-worker.js") // URL is relative to origin, not this script's file location
+        .then(() => console.log("Service Worker Registered"));
+    }
+  </script>
 </html>

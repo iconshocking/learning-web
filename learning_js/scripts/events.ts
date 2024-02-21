@@ -11,7 +11,9 @@ function randomBackground() {
 
 const abortController = new AbortController();
 
-btn?.addEventListener("click", randomBackground, { signal: abortController.signal });
+btn?.addEventListener("click", randomBackground, {
+  signal: abortController.signal,
+});
 btn?.addEventListener(
   "click",
   () => {
@@ -22,7 +24,7 @@ btn?.addEventListener(
   },
   {
     signal: abortController.signal,
-  }
+  },
 );
 
 btn?.addEventListener(
@@ -31,14 +33,14 @@ btn?.addEventListener(
     const rndCol = `rgb(${random(255)}, ${random(255)}, ${random(255)})`;
     btn.style.backgroundColor = rndCol;
   },
-  { signal: abortController.signal }
+  { signal: abortController.signal },
 );
 btn?.addEventListener(
   "mouseout",
   () => {
     btn.style.backgroundColor = "revert";
   },
-  { signal: abortController.signal }
+  { signal: abortController.signal },
 );
 
 const removeBtn = document.querySelector(".remove") as HTMLButtonElement;
@@ -111,14 +113,16 @@ try {
   };
 
   window.addEventListener("test" as any, () => {}, options);
-  window.removeEventListener("test" as any, () => {}, { capture: options.capture });
+  window.removeEventListener("test" as any, () => {}, {
+    capture: options.capture,
+  });
 } catch (err) {
   passiveSupported = false;
 }
 extra?.addEventListener(
   "mouseup",
   () => console.log(`Passive supported: ${passiveSupported}`),
-  passiveSupported ? { passive: true } : false
+  passiveSupported ? { passive: true } : false,
 );
 
 // Getting data into an event listener using "this"
@@ -128,7 +132,7 @@ extra?.addEventListener(
   function (this: string) {
     // Expected Value: 'Data'
     console.log("this =", this);
-  }.bind(someString)
+  }.bind(someString),
 );
 // Using an outer scope variable captured by a closure or an object works as well
 

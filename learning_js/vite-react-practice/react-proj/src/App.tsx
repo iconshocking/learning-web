@@ -46,10 +46,22 @@ function App() {
     <>
       <div>
         <a href="https://vitejs.dev">
-          <img src={viteLogo} className="logo" alt="Vite logo" height="24px" width="24px" />
+          <img
+            src={viteLogo}
+            className="logo"
+            alt="Vite logo"
+            height="24px"
+            width="24px"
+          />
         </a>
         <a href="https://react.dev">
-          <img src={reactLogo} className="logo react" alt="React logo" height="24px" width="24px" />
+          <img
+            src={reactLogo}
+            className="logo react"
+            alt="React logo"
+            height="24px"
+            width="24px"
+          />
         </a>
       </div>
       {/* using && vs ? avoids needing to stub in a false case everytime */}
@@ -67,10 +79,11 @@ function App() {
       </p>
 
       <p>
-        CSS import of <code>App.css</code> and <code>index.css</code> doesn't import anything for JS
-        code, but it allows Vite to crawl for which CSS files are referenced via JS (or other CSS)
-        reachable via site entry points (default is <code>index.html</code> only).{" "}
-        <code>dummy.css</code> is not inlcuded in the final <code>dist</code> CSS file because it is
+        CSS import of <code>App.css</code> and <code>index.css</code> doesn't
+        import anything for JS code, but it allows Vite to crawl for which CSS
+        files are referenced via JS (or other CSS) reachable via site entry
+        points (default is <code>index.html</code> only). <code>dummy.css</code>{" "}
+        is not inlcuded in the final <code>dist</code> CSS file because it is
         not imported or linked by any file.
       </p>
 
@@ -86,15 +99,15 @@ function App() {
           <code>htmlFor</code> instead of <code>for</code> (when using labels)
         </li>
         <li>
-          <code>on[Event]</code> instead of <code>on[event]</code> (which adds an event listener
-          instead of setting the attribute in HTML)
+          <code>on[Event]</code> instead of <code>on[event]</code> (which adds
+          an event listener instead of setting the attribute in HTML)
         </li>
       </ul>
 
       <h3>List rendering</h3>
       <p style={{ backgroundColor: "red" }}>
-        Aleays remember to provide iterated components with <code>key</code> properties, so React
-        can optimize re-rendering.
+        Aleays remember to provide iterated components with <code>key</code>{" "}
+        properties, so React can optimize re-rendering.
       </p>
       <div style={{ backgroundColor: "navy" }}>
         {["jeff", "jim", "joe"].map((name, index) => (
@@ -103,35 +116,42 @@ function App() {
       </div>
 
       <h3>Conditional rendering</h3>
-      <SubButton text="Click me to change title" onClick={setNewTitle}></SubButton>
+      <SubButton
+        text="Click me to change title"
+        onClick={setNewTitle}
+      ></SubButton>
       <SubButton
         text={`Click me to ${titleHidden ? "show" : "hide"} title!`}
         onClick={toggleTitleHidden}
       ></SubButton>
 
       <p>
-        Also remember that HTML can keep track of some button states automatically without React
-        setting any state changes, so always make sure to set click/change listeners on buttons if
-        they are keeping track of state.
+        Also remember that HTML can keep track of some button states
+        automatically without React setting any state changes, so always make
+        sure to set click/change listeners on buttons if they are keeping track
+        of state.
       </p>
 
       <h3>Focus Accessibility</h3>
       <p>
-        Always make sure that focus is accounted for when conditionally rendering elements since it
-        can be confusing when either
+        Always make sure that focus is accounted for when conditionally
+        rendering elements since it can be confusing when either
       </p>
       <ol>
-        <li>focus jumps to a random element after a focused element is hidden</li>
         <li>
-          of focus does not move at all or not to the logical place after an element has become
-          visible
+          focus jumps to a random element after a focused element is hidden
+        </li>
+        <li>
+          of focus does not move at all or not to the logical place after an
+          element has become visible
         </li>
       </ol>
 
       <p>
-        Additionally, test focus changes when navigating a SPA because unlike a standard HTML page,
-        where navigating moves focus to the top of the page (specifically the <code>body</code>),
-        focus (AND history) are not changed at all in SPA navigation by default.
+        Additionally, test focus changes when navigating a SPA because unlike a
+        standard HTML page, where navigating moves focus to the top of the page
+        (specifically the <code>body</code>), focus (AND history) are not
+        changed at all in SPA navigation by default.
       </p>
       {!inputHidden && (
         <label htmlFor="hideable">
@@ -153,7 +173,10 @@ function SubComponent(props: { id: string; name: string }) {
   return <p id={props.id}>I'm a component with name {props.name}!</p>;
 }
 
-function SubButton(props: { text: string; onClick: (clickCount: number) => void }) {
+function SubButton(props: {
+  text: string;
+  onClick: (clickCount: number) => void;
+}) {
   const [count, setCount] = useState(0);
 
   return (

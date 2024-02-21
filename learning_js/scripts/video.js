@@ -107,6 +107,7 @@ function setTime() {
   const mediaTime = `${minuteValue}:${secondValue}`;
   timer.textContent = mediaTime;
 
-  const barLength = timerWrapper.clientWidth * (media.currentTime / media.duration);
+  const barLength =
+    timerWrapper.clientWidth * (media.currentTime / media.duration);
   timerBar.style.width = `${barLength}px`;
 }

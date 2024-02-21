@@ -153,7 +153,7 @@ while (balls.length < 25) {
     _random(-7, 7),
     _random(-7, 7),
     randomRGB(),
-    size
+    size,
   );
 
   balls.push(ball);

@@ -98,7 +98,9 @@ function degToRad(degrees) {
   // do not draw image until it is loaded
   // arguments are image, crop start x, crop start y, crop width, crop height,
   // canvas start x, canvas start y, canvas paste width, canvas paste height
-  image.addEventListener("load", () => ctx.drawImage(image, 20, 20, 250, 250, 50, 50, 1200, 400));
+  image.addEventListener("load", () =>
+    ctx.drawImage(image, 20, 20, 250, 250, 50, 50, 1200, 400),
+  );
 }
 
 {

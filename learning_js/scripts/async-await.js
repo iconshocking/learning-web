@@ -57,7 +57,7 @@ console.log(
     setTimeout(() => {
       resolve(10);
     }, 200);
-  })
+  }),
 );
 // 2. a thenable that is not a promise is converted to one via `new Promise((resolve, _) => thenable.then(resolve))`
 console.log(
@@ -65,7 +65,7 @@ console.log(
     then(resolve, _reject) {
       resolve("resolved!");
     },
-  }
+  },
 );
 // 3. a non-thenable is wrapped in a fulfilled promise
 let obj = {};
@@ -83,7 +83,7 @@ async function f4() {
     const zz = await Promise.resolve(
       (() => {
         throw new Error("synchronous error");
-      })()
+      })(),
     );
   } catch (e) {
     console.error(e.message);

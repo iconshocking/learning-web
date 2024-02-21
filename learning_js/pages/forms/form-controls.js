@@ -2,7 +2,9 @@ function toggleVisiblity(e) {
   e.target.nextElementSibling.classList.toggle("hidden");
 }
 
-document.querySelector(".collapsable").addEventListener("click", toggleVisiblity);
+document
+  .querySelector(".collapsable")
+  .addEventListener("click", toggleVisiblity);
 
 const uploadEl = document.querySelector("#image_uploads");
 const previewEl = document.querySelector(".preview");

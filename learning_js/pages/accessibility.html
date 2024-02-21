@@ -1,477 +1,586 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Accessibility</title>
+    <style>
+      p {
+        margin-bottom: 0.5rem;
 
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Accessibility</title>
-  <style>
-    p {
-      margin-bottom: 0.5rem;
+        + p {
+          margin-top: 1rem;
+        }
 
-      +p {
-        margin-top: 1rem;
+        li > & {
+          margin-top: 0.5rem;
+        }
       }
 
-      li>& {
+      body > h2 {
+        margin-top: 3rem;
+        text-decoration: dashed underline black 2px;
+        text-underline-offset: 0.25em;
+
+        + h3 {
+          margin-top: 1.5rem;
+        }
+      }
+
+      h3 {
+        margin-top: 2.5rem;
+      }
+
+      ul,
+      ol {
+        position: relative;
+
+        > span {
+          display: inline-block;
+          margin-left: -2.5rem;
+          margin-bottom: 0.5rem;
+        }
+      }
+
+      li + li {
         margin-top: 0.5rem;
       }
-    }
+    </style>
+  </head>
 
-    body>h2 {
-      margin-top: 3rem;
-      text-decoration: dashed underline black 2px;
-      text-underline-offset: 0.25em;
+  <body>
+    <h1>Accessibility</h1>
+    <h2>Types of Accessibility</h2>
+    <ul>
+      <li>
+        <p>
+          Visual impairment (screen readers, make sure non-sighted users made aware of content
+          updating)
+        </p>
+      </li>
+      <li>
+        <p>Audio impairment (textual descriptions/captions for any video/audio content)</p>
+      </li>
+      <li>
+        <p>
+          Mobility impairment (site navigable by only keyboard (in addition to mouse and touch))
+        </p>
+      </li>
+      <li>
+        <p>
+          Cognitive impairment (make things clear, consistent, and familiar - which is good for
+          every user)
+        </p>
+        <ul>
+          <li>
+            <p>Deliver content in more than one way, such as by text-to-speech or by video.</p>
+          </li>
+          <li>
+            <p>
+              Ensure easily understood content, such as text written using plain-language standards.
+            </p>
+          </li>
+          <li>
+            <p>Focus attention on important content.</p>
+          </li>
+          <li>
+            <p>Minimize distractions, such as unnecessary content or advertisements.</p>
+          </li>
+          <li>
+            <p>Maintain consistent webpage layout and navigation.</p>
+          </li>
+          <li>
+            <p>
+              Use familiar elements, such as underlined links blue when not visited and purple when
+              visited.
+            </p>
+          </li>
+          <li>
+            <p>Divide processes into logical, essential steps with progress indicators.</p>
+          </li>
+          <li>
+            <p>Make website authentication as easy as possible without compromising security.</p>
+          </li>
+          <li>
+            <p>
+              Ensure forms are easy to complete, such as with clear error messages and simple error
+              recovery.
+            </p>
+          </li>
+        </ul>
+      </li>
+    </ul>
 
-      +h3 {
-        margin-top: 1.5rem;
-      }
-    }
+    <h2>HTML Accessibility</h2>
+    <h3>POSH (Plain Old Semantic HTML)</h3>
+    <section>
+      <p>
+        Use semantically releveant elements for the content/operation they are for (not styled divs,
+        etc.)
+      </p>
+      <ol>
+        <li>Easier to develop with (functionality for free)</li>
+        <li>Better on mobile (simpler and clearer to maintain)</li>
+        <li>
+          Good for SEO (greater weight is given to keywords inside headers, links, buttons, etc.)
+        </li>
+      </ol>
+      <h4>Example HTML:</h4>
+      <section>
+        <div style="border: solid black 2px">
+          <code style="white-space: pre-line"
+            >&lt;h1&gt;My heading&lt;/h1&gt; &lt;p&gt;This is the first section of my
+            document.&lt;/p&gt; &lt;p&gt;I'll add another paragraph here too.&lt;/p&gt; &lt;ol&gt;
+            &lt;li&gt;Here is&lt;/li&gt; &lt;li&gt;a list for&lt;/li&gt; &lt;li&gt;you to
+            read&lt;/li&gt; &lt;/ol&gt; &lt;h2&gt;My subheading&lt;/h2&gt; &lt;p&gt; This is the
+            first subsection of my document. I'd love people to be able to find this content!
+            &lt;/p&gt; &lt;h2&gt;My 2nd subheading&lt;/h2&gt; &lt;p&gt; This is the second
+            subsection of my content, which I think is more interesting than the last one.
+            &lt;/p&gt;
+          </code>
+        </div>
+        <p>
+          Note the lack of &lt;/br&gt; tags. These should only be used to denote line break within
+          what should be considered a single unit of text, like a poem or an address. Generally use
+          &lt;p&gt; elements with bottom margins instead.
+        </p>
+      </section>
 
-    h3 {
-      margin-top: 2.5rem;
-    }
+      <h4>Example rendered:</h4>
+      <section style="border: solid black 2px">
+        <h1>My heading</h1>
 
-    ul,
-    ol {
-      position: relative;
+        <p>This is the first section of my document.</p>
 
-      >span {
-        display: inline-block;
-        margin-left: -2.5rem;
-        margin-bottom: 0.5rem;
-      }
-    }
+        <p>I'll add another paragraph here too.</p>
 
-    li+li {
-      margin-top: 0.5rem;
-    }
-  </style>
-</head>
+        <ol>
+          <li>Here is</li>
+          <li>a list for</li>
+          <li>you to read</li>
+        </ol>
 
-<body>
-  <h1>Accessibility</h1>
-  <h2>Types of Accessibility</h2>
-  <ul>
-    <li>
-      <p>Visual impairment (screen readers, make sure non-sighted users made aware of content updating)</p>
-    </li>
-    <li>
-      <p>Audio impairment (textual descriptions/captions for any video/audio content)</p>
-    </li>
-    <li>
-      <p>Mobility impairment (site navigable by only keyboard (in addition to mouse and touch))</p>
-    </li>
-    <li>
-      <p>Cognitive impairment (make things clear, consistent, and familiar - which is good for every user)</p>
+        <h2>My subheading</h2>
+
+        <p>
+          This is the first subsection of my document. I'd love people to be able to find this
+          content!
+        </p>
+
+        <h2>My 2nd subheading</h2>
+
+        <p>
+          This is the second subsection of my content, which I think is more interesting than the
+          last one.
+        </p>
+      </section>
+
+      <h3>Clear language</h3>
+      <ul>
+        <li>Don't use dashes when possible ('5 to 7', not '5-7')</li>
+        <li>Expand abbreviations</li>
+        <li>Expand acronyms and/or use &lt;abbr&gt;&lt;/abbr&gt; elements</li>
+      </ul>
+
+      <h3>HTML Structure</h3>
+      <section>
+        <p>
+          The order and choice of elements in the HTML structure should make it easy to understand
+          the structure of the page. Design should be done via CSS whereas HTML should not focus on
+          where things render.
+        </p>
+
+        <p>
+          For example: tables should use <code>&lt;th&gt;</code> elements with the
+          <code>scope</code> attribute in order to allow non-sighted users to know which table cells
+          are actually headers
+        </p>
+      </section>
+
+      <h3>Interactive Elements</h3>
+      <section></section>
+      <p>
+        Standard interactive elements are keyboard accessible by default (links, buttons, inputs,
+        other form fields). Do not forego using these elements; style around them. If you really
+        must, the following are useful:
+      </p>
       <ul>
         <li>
-          <p>Deliver content in more than one way, such as by text-to-speech or by video.</p>
+          <p><code>tabindex="0"</code> makes a normally non-focusable element focusable</p>
         </li>
         <li>
-          <p>Ensure easily understood content, such as text written using plain-language standards.</p>
+          <p>
+            <code>tabindex="-1"</code>makes a normally non-focusable element to be able to receive
+            focus programmatically (maybe useful for an error view)
+          </p>
         </li>
         <li>
-          <p>Focus attention on important content.</p>
-        </li>
-        <li>
-          <p>Minimize distractions, such as unnecessary content or advertisements.</p>
-        </li>
-        <li>
-          <p>Maintain consistent webpage layout and navigation.</p>
-        </li>
-        <li>
-          <p>Use familiar elements, such as underlined links blue when not visited and purple when visited.</p>
-        </li>
-        <li>
-          <p>Divide processes into logical, essential steps with progress indicators.</p>
-        </li>
-        <li>
-          <p>Make website authentication as easy as possible without compromising security.</p>
-        </li>
-        <li>
-          <p>Ensure forms are easy to complete, such as with clear error messages and simple error recovery.</p>
+          Any other value of <code>tabindex</code> is not recommended since it changes tab
+          navigation order, which can be confusing and goes against HTML order clarity
         </li>
       </ul>
-    </li>
-  </ul>
-  </li>
-  </ul>
 
-  <h2>HTML Accessibility</h2>
-  <h3>POSH (Plain Old Semantic HTML)</h3>
-  <section>
-    <p>Use semantically releveant elements for the content/operation they are for (not styled divs, etc.)</p>
-    <ol>
-      <li>Easier to develop with (functionality for free)</li>
-      <li>Better on mobile (simpler and clearer to maintain)</li>
-      <li>Good for SEO (greater weight is given to keywords inside headers, links, buttons, etc.)</li>
-    </ol>
-    <h4>Example HTML:</h4>
-    <section>
-      <div style="border: solid black 2px;">
-        <code style="white-space: pre-line;">&lt;h1&gt;My heading&lt;/h1&gt;
-      
-      &lt;p&gt;This is the first section of my document.&lt;/p&gt;
-      
-      &lt;p&gt;I'll add another paragraph here too.&lt;/p&gt;
-      
-      &lt;ol&gt;
-        &lt;li&gt;Here is&lt;/li&gt;
-        &lt;li&gt;a list for&lt;/li&gt;
-        &lt;li&gt;you to read&lt;/li&gt;
-      &lt;/ol&gt;
-      
-      &lt;h2&gt;My subheading&lt;/h2&gt;
-      
-      &lt;p&gt;
-        This is the first subsection of my document. I'd love people to be able to
-        find this content!
-      &lt;/p&gt;
-      
-      &lt;h2&gt;My 2nd subheading&lt;/h2&gt;
-      
-      &lt;p&gt;
-        This is the second subsection of my content, which I think is more interesting
-        than the last one.
-      &lt;/p&gt;
-      </code>
-      </div>
-      <p>Note the lack of &lt;/br&gt; tags. These should only be used to denote line break within
-        what should be considered a single unit of text, like a poem or an address. Generally use
-        &lt;p&gt; elements with bottom margins instead.
+      <p>ALWAYS make sure an interactive element is tab-accessible.</p>
+
+      <h3>Labels that Don't Require Context</h3>
+      <section>
+        <div style="border: solid black 2px">
+          <h4 style="margin-top: 0.5rem">Good Label</h4>
+          <code style="white-space: pre-line"
+            >&lt;p&gt; Whales are really awesome creatures. &lt;a href="whales.html"&gt;Find out
+            more about whales&lt;/a&gt;. &lt;/p&gt;
+          </code>
+          <h4>Bad Label</h4>
+          <code style="white-space: pre-line"
+            >&lt;p&gt; Whales are really awesome creatures. To find out more about whales, &lt;a
+            href="whales.html"&gt;click here&lt;/a&gt;. &lt;/p&gt;
+          </code>
+        </div>
+
+        <p><code>aria-label/labelledby</code> should only be used as a last resort.</p>
+
+        <p>
+          If additional description is desired, <code>aria-describedby</code> (in conjunction with a
+          visually-hidden element) will add additional read-out after all other label text and
+          role/input types.
+        </p>
+
+        <p>
+          Note: <code>placeholder</code> attribute for inputs is not always read by screen readers,
+          so make sure the information is conveyed in some other way as well.
+        </p>
+
+        <p>
+          Note: Firefox Accessibility Inspector is useful for checking for these sorts of labeling
+          issues because there is a 'Check for issues' functionality.
+        </p>
+      </section>
+
+      <h3>Image Labels</h3>
+      <section>
+        <p>
+          <code>img</code> elements should always include the <code>alt</code> attribute to describe
+          anything important about the image that only sighted users would be able to know.
+          <code>title</code> should be used only for extra contextual information.
+        </p>
+
+        <p>
+          If a text description of an image is intended for all users, use
+          <code>&lt;figure&gt;</code> with a nested <code>&lt;figcaption&gt;</code>.
+        </p>
+
+        <h4>Empt alt attribute</h4>
+        <p>
+          If an image is purely decorative (and requires HTML-inclusion instead of via CSS), then
+          set <code>alt=""</code> to prevent screen readers from reading out the URL of the image.
+        </p>
+      </section>
+
+      <h3>Video Controls</h3>
+      <p>
+        Native HTML5 video controls are inconsistent and not always tabbable, depending on the
+        browser, so setting up your own UI with simple buttons will usually be enough to make the
+        video reasonably accessible.
+      </p>
+
+      <h3>Audio Transcripts</h3>
+      <p>
+        All audio should have accompanying transcripts, whether through another service, like an
+        embdedded 3rd-party video player, or your own custom interface (a show/hide transcript - or
+        an external link - works if you do not have the ability to sync the transcript to an
+        accompanying visual medium)
+      </p>
+
+      <p>
+        Video text tracks can be implemented by including a WebVTT file in your HTML like so:
+        <code style="white-space: pre; display: block">
+          &lt;video controls&gt; &lt;source src="example.mp4" type="video/mp4" /&gt; &lt;source
+          src="example.webm" type="video/webm" /&gt; &lt;track kind="subtitles"
+          src="subtitles_en.vtt" srclang="en" /&gt; &lt;/video&gt;</code
+        >
+      </p>
+
+      <p>Note: Text tracks can help with SEO since text is keyword-able, unlike media.</p>
+
+      <h3>Links</h3>
+      <p>
+        Links should have high contrast from the background color and non-linking text. It is also
+        good to signify visually in other ways, such as the standard underline, that a link is a
+        link.
+      </p>
+
+      <p>
+        Also do not repurpose <code>a</code> elements to be buttons that do not perform navigations.
+      </p>
+
+      <p>
+        <strong>Non-HTML links</strong> should mention the filetype that they will be downloading
+        (PDF, etc.), so that expected behavior is clear upon activating the link.
+      </p>
+
+      <p>
+        <strong>Links opening in new tabs</strong> should have a visual indication (like an icon or
+        actual text) and, if using visual indication with no accessible description, also include a
+        non-visible accessible description (an offscreen span, etc.)
+      </p>
+
+      <p>
+        <strong>Skip links</strong> are helpful links at the top of the page that can either be
+        visible or hidden until focused, at which point becoming prominently visible, (to account
+        for mobility-impaired users) that navigate directly to the main content of the page,
+        skipping any headers, navs, etc.
+      </p>
+
+      <h3>Interactive Elements Proximity (Leaving Space)</h3>
+      <p>
+        Interactive elements that are too close together, such as articles in a feed with no space
+        in between, make it difficult to navigate for people with tremors, such as when scrolling on
+        mobile. Add appreciable margins between interactive content and/or provide a way for the
+        user to turn on a consistent scrollbar.
+      </p>
+
+      <h3>Mobile Accessibility</h3>
+      <p>Tools: TalkBack on Android & VoiceOver on iOS.</p>
+
+      <p>
+        <em>NEVER</em> set <code>user-scalable=yes</code> in your HTML meta tag since zooming is
+        necessary for many users with vision or motor impairments
       </p>
     </section>
 
-    <h4>Example rendered:</h4>
-    <section style="border: solid black 2px;">
-      <h1>My heading</h1>
+    <h2>CSS Accessibility</h2>
+    <section>
+      <ul>
+        <li>Headers should look like headers.</li>
+        <li>
+          <em>Emphasized</em> and/or <strong>bold</strong> text have standard conventionss, so don't
+          alter them too much.
+        </li>
+        <li>
+          <abbr title="acronyms">ACRONYMS</abbr> have a standard dotted underline (when given a
+          title), so do not venture far from that styling.
+        </li>
+        <li>
+          <a href="#">Links</a> should always have a default, visited/focus/hover, and active state
+          styling if you are overriding.
+        </li>
+        <li>
+          Table headers should be prominent (usually bold), and zebra striping can make rows easier
+          to distinguish.
+        </li>
+        <li>
+          Color should be high contrast (also improves visiblity in sunlight) and should never be
+          the sole source of information (include symbols or description).
+        </li>
+        <li>
+          Hidden visual elements (such as tabbed pages) are fine for screen readers as long as the
+          content is accessible. Take note of the following when visually hiding content:
+          <ul>
+            <li>
+              Do NOT use <code>display: hidden</code>, <code>hidden</code>, or
+              <code>visibility: hidden</code> (which leaves space) because this also hides these
+              elements from screen readers.
+              <small style="display: block"
+                >- Note: the disctinction for <code>hidden</code> is that it is for content that is
+                not part of the document, like hidden error popups, etc.</small
+              >
+            </li>
+            <li>
+              Do NOT use 0-pixel sizing techniques (<code>width:0px, height:0px</code> or
+              <code>font-size:0px</code> or <code>line-height:0</code>) because this will usually
+              remove the element from the flow of the document (and can penalize SEO due to being
+              interpreted as malicious)
+            </li>
+            <li>
+              Absolute positioning off the horizontal edge of the screen is often the best solution,
+              but NOT for interactable elements since sighted users can tab to the input but not be
+              able to see it.
+              <code style="display: block; white-space: pre; margin: 0.5rem auto"
+                >.screen-reader-only { position:absolute; left:-10000px; top:auto; width:1px;
+                height:1px; overflow:hidden; }</code
+              >
+            </li>
+            <li>
+              An alternative is is to use <code>clip-path</code> as follows:
+              <code style="display: block; white-space: pre; margin: 0.5rem auto"
+                >.visually-hidden { position: absolute; clip-path: inset(50%); width: 1px; height:
+                1px; overflow: hidden; }</code
+              >
+            </li>
+          </ul>
+          <small style="display: block; margin: 0.5rem auto"
+            >Note: Need to look into whether conditional rendering tabbed content is
+            accessible.</small
+          >
+        </li>
+        <li>Consider users adjusting text size and zooming - use responsive design.</li>
+        <li>
+          Allow users to disable/reduce animations (via a setting/toggle) and to check for
+          <code>prefers-reduced-motion</code> media query.
+        </li>
+      </ul>
+    </section>
 
-      <p>This is the first section of my document.</p>
-
-      <p>I'll add another paragraph here too.</p>
-
+    <h2>JS Accessibility</h2>
+    <section>
+      <p>For errors, such as form validation, there are a few strategies:</p>
       <ol>
-        <li>Here is</li>
-        <li>a list for</li>
-        <li>you to read</li>
+        <li>Error alert with focus (limited and temporary)</li>
+        <li>
+          <p>
+            Inserted into the start of the document w/ focus (errors remain accessible this way,
+            unlike an alert).
+          </p>
+          <p>
+            Additionally, making the errors internal links within the page to the source of the
+            errors makes error fixing simpler.
+          </p>
+        </li>
+        <li>
+          Inline errors associated with the error source (within the input label, etc.), but this
+          does not make it apparent all the errors that need to be fixed. Often more useful in
+          combination with errors at the start of the document.
+        </li>
+      </ol>
+      <p>
+        Regardless of the strategy used, <code>aria-invalid</code> and
+        <code>aria-errormessage</code> (which takes an ID) should be set if not using native HTML
+        validation (and even if, to make sure any custom validation doesn't fall through the cracks
+        if you are using a combination of native and custom validation)
+      </p>
+
+      <h3>Mouse-specific Events</h3>
+      <section>
+        <p>
+          Any custom handling of mouse events (<code>mouseover, mouseout,</code> etc.) should be
+          doubled up with the <code>focus</code> and <code>blur</code> events.
+        </p>
+        <p>
+          The <code>click</code> event is handled by default when hitting <kbd>Enter</kbd> EXCEPT
+          for on non-default-focusable elements that support focus only due to
+          <code>tabindex</code>, in which case key presses will need to be listened for.
+        </p>
+      </section>
+    </section>
+
+    <h2>WAI-ARIA</h2>
+    <section>
+      <ol>
+        <span>3 main components:</span>
+        <li>
+          <strong>Roles</strong> - Semantic native HTML elements already have the <code>role</code>
+          attribute set with a value, so this only need to be set when adding additional context or
+          on elements that are emulating another.
+          <p>
+            For example, on a form containing only a search input, adding
+            <code>role="search"</code> adds context to the purpose of the form and makes it more
+            navigable.
+          </p>
+          <ul>
+            <span>A selection of useful roles:</span
+            ><code>
+              <li>tablist, tab, tabpanel</li>
+              <li>aria-selected</li>
+              <li>aria-setsize, aria-posinset</li>
+            </code>
+          </ul>
+          <p>
+            NOTE: sometimes removing certain CSS properties for an element will cause the browser to
+            remove its default associated ARIA role (e.g., when setting
+            <code>list-style: none</code>), so set roles explicitly when there are significant CSS
+            changes that might cause accessibility roles to be stripped.
+          </p>
+        </li>
+        <li>
+          <strong>Properties</strong> - Provide extra meaning/semantics (<code
+            >aria-label, aria-labelledby</code
+          >, etc.).
+          <ul>
+            <span>A few less common, but useful properties:</span>
+            <li>
+              <code>aria-owns, aria-controls</code>: relays relationship to another element when the
+              DOM structure itself doesn't
+            </li>
+            <li>
+              <code>aria-expanded</code>: states whether nested elements should be considered
+              currently accessible
+            </li>
+            <li>
+              <code>aria-pressed</code>: signifies the state of a toggle button, which may only be
+              clear visually otherwise
+            </li>
+          </ul>
+        </li>
+        <li>
+          <strong>States</strong> - Can change throughout the lifecycle of the page (<code
+            >aria-disabled, aria-live</code
+          >, etc.) that give hints to how/when the screen reader should read out the containing
+          information.
+        </li>
       </ol>
 
-      <h2>My subheading</h2>
+      <h3>Signposts/Landmarks</h3>
+      <p>
+        Add additional roles as needed to make the important parts of your page easily accessible.
+        (Access the Landmarks menu in Mac VoiceOver using <kbd>CTRL+Option+U</kbd>.)
+      </p>
+
+      <h3>Dynamic Content Updates</h3>
+      <ul>
+        <span
+          ><code>aria-live</code> presents new content to screen readers when the element content
+          updates. The values are:</span
+        >
+        <li><code>"polite"</code> - informs users once idle</li>
+        <li><code>"assertive</code> - informs users immediately</li>
+      </ul>
 
       <p>
-        This is the first subsection of my document. I'd love people to be able to
-        find this content!
+        Note: an element hidden from all users (via <code>display="none"</code>, etc.) will not
+        communicate anything to screen readers, so one can have a hidden element with
+        <code>aria-live</code> that only announces to the screen reader when it is unhidden.
       </p>
-
-      <h2>My 2nd subheading</h2>
 
       <p>
-        This is the second subsection of my content, which I think is more interesting
-        than the last one.
+        There are a few roles that activate <code>aria-live</code> by default, but for compatibility
+        reasons always set the attribute manually as well except with role <code>alert</code> (can
+        cause doubling of read-out since it is only live region with
+        <code>aria-live="assertive"</code>)
       </p>
 
-    </section>
-
-    <h3>Clear language</h3>
-    <ul>
-      <li>Don't use dashes when possible ('5 to 7', not '5-7')</li>
-      <li>Expand abbreviations</li>
-      <li>Expand acronyms and/or use &lt;abbr&gt;&lt;/abbr&gt; elements</li>
-    </ul aria-labelled>
-
-    <h3>HTML Structure</h3>
-    <section>
-      <p>The order and choice of elements in the HTML structure should make it easy to understand the structure of the
-        page. Design should be done via CSS whereas HTML should not focus on where things render.</p>
-
-      <p>For example: tables should use <code>&lt;th&gt;</code> elements with the <code>scope</code> attribute in order
-        to allow non-sighted users to know which table cells are actually headers </p>
-    </section>
-
-    <h3>Interactive Elements</h3>
-    <section></section>
-    <p>Standard interactive elements are keyboard accessible by default (links, buttons, inputs, other form fields).
-      Do not forego using these elements; style around them. If you really must, the following are useful:</p>
-    <ul>
-      <li>
-        <p><code>tabindex="0"</code> makes a normally non-focusable element focusable</p>
-      </li>
-      <li>
-        <p><code>tabindex="-1"</code>makes a normally non-focusable element to be able to receive focus
-          programmatically (maybe useful for an error view)</p>
-      </li>
-      <li>Any other value of <code>tabindex</code> is not recommended since it changes tab navigation order, which can
-        be confusing and goes against HTML order clarity</li>
-    </ul>
-
-    <p>ALWAYS make sure an interactive element is tab-accessible.</p>
-
-    <h3>Labels that Don't Require Context</h3>
-    <section>
-      <div style="border: solid black 2px;">
-        <h4 style="margin-top: 0.5rem;">Good Label</h4>
-        <code style="white-space: pre-line;">&lt;p&gt;
-              Whales are really awesome creatures.
-              &lt;a href="whales.html"&gt;Find out more about whales&lt;/a&gt;.
-              &lt;/p&gt;
-            </code>
-        <h4>Bad Label</h4>
-        <code style="white-space: pre-line;">&lt;p&gt;
-              Whales are really awesome creatures. To find out more about whales,
-              &lt;a href="whales.html"&gt;click here&lt;/a&gt;.
-              &lt;/p&gt;
-            </code>
-      </div>
-
-      <p><code>aria-label/labelledby</code> should only be used as a last resort.</p>
-
-      <p>If additional description is desired, <code>aria-describedby</code> (in conjunction with a visually-hidden
-        element) will add additional read-out after all other label text and role/input types.</p>
-
-      <p>Note: <code>placeholder</code> attribute for inputs is not always read by screen readers, so make sure the
-        information is conveyed in some other way as well.</p>
-
-      <p>Note: Firefox Accessibility Inspector is useful for checking for these sorts of labeling issues because there
-        is a 'Check for issues' functionality.</p>
-    </section>
-
-    <h3>Image Labels</h3>
-    <section>
-      <p><code>img</code> elements should always include the <code>alt</code> attribute to describe anything important
-        about the image that only sighted users would be able to know. <code>title</code> should be used only for extra
-        contextual information.</p>
-
-      <p>If a text description of an image is intended for all users, use <code>&lt;figure&gt;</code> with a nested
-        <code>&lt;figcaption&gt;</code>.
+      <p>
+        Only the updated content will be read out, so use <code>aria-atomic="true"</code> to read
+        out the entire element content w/ any child content.
       </p>
 
-      <h4>Empt alt attribute</h4>
-      <p>If an image is purely decorative (and requires HTML-inclusion instead of via CSS), then set <code>alt=""</code>
-        to prevent screen readers from reading out the URL of the image.</p>
-    </section>
-
-    <h3>Video Controls</h3>
-    <p>Native HTML5 video controls are inconsistent and not always tabbable, depending on the browser, so setting up
-      your own UI with simple buttons will usually be enough to make the video reasonably accessible.</p>
-
-    <h3>Audio Transcripts</h3>
-    <p>All audio should have accompanying transcripts, whether through another service, like an embdedded 3rd-party
-      video player, or your own custom interface (a show/hide transcript - or an external link - works if you do not
-      have the ability to sync the transcript to an accompanying visual medium)</p>
-
-    <p>Video text tracks can be implemented by including a WebVTT file in your HTML like so:
-      <code style="white-space: pre; display: block;">
-&lt;video controls&gt;
-  &lt;source src="example.mp4" type="video/mp4" /&gt;
-  &lt;source src="example.webm" type="video/webm" /&gt;
-  &lt;track kind="subtitles" src="subtitles_en.vtt" srclang="en" /&gt;
-&lt;/video&gt;</code>
-    </p>
-
-    <p>Note: Text tracks can help with SEO since text is keyword-able, unlike media.</p>
-
-    <h3>Links</h3>
-    <p>Links should have high contrast from the background color and non-linking text. It is also good to signify
-      visually in other ways, such as the standard underline, that a link is a link.</p>
-
-    <p>Also do not repurpose <code>a</code> elements to be buttons that do not perform navigations.
-
-    <p><strong>Non-HTML links</strong> should mention the filetype that they will be downloading (PDF, etc.), so that
-      expected behavior is clear upon activating the link.</p>
-
-    <p><strong>Links opening in new tabs</strong> should have a visual indication (like an icon or actual text) and, if
-      using visual indication with no accessible description, also include a non-visible accessible description (an
-      offscreen span, etc.)</p>
-
-    <p><strong>Skip links</strong> are helpful links at the top of the page that can either be
-      visible or hidden until focused, at which point becoming prominently visible, (to account for
-      mobility-impaired users) that navigate directly to the main content of the page, skipping any
-      headers, navs, etc.</p>
-
-    <h3>Interactive Elements Proximity (Leaving Space)</h3>
-    <p>Interactive elements that are too close together, such as articles in a feed with no space in
-      between, make it difficult to navigate for people with tremors, such as when scrolling on
-      mobile. Add appreciable margins between interactive content and/or provide a way for the user to
-      turn on a consistent scrollbar.</p>
-
-    <h3>Mobile Accessibility</h3>
-    <p>Tools: TalkBack on Android & VoiceOver on iOS.</p>
-
-    <p><em>NEVER</em> set <code>user-scalable=yes</code> in your HTML meta tag since zooming is necessary for many users
-      with vision or motor impairments</p>
-  </section>
-
-  <h2>CSS Accessibility</h2>
-  <section>
-    <ul>
-      <li>Headers should look like headers.</li>
-      <li><em>Emphasized</em> and/or <strong>bold</strong> text have standard conventionss, so don't
-        alter them too much.</li>
-      <li><abbr title="acronyms">ACRONYMS</abbr> have a standard dotted underline (when given a
-        title), so do not venture far from that styling.</li>
-      <li><a href="#">Links</a> should always have a default, visited/focus/hover, and active state
-        styling if you are overriding.</li>
-      <li>Table headers should be prominent (usually bold), and zebra striping can make rows easier to distinguish.</li>
-      <li>Color should be high contrast (also improves visiblity in sunlight) and should never be the sole source of
-        information (include symbols or description).</li>
-      <li>Hidden visual elements (such as tabbed pages) are fine for screen readers as long as the content is
-        accessible. Take note of the following when visually hiding content:
-        <ul>
-          <li>Do NOT use <code>display: hidden</code>, <code>hidden</code>, or <code>visibility:
-          hidden</code> (which leaves space) because this also hides these elements from screen
-            readers.
-            <small style="display: block;">- Note: the disctinction for <code>hidden</code> is that it is for content
-              that
-              is not part of the document, like hidden error popups, etc.</small>
-          </li>
-          <li>Do NOT use 0-pixel sizing techniques (<code>width:0px, height:0px</code> or <code>font-size:0px</code> or
-            <code>line-height:0</code>) because this will usually remove the element from the flow
-            of the document (and can penalize SEO due to being interpreted as malicious)
-          </li>
-          <li>Absolute positioning off the horizontal edge of the screen is often the best solution, but NOT for
-            interactable elements since sighted users can tab to the input but not be able to see it.
-            <code style="display: block; white-space: pre; margin: 0.5rem auto;">.screen-reader-only {
-  position:absolute;
-  left:-10000px;
-  top:auto;
-  width:1px;
-  height:1px;
-  overflow:hidden;
-}</code>
-          </li>
-          <li>An alternative is is to use <code>clip-path</code> as follows:
-            <code style="display: block; white-space: pre; margin: 0.5rem auto;">.visually-hidden {
-  position: absolute;
-  clip-path: inset(50%);
-  width: 1px;
-  height: 1px;
-  overflow: hidden;
-}</code>
-          </li>
-        </ul>
-        <small style="display: block; margin: 0.5rem auto;">Note: Need to look into whether conditional rendering tabbed
-          content is accessible.</small>
-      </li>
-      <li>Consider users adjusting text size and zooming - use responsive design.</li>
-      <li>Allow users to disable/reduce animations (via a setting/toggle) and to check for
-        <code>prefers-reduced-motion</code> media query.
-      </li>
-    </ul>
-  </section>
-
-  <h2>JS Accessibility</h2>
-  <section>
-    <p>For errors, such as form validation, there are a few strategies:</p>
-    <ol>
-      <li>Error alert with focus (limited and temporary)</li>
-      <li>
-        <p>Inserted into the start of the document w/ focus (errors remain accessible this way, unlike an alert).</p>
-        <p>Additionally, making the errors internal links within the page to the source of the
-          errors makes error fixing simpler.</p>
-      </li>
-      <li>Inline errors associated with the error source (within the input label, etc.), but this does not make it
-        apparent all the errors that need to be fixed. Often more useful in combination with errors at the start of
-        the document.</li>
-    </ol>
-    <p>Regardless of the strategy used, <code>aria-invalid</code> and
-      <code>aria-errormessage</code> (which takes an ID) should be set if not using native HTML
-      validation (and even if, to make sure any custom validation doesn't fall through the cracks if
-      you are using a combination of native and custom validation)
-    </p>
-
-    <h3>Mouse-specific Events</h3>
-    <section>
-      <p>Any custom handling of mouse events (<code>mouseover, mouseout,</code> etc.) should be doubled up with the
-        <code>focus</code> and <code>blur</code> events.
+      <p>
+        Additionally, <code>aria-relevant</code> allows you to define what information is considered
+        an update. Usually the default of <code>"additions text"</code> is best, but if WHAT content
+        has been removed is important (such as current online users in the chat), then you can add
+        <code>"removals"</code> as well.
       </p>
-      <p>The <code>click</code> event is handled by default when
-        hitting <kbd>Enter</kbd> EXCEPT for on non-default-focusable elements that support focus only due to
-        <code>tabindex</code>, in which case key presses will need to be listened for.
+
+      <p>
+        <strong>NOTE:</strong> content MUST change for the screen reader to announce a live region
+        update (replacing child elements with identical content does NOT count as a change). There
+        are two ways around this:
+      </p>
+      <ol>
+        <li>
+          Add <code>removals</code> to <code>aria-relevant</code>, but this can read out a lot of
+          duplicated text, so this is not usually recommended.
+        </li>
+        <li>
+          (Recommended) Toggle the inclusion of a zero-width space character at the start/end of
+          your content since this registers as different content but creates no read-out difference.
+        </li>
+      </ol>
+
+      <h3>Hiding Content from Screen Readers</h3>
+      <p>
+        Use <code>aria-hidden="true"</code> to hide content that is only useful to sighted users
+        from screen readers.
       </p>
     </section>
-  </section>
-
-  <h2>WAI-ARIA</h2>
-  <section>
-    <ol><span>3 main components:</span>
-      <li><strong>Roles</strong> - Semantic native HTML elements already have the <code>role</code>
-        attribute set with a value, so this only need to be set when adding additional context or on
-        elements that are emulating another.
-        <p>For example, on a form containing only a search input, adding <code>role="search"</code> adds context to the
-          purpose of the form and makes it more navigable.</p>
-        <ul><span>A selection of useful roles:</span><code>
-          <li>tablist, tab, tabpanel</li>
-          <li>aria-selected</li>
-          <li>aria-setsize, aria-posinset</li>
-            </code>
-        </ul>
-        <p>NOTE: sometimes removing certain CSS properties for an element will cause the browser to
-        remove its default associated ARIA role (e.g., when setting <code>list-style: none</code>),
-        so set roles explicitly when there are significant CSS changes that might cause
-        accessibility roles to be stripped.</p>
-      </li>
-      <li><strong>Properties</strong> - Provide extra meaning/semantics (<code>aria-label, aria-labelledby</code>,
-        etc.).
-        <ul><span>A few less common, but useful properties:</span>
-          <li><code>aria-owns, aria-controls</code>: relays relationship to another element when the
-            DOM structure itself doesn't</li>
-          <li><code>aria-expanded</code>: states whether nested elements should be considered currently accessible</li>
-          <li><code>aria-pressed</code>: signifies the state of a toggle button, which may only be clear visually otherwise</li>
-        </ul>
-      </li>
-      <li><strong>States</strong> - Can change throughout the lifecycle of the page
-        (<code>aria-disabled, aria-live</code>, etc.) that
-        give
-        hints to how/when the screen reader should read out the containing information.</li>
-    </ol>
-
-    <h3>Signposts/Landmarks</h3>
-    <p>Add additional roles as needed to make the important parts of your page easily accessible. (Access the Landmarks
-      menu in Mac VoiceOver using <kbd>CTRL+Option+U</kbd>.)</p>
-
-    <h3>Dynamic Content Updates</h3>
-    <ul>
-      <span><code>aria-live</code> presents new content to screen readers when the element content updates. The values
-        are:</span>
-      <li><code>"polite"</code> - informs users once idle</li>
-      <li><code>"assertive</code> - informs users immediately</li>
-    </ul>
-
-    <p>Note: an element hidden from all users (via
-      <code>display="none"</code>, etc.) will not communicate anything
-      to screen readers, so one can have a hidden element with <code>aria-live</code> that only announces to the
-      screen reader when it is unhidden.
-    </p>
-
-    <p>There are a few roles that activate <code>aria-live</code> by default, but for compatibility reasons always set
-      the attribute manually as well except with role <code>alert</code> (can cause doubling of read-out since it is
-      only live region with <code>aria-live="assertive"</code>)
-    </p>
-
-    <p>Only the updated content will be read out, so use <code>aria-atomic="true"</code> to read out the entire
-      element content w/ any child content.</p>
-
-    <p>Additionally, <code>aria-relevant</code> allows you to define what information is considered
-      an update. Usually the default of <code>"additions text"</code> is best, but if WHAT content has
-      been removed is important (such as current online users in the chat), then you can add
-      <code>"removals"</code> as well.
-    </p>
-
-    <p><strong>NOTE:</strong> content MUST change for the screen reader to announce a live region
-      update (replacing child elements with identical content does NOT count as a change). There are
-      two ways around this:</p>
-    <ol>
-      <li>Add <code>removals</code> to <code>aria-relevant</code>, but this can read out a lot of
-        duplicated text, so this is not usually recommended.</li>
-      <li>(Recommended) Toggle the inclusion of a zero-width space character at the start/end of your content since this
-        registers as
-        different content but creates no read-out difference.</li>
-    </ol>
-
-    <h3>Hiding Content from Screen Readers</h3>
-    <p>Use <code>aria-hidden="true"</code> to hide content that is only useful to sighted users from screen readers.</p>
-  </section>
-</body>
-
+  </body>
 </html>

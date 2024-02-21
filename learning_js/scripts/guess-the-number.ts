@@ -5,9 +5,13 @@ document.querySelector("button")?.addEventListener("click", () => {
   const guessesList = document.querySelector(".guesses");
   if (!guessesList) return;
 
-  const input = document.querySelector("input[type='text']") as HTMLInputElement;
+  const input = document.querySelector(
+    "input[type='text']",
+  ) as HTMLInputElement;
   if (!input) return;
-  const guess = Number((document.querySelector("input[type='text']") as HTMLInputElement).value);
+  const guess = Number(
+    (document.querySelector("input[type='text']") as HTMLInputElement).value,
+  );
   input.value = "";
   if (!guess && guess !== 0) return;
   guessesList.classList.remove("hidden");

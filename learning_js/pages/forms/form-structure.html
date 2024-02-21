@@ -1,63 +1,65 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Form Structure</title>
+  </head>
 
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Form Structure</title>
-</head>
+  <!-- NEVER NEST FORMS WITHIN OTHER FORMS -->
 
-<!-- NEVER NEST FORMS WITHIN OTHER FORMS -->
-
-<body>
-  <!-- can use method="get" if form submission is idempotent -->
-  <!-- method="dialog" will close dialog with form in it, trigger a submit event, but does not actually submit or clear the form (
+  <body>
+    <!-- can use method="get" if form submission is idempotent -->
+    <!-- method="dialog" will close dialog with form in it, trigger a submit event, but does not actually submit or clear the form (
     dialog is pretty new for some browsers, so be wary) -->
-  <dialog style="display: block; position: static;" open>
-    <form action="./form-structure.html" method="dialog">
-      <fieldset>
-        <!-- legend is the caption for a fieldset -->
-        <legend>Fruit juice size</legend>
-        <p>
-          <input type="radio" name="size" id="size_1" value="small" />
-          <label for="size_1">Small</label>
-        </p>
-        <p>
-          <input type="radio" name="size" id="size_2" value="medium" />
-          <label for="size_2">Medium</label>
-        </p>
-        <p>
-          <input type="radio" name="size" id="size_3" value="large" />
-          <label for="size_3">Large</label>
-        </p>
-        <!-- disabling fieldset disables all controls within it -->
-        <button type="button"
-          onclick="(() => { console.log('hi'); document.querySelector('fieldset').setAttribute('disabled', true); }).call()">
-          disable fieldset
-        </button>
-      </fieldset>
+    <dialog style="display: block; position: static" open>
+      <form action="./form-structure.html" method="dialog">
+        <fieldset>
+          <!-- legend is the caption for a fieldset -->
+          <legend>Fruit juice size</legend>
+          <p>
+            <input type="radio" name="size" id="size_1" value="small" />
+            <label for="size_1">Small</label>
+          </p>
+          <p>
+            <input type="radio" name="size" id="size_2" value="medium" />
+            <label for="size_2">Medium</label>
+          </p>
+          <p>
+            <input type="radio" name="size" id="size_3" value="large" />
+            <label for="size_3">Large</label>
+          </p>
+          <!-- disabling fieldset disables all controls within it -->
+          <button
+            type="button"
+            onclick="(() => { console.log('hi'); document.querySelector('fieldset').setAttribute('disabled', true); }).call()"
+          >
+            disable fieldset
+          </button>
+        </fieldset>
 
-      <!-- label is key for accessibility of input elements -->
-      <label for="full-name">Full Name:</label>
-      <input type="text" id="full-name" name="fullname" />
+        <!-- label is key for accessibility of input elements -->
+        <label for="full-name">Full Name:</label>
+        <input type="text" id="full-name" name="fullname" />
 
-      <!-- always include 'for' attribute even if input is nested inside label -->
-      <label for="othername">Full Name:
-        <input type="text" id="othername" name="othername" />
-      </label>
+        <!-- always include 'for' attribute even if input is nested inside label -->
+        <label for="othername"
+          >Full Name:
+          <input type="text" id="othername" name="othername" />
+        </label>
 
-      <!-- MULTIPLE LABEL EXAMPLE -->
-      <p>Required fields are followed by *.</p>
+        <!-- MULTIPLE LABEL EXAMPLE -->
+        <p>Required fields are followed by *.</p>
 
-      <!-- WRONG: multiple labels pointing to same input - confuses screen readers -->
-      <!-- <div>
+        <!-- WRONG: multiple labels pointing to same input - confuses screen readers -->
+        <!-- <div>
         <label for="username">Name:</label>
         <input id="username" type="text" name="username" required>
         <label for="username"><span aria-label="required">*</label>
       </div> -->
 
-      <!-- OKAY: single label but the label does not contain all necessary info -->
-      <!-- <div>
+        <!-- OKAY: single label but the label does not contain all necessary info -->
+        <!-- <div>
         <label for="username">
           <span>Name:</span>
           <input id="username" type="text" name="username" required>
@@ -65,132 +67,136 @@
         </label>
       </div> -->
 
-      <!-- BEST: all information in label that is read out together -->
-      <div>
-        <label for="username">Name: *</label>
-        <input id="username" type="text" name="username" required />
-      </div>
+        <!-- BEST: all information in label that is read out together -->
+        <div>
+          <label for="username">Name: *</label>
+          <input id="username" type="text" name="username" required />
+        </div>
+      </form>
+    </dialog>
+    <br />
 
-    </form>
-  </dialog>
-  <br>
+    <!-- ARIA -->
+    <h2>ARIA</h2>
+    <div>
+      <!-- always prefer using standard attributes/elements like 'title', 'alt', 'label', or 'aria-labeledby' over 'aria-label' -->
+      <!-- also, if it's important for non-sighted users, consider if the information is important for sighted users too -->
+      <button aria-label="Close">X</button>
+    </div>
 
-  <!-- ARIA -->
-  <h2>ARIA</h2>
-  <div>
-    <!-- always prefer using standard attributes/elements like 'title', 'alt', 'label', or 'aria-labeledby' over 'aria-label' -->
-    <!-- also, if it's important for non-sighted users, consider if the information is important for sighted users too -->
-    <button aria-label="Close">X</button>
-  </div>
-
-  <!-- aria-labelledby example with multiple ids -->
-  <h4 id="title" class="article-title">cool stuff list</h4>
-  <p>
-    Info but you can
-    <a href="13.html" id="info" aria-labelledby="info title">read more</a>
-  </p>
-
-  <form action="./form-structure.html" method="get">
-    <h1>Payment form</h1>
+    <!-- aria-labelledby example with multiple ids -->
+    <h4 id="title" class="article-title">cool stuff list</h4>
     <p>
-      Required fields are followed by
-      <strong>*</strong>.
+      Info but you can
+      <a href="13.html" id="info" aria-labelledby="info title">read more</a>
     </p>
 
-    <section>
-      <h2>Contact information</h2>
-      <fieldset>
-        <legend>Title</legend>
-        <ul style="list-style-type: none;">
-          <li>
-            <label for="title_1">
-              <input type="radio" id="title_1" name="title" value="A" />
-              Ace
-            </label>
-          </li>
-          <li>
-            <label for="title_2">
-              <input type="radio" id="title_2" name="title" value="K" />
-              King
-            </label>
-          </li>
-          <li>
-            <label for="title_3">
-              <input type="radio" id="title_3" name="title" value="Q" />
-              Queen
-            </label>
-          </li>
-        </ul>
-      </fieldset>
+    <form action="./form-structure.html" method="get">
+      <h1>Payment form</h1>
       <p>
-        <label for="name">
-          <span>Name: </span>
-          <strong>*</strong>
-        </label>
-        <!-- required is read by screenreaders (supposedly) -->
-        <input type="text" id="name" name="username" required />
+        Required fields are followed by
+        <strong>*</strong>.
       </p>
-      <p>
-        <label for="mail">
-          <span>Email: </span>
-          <strong>*</strong>
-        </label>
-        <input type="email" id="mail" name="usermail" required />
-      </p>
-      <p>
-        <label for="pwd">
-          <span>Password: </span>
-          <strong>*</strong>
-        </label>
-        <input type="password" id="pwd" name="password" required />
-      </p>
-    </section>
 
-    <section>
-      <h2>Payment information</h2>
-      <p>
-        <label for="card">Card type:</label>
-        <select id="card" name="usercard">
-          <option value="visa">Visa</option>
-          <option value="mc">Mastercard</option>
-          <option value="amex">American Express</option>
-        </select>
-      </p>
-      <p>
-        <label for="number">
-          <span>Card number:</span>
-          <strong>*</strong>
-        </label>
-        <input type="tel" id="number" name="cardnumber" required />
-      </p>
-      <p>
-        <label for="expiration">
-          <span>Expiration date:</span>
-          <strong>*</strong>
-        </label>
-        <!-- note placeholder instead of a default value -->
-        <input type="text" id="expiration" required placeholder="MM/YY" pattern="^(0[1-9]|1[0-2])\/([0-9]{2})$" />
-      </p>
-    </section>
+      <section>
+        <h2>Contact information</h2>
+        <fieldset>
+          <legend>Title</legend>
+          <ul style="list-style-type: none">
+            <li>
+              <label for="title_1">
+                <input type="radio" id="title_1" name="title" value="A" />
+                Ace
+              </label>
+            </li>
+            <li>
+              <label for="title_2">
+                <input type="radio" id="title_2" name="title" value="K" />
+                King
+              </label>
+            </li>
+            <li>
+              <label for="title_3">
+                <input type="radio" id="title_3" name="title" value="Q" />
+                Queen
+              </label>
+            </li>
+          </ul>
+        </fieldset>
+        <p>
+          <label for="name">
+            <span>Name: </span>
+            <strong>*</strong>
+          </label>
+          <!-- required is read by screenreaders (supposedly) -->
+          <input type="text" id="name" name="username" required />
+        </p>
+        <p>
+          <label for="mail">
+            <span>Email: </span>
+            <strong>*</strong>
+          </label>
+          <input type="email" id="mail" name="usermail" required />
+        </p>
+        <p>
+          <label for="pwd">
+            <span>Password: </span>
+            <strong>*</strong>
+          </label>
+          <input type="password" id="pwd" name="password" required />
+        </p>
+      </section>
 
-    <section>
-      <button type="submit">Validate the payment</button>
-    </section>
+      <section>
+        <h2>Payment information</h2>
+        <p>
+          <label for="card">Card type:</label>
+          <select id="card" name="usercard">
+            <option value="visa">Visa</option>
+            <option value="mc">Mastercard</option>
+            <option value="amex">American Express</option>
+          </select>
+        </p>
+        <p>
+          <label for="number">
+            <span>Card number:</span>
+            <strong>*</strong>
+          </label>
+          <input type="tel" id="number" name="cardnumber" required />
+        </p>
+        <p>
+          <label for="expiration">
+            <span>Expiration date:</span>
+            <strong>*</strong>
+          </label>
+          <!-- note placeholder instead of a default value -->
+          <input
+            type="text"
+            id="expiration"
+            required
+            placeholder="MM/YY"
+            pattern="^(0[1-9]|1[0-2])\/([0-9]{2})$"
+          />
+        </p>
+      </section>
 
-  </form>
+      <section>
+        <button type="submit">Validate the payment</button>
+      </section>
+    </form>
+  </body>
 
-</body>
-
-<script>
-  // making readonly inputs more accessible since VoiceOver only says "clickable", which I don't know if is clear/standard
-  for (const input of document.querySelectorAll('input:read-only')) {
-    console.log(input)
-    // in some cases, non-semantic elements like span/div will have their aria-label ignored,
-    // so in such cases create invisible text (often absouletly positioned off screen) so it won't be seen by sighted users
-    const span = document.createElement('span')
-    span.setAttribute('aria-label', 'read only')
-    document.querySelector('label[for="' + input.id + '"]')?.appendChild(span)
-  }
-</script>
-
+  <script>
+    // making readonly inputs more accessible since VoiceOver only says "clickable", which I don't know if is clear/standard
+    for (const input of document.querySelectorAll("input:read-only")) {
+      console.log(input);
+      // in some cases, non-semantic elements like span/div will have their aria-label ignored,
+      // so in such cases create invisible text (often absouletly positioned off screen) so it won't be seen by sighted users
+      const span = document.createElement("span");
+      span.setAttribute("aria-label", "read only");
+      document
+        .querySelector('label[for="' + input.id + '"]')
+        ?.appendChild(span);
+    }
+  </script>
 </html>

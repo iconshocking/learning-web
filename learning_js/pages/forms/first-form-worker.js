@@ -9,6 +9,11 @@ self.addEventListener("fetch", (e) => {
       console.log(formData);
     });
     // default form submission is a navigation request (can only be prevented via event.preventDefault() on the submit input/button)
-    e.respondWith(Response.redirect("http://localhost:8000/pages/forms/first-form.html", 302));
+    e.respondWith(
+      Response.redirect(
+        "http://localhost:8000/pages/forms/first-form.html",
+        302,
+      ),
+    );
   }
 });

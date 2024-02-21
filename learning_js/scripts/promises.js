@@ -121,7 +121,7 @@ const promise2 = new Promise((_, reject) => setTimeout(reject, 100, "foo"));
 const promises = [promise1, promise2];
 
 Promise.allSettled(promises).then((results) =>
-  results.forEach((result) => console.log(result.status))
+  results.forEach((result) => console.log(result.status)),
 );
 
 // .any()
@@ -163,8 +163,9 @@ function promiseState(promise) {
   const pendingState = { status: "pending" };
   // this runs asynchronously but is put immediately into the event queue so is as fast as possible for an async operation.
   return Promise.race([promise, pendingState]).then(
-    (value) => (value === pendingState ? value : { status: "fulfilled", value }),
-    (reason) => ({ status: "rejected", reason })
+    (value) =>
+      value === pendingState ? value : { status: "fulfilled", value },
+    (reason) => ({ status: "rejected", reason }),
   );
 }
 
@@ -247,7 +248,7 @@ function myAsyncFunction(url) {
       xhr.onload = () => resolve(xhr.responseText);
       xhr.onerror = () => reject(xhr.statusText);
       xhr.send();
-    }
+    },
   );
 }
 

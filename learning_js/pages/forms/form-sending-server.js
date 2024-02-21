@@ -25,7 +25,7 @@ const storage = multer.diskStorage({
         "-" +
         file.originalname.substring(0, separator) +
         "." +
-        file.originalname.substring(separator + 1)
+        file.originalname.substring(separator + 1),
     );
   },
 });
@@ -53,7 +53,11 @@ app.post("/pages/forms/form-sending", (req, res) => {
 });
 
 // not sure if express needs santization
-app.post("/pages/forms/form-sending/file-upload", upload.single("file"), (req, res) => {
-  const { name, last } = req.body;
-  res.send({ resp: `Thanks ${name} ${last}!` });
-});
+app.post(
+  "/pages/forms/form-sending/file-upload",
+  upload.single("file"),
+  (req, res) => {
+    const { name, last } = req.body;
+    res.send({ resp: `Thanks ${name} ${last}!` });
+  },
+);
