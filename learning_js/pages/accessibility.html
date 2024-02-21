@@ -128,16 +128,33 @@
       <h4>Example HTML:</h4>
       <section>
         <div style="border: solid black 2px">
-          <code style="white-space: pre-line"
-            >&lt;h1&gt;My heading&lt;/h1&gt; &lt;p&gt;This is the first section of my
-            document.&lt;/p&gt; &lt;p&gt;I'll add another paragraph here too.&lt;/p&gt; &lt;ol&gt;
-            &lt;li&gt;Here is&lt;/li&gt; &lt;li&gt;a list for&lt;/li&gt; &lt;li&gt;you to
-            read&lt;/li&gt; &lt;/ol&gt; &lt;h2&gt;My subheading&lt;/h2&gt; &lt;p&gt; This is the
-            first subsection of my document. I'd love people to be able to find this content!
-            &lt;/p&gt; &lt;h2&gt;My 2nd subheading&lt;/h2&gt; &lt;p&gt; This is the second
-            subsection of my content, which I think is more interesting than the last one.
-            &lt;/p&gt;
-          </code>
+          <!-- prettier-ignore -->
+          <code style="white-space: pre-line;">&lt;h1&gt;My heading&lt;/h1&gt;
+      
+      &lt;p&gt;This is the first section of my document.&lt;/p&gt;
+      
+      &lt;p&gt;I'll add another paragraph here too.&lt;/p&gt;
+      
+      &lt;ol&gt;
+        &lt;li&gt;Here is&lt;/li&gt;
+        &lt;li&gt;a list for&lt;/li&gt;
+        &lt;li&gt;you to read&lt;/li&gt;
+      &lt;/ol&gt;
+      
+      &lt;h2&gt;My subheading&lt;/h2&gt;
+      
+      &lt;p&gt;
+        This is the first subsection of my document. I'd love people to be able to
+        find this content!
+      &lt;/p&gt;
+      
+      &lt;h2&gt;My 2nd subheading&lt;/h2&gt;
+      
+      &lt;p&gt;
+        This is the second subsection of my content, which I think is more interesting
+        than the last one.
+      &lt;/p&gt;
+      </code>
         </div>
         <p>
           Note the lack of &lt;/br&gt; tags. These should only be used to denote line break within
@@ -226,15 +243,19 @@
       <section>
         <div style="border: solid black 2px">
           <h4 style="margin-top: 0.5rem">Good Label</h4>
-          <code style="white-space: pre-line"
-            >&lt;p&gt; Whales are really awesome creatures. &lt;a href="whales.html"&gt;Find out
-            more about whales&lt;/a&gt;. &lt;/p&gt;
-          </code>
+          <!-- prettier-ignore -->
+          <code style="white-space: pre-line;">&lt;p&gt;
+              Whales are really awesome creatures.
+              &lt;a href="whales.html"&gt;Find out more about whales&lt;/a&gt;.
+              &lt;/p&gt;
+            </code>
           <h4>Bad Label</h4>
-          <code style="white-space: pre-line"
-            >&lt;p&gt; Whales are really awesome creatures. To find out more about whales, &lt;a
-            href="whales.html"&gt;click here&lt;/a&gt;. &lt;/p&gt;
-          </code>
+          <!-- prettier-ignore -->
+          <code style="white-space: pre-line;">&lt;p&gt;
+              Whales are really awesome creatures. To find out more about whales,
+              &lt;a href="whales.html"&gt;click here&lt;/a&gt;.
+              &lt;/p&gt;
+            </code>
         </div>
 
         <p><code>aria-label/labelledby</code> should only be used as a last resort.</p>
@@ -293,11 +314,13 @@
 
       <p>
         Video text tracks can be implemented by including a WebVTT file in your HTML like so:
-        <code style="white-space: pre; display: block">
-          &lt;video controls&gt; &lt;source src="example.mp4" type="video/mp4" /&gt; &lt;source
-          src="example.webm" type="video/webm" /&gt; &lt;track kind="subtitles"
-          src="subtitles_en.vtt" srclang="en" /&gt; &lt;/video&gt;</code
-        >
+        <!-- prettier-ignore -->
+        <code style="white-space: pre; display: block;">
+&lt;video controls&gt;
+  &lt;source src="example.mp4" type="video/mp4" /&gt;
+  &lt;source src="example.webm" type="video/webm" /&gt;
+  &lt;track kind="subtitles" src="subtitles_en.vtt" srclang="en" /&gt;
+&lt;/video&gt;</code>
       </p>
 
       <p>Note: Text tracks can help with SEO since text is keyword-able, unlike media.</p>
@@ -395,17 +418,26 @@
               Absolute positioning off the horizontal edge of the screen is often the best solution,
               but NOT for interactable elements since sighted users can tab to the input but not be
               able to see it.
-              <code style="display: block; white-space: pre; margin: 0.5rem auto"
-                >.screen-reader-only { position:absolute; left:-10000px; top:auto; width:1px;
-                height:1px; overflow:hidden; }</code
-              >
+              <!-- prettier-ignore -->
+              <code style="display: block; white-space: pre; margin: 0.5rem auto;">.screen-reader-only {
+  position:absolute;
+  left:-10000px;
+  top:auto;
+  width:1px;
+  height:1px;
+  overflow:hidden;
+}</code>
             </li>
             <li>
               An alternative is is to use <code>clip-path</code> as follows:
-              <code style="display: block; white-space: pre; margin: 0.5rem auto"
-                >.visually-hidden { position: absolute; clip-path: inset(50%); width: 1px; height:
-                1px; overflow: hidden; }</code
-              >
+              <!-- prettier-ignore -->
+              <code style="display: block; white-space: pre; margin: 0.5rem auto;">.visually-hidden {
+  position: absolute;
+  clip-path: inset(50%);
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+}</code>
             </li>
           </ul>
           <small style="display: block; margin: 0.5rem auto"
