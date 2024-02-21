@@ -190,6 +190,34 @@
         <li>
           Libraries (and drop-in polyfills) can be used to easily handle cross-browser differences
           automatically. You should gate loading these libraries/polyfills with feature detection.
+          <p>Feature detection can be done in a few ways:</p>
+          <ul>
+            <li>CSS <code>@supports</code></li>
+            <li>Checking JS object properties: <code>if ("geolocation" in navigator)</code></li>
+            <li>
+              Checking elements via JS for APIs:
+              <code>if (document.createElement("canvas").getContext)</code>
+            </li>
+            <li>
+              Checking APIs directly via JS:
+              <code>
+                document.createElement("video").canPlayType('video/mp4; codecs="avc1.42E01E,
+                mp4a.40.2"')</code
+              >
+            </li>
+            <li>
+              Check whether browser supports a value by checking persistence:
+              <code>
+                <pre>
+var i = document.createElement("input");
+i.setAttribute("type", "color");
+return i.type !== "text";</pre
+                >
+              </code>
+            </li>
+            <li>Check CSS media queries via</li>
+          </ul>
+          <p>Note that some features are undetectable though and require polyfills for safety.</p>
         </li>
         <li>
           You should NOT use vendor-prefixed JS objects in production code, but if you must, you can
