@@ -32,6 +32,8 @@
 </body>
 
 <!-- session and local storage -->
+<!-- NOTE: These are SYNCHRONOUS APIs, which means they can cause performance issues by blocking the
+JS thread if using data that is too large or making too many calls. -->
 <script>
   // storage store independent for each domain
   document.querySelector('#set').addEventListener('click', () => {
