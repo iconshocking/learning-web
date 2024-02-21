@@ -76,14 +76,10 @@
             <ul>
               - Strategies:
               <li>Do not block displaying text on displaying media</li>
+              <li>Loading animations (w/ multiple parts if wait will be long) to engage users</li>
               <li>
-                Loading animations (w/ multiple parts if wait will be long) to
-                engage users
-              </li>
-              <li>
-                Generally priotizing partial rendering or some form of
-                enegagement rather than waiting w/o feedback for an action to
-                complete
+                Generally priotizing partial rendering or some form of enegagement rather than
+                waiting w/o feedback for an action to complete
               </li>
             </ul>
           </li>
@@ -91,45 +87,40 @@
             <ul>
               Performance Measurements:
               <li>
-                <strong>(Less useful):</strong> <dfn>First Paint</dfn> - when
-                the first pixels render to the screen, such that it is clear the
-                page is loading (not that useful of a metric).
+                <strong>(Less useful):</strong> <dfn>First Paint</dfn> - when the first pixels
+                render to the screen, such that it is clear the page is loading (not that useful of
+                a metric).
               </li>
               <li>
-                <dfn>First Contentful Paint <abbr title="">(FCP)</abbr></dfn> -
-                when the user is able to consume first content (text, image,
-                etc.)
+                <dfn>First Contentful Paint <abbr title="">(FCP)</abbr></dfn> - when the user is
+                able to consume first content (text, image, etc.)
               </li>
 
               <li>
                 <strong>DEPRECATED: </strong
                 ><span style="text-decoration-line: line-through"
-                  ><dfn
-                    >First Meaningful Paint <abbr title="">(FMP)</abbr></dfn
-                  ></span
+                  ><dfn>First Meaningful Paint <abbr title="">(FMP)</abbr></dfn></span
                 >
               </li>
               <li>
                 <dfn>Largest Contentful Paint <abbr title="">(LCP)</abbr></dfn>
-                - when the largest image (or video frane) or piece of text
-                visible from the initial viewport loads
+                - when the largest image (or video frane) or piece of text visible from the initial
+                viewport loads
               </li>
               <li>
-                <dfn>Speed index</dfn> - sum of the percent of screen that is
-                visually loaded across 100 ms intervals until initial viewport
-                is fully loaded.
+                <dfn>Speed index</dfn> - sum of the percent of screen that is visually loaded across
+                100 ms intervals until initial viewport is fully loaded.
               </li>
               <li>
-                <dfn>Time to Interactive</dfn> - when the last
-                <dfn title="">long task</dfn> (task taking over 50 ms on the
-                main thread) of initial loading completes and another long task
-                would not run within 5 seconds if the user was idle.
+                <dfn>Time to Interactive</dfn> - when the last <dfn title="">long task</dfn> (task
+                taking over 50 ms on the main thread) of initial loading completes and another long
+                task would not run within 5 seconds if the user was idle.
               </li>
 
               <p>
-                Another useful term is <dfn>above the fold content</dfn>, which
-                refers to the content that is visible before any scrolling ("the
-                fold" being the bottom edge of the screen).
+                Another useful term is <dfn>above the fold content</dfn>, which refers to the
+                content that is visible before any scrolling ("the fold" being the bottom edge of
+                the screen).
               </p>
             </ul>
           </li>
@@ -140,31 +131,25 @@
       <section>
         <ul>
           <li>
-            Optimize loading the critical path. Defer/delay loading scripts,
-            media (compressed & optimized), and content that are below the fold,
-            not interactive, or less important.
+            Optimize loading the critical path. Defer/delay loading scripts, media (compressed &
+            optimized), and content that are below the fold, not interactive, or less important.
           </li>
           <li>
-            Avoid jumping reflows. Always provide placecholders for slower
-            loading content to avoid the increased perception of loading and
-            difficulty of usability.
+            Avoid jumping reflows. Always provide placecholders for slower loading content to avoid
+            the increased perception of loading and difficulty of usability.
           </li>
           <li>
-            Make fallback fonts and their sizes and weights consistent to avoid
-            text flickering once the final font loads in.
+            Make fallback fonts and their sizes and weights consistent to avoid text flickering once
+            the final font loads in.
           </li>
           <li>
-            Keep interactive elements feeling snappy. Users perceive lag most
-            noticeably during interaction, so keep the user unblocked and
-            receiving feedback (like using type-ahead patterns and rendering
-            quickly any changes associated with updating an input or pressing a
-            buttton).
+            Keep interactive elements feeling snappy. Users perceive lag most noticeably during
+            interaction, so keep the user unblocked and receiving feedback (like using type-ahead
+            patterns and rendering quickly any changes associated with updating an input or pressing
+            a buttton).
             <ul>
               Examples:
-              <li>
-                Performing operations on <code>keydown</code> instead of
-                <code>keyup</code>.
-              </li>
+              <li>Performing operations on <code>keydown</code> instead of <code>keyup</code>.</li>
               <li>Showing loading animations as early as possible.</li>
             </ul>
           </li>
@@ -184,31 +169,28 @@
       <h2>Image Performance</h2>
       <section>
         <p>
-          <code>loading="lazy"</code> on images and video (and iframes) defers
-          loading to when the element is a certain distance of being visible in
-          the viewport. This attribute will simply be ignored if not supported.
+          <code>loading="lazy"</code> on images and video (and iframes) defers loading to when the
+          element is a certain distance of being visible in the viewport. This attribute will simply
+          be ignored if not supported.
         </p>
         <h3>Optimal formats</h3>
         <ul>
           <li>SVG for non-photos: icons, charts, logos, etc.</li>
           <li>
-            <strong>(Warning: very new)</strong>AVIF for photos / raster images
-            (lossless or lossy) and animations
+            <strong>(Warning: very new)</strong>AVIF for photos / raster images (lossless or lossy)
+            and animations
           </li>
-          <li>
-            WebP for photos / raster images (lossless or lossy) and animations
-          </li>
+          <li>WebP for photos / raster images (lossless or lossy) and animations</li>
           <li>
             PNG as fallback for WebP (PNG8 if PNG24 is much larger than WebP)
             <p style="display: block">
-              - Progressive JPEGs as fallback if size is a big concern (even a
-              browser that doesn't support it will render the full res image
-              once the entire file is downloaded)
+              - Progressive JPEGs as fallback if size is a big concern (even a browser that doesn't
+              support it will render the full res image once the entire file is downloaded)
             </p>
           </li>
           <li>
-            <strong><em>NEVER</em></strong> use GIF for non-animations (and
-            prefer video/WebP/AVIF even then)
+            <strong><em>NEVER</em></strong> use GIF for non-animations (and prefer video/WebP/AVIF
+            even then)
           </li>
         </ul>
         <p>Certain CDNs will serve the ideal format for you automatically.</p>
@@ -216,42 +198,38 @@
         <h3>Compression</h3>
         <ol>
           <li>
-            Higher DPI equates to a higher resolution image in the same screen
-            space, so compression can be higher than usual on these images.
+            Higher DPI equates to a higher resolution image in the same screen space, so compression
+            can be higher than usual on these images.
           </li>
           <li>
-            Do not create assets past 2x DPI since very few people can notice a
-            difference beyond 2x.
+            Do not create assets past 2x DPI since very few people can notice a difference beyond
+            2x.
           </li>
         </ol>
 
         <h3>Optimal Sizes</h3>
         <p>
-          Use <code>srcset</code> attribute with <code>img</code> or
-          <code>source</code> to provide different images for different viewport
-          sizes and DPRs.
+          Use <code>srcset</code> attribute with <code>img</code> or <code>source</code> to provide
+          different images for different viewport sizes and DPRs.
         </p>
 
         <h3>Image Priority</h3>
         <ol>
           <li>
-            Background images should be defined in CSS since those get lower
-            download than HTML image elements priority.
+            Background images should be defined in CSS since those get lower download than HTML
+            image elements priority.
           </li>
           <li>
-            <code>fetchpriority="high/low/auto"</code> allows for
-            de/prioritizing certain iamge downloads.
-            <small style="display: block"
-              >NOTE: quite new, so don't rely on.</small
-            >
+            <code>fetchpriority="high/low/auto"</code> allows for de/prioritizing certain iamge
+            downloads.
+            <small style="display: block">NOTE: quite new, so don't rely on.</small>
           </li>
         </ol>
 
         <h3>Readability when Using Background Images</h3>
         <p>
-          If text would not be visible without a background image being
-          displayed, make sure an initial background color is set to ensure
-          readability before the image download completes.
+          If text would not be visible without a background image being displayed, make sure an
+          initial background color is set to ensure readability before the image download completes.
         </p>
       </section>
 
@@ -263,10 +241,10 @@
         <h3>Source order</h3>
         <p>
           Since the browser downloads the file for the first
-          <code>&lt;source type="video/xxx"&gt;</code> it supports, ALWAYS put
-          the <code>source</code> element with the smallest file first within
-          the <code>video</code> element, unless you have a particular reason to
-          show especially high quality when browser-supported.
+          <code>&lt;source type="video/xxx"&gt;</code> it supports, ALWAYS put the
+          <code>source</code> element with the smallest file first within the
+          <code>video</code> element, unless you have a particular reason to show especially high
+          quality when browser-supported.
         </p>
 
         <h3>Preferred formats (containers)</h3>
@@ -280,76 +258,66 @@
           <li>
             VP9: Open format, roughly comparable to HEVC
             <small style="display: block"
-              >(Note: VP8 mainly used with just WebP (VP8 frame underlies its
-              data format), so always prefer VP9 for video and usually with the
-              WebM container).</small
+              >(Note: VP8 mainly used with just WebP (VP8 frame underlies its data format), so
+              always prefer VP9 for video and usually with the WebM container).</small
             >
           </li>
           <li>H.264/AVC: most common - the standard</li>
           <li>
-            H.265/HEVC: better compression than H.264 but requires up-to-date
-            broswers and more recent hardware decoders (so keep an eye on
-            support for the future)
+            H.265/HEVC: better compression than H.264 but requires up-to-date broswers and more
+            recent hardware decoders (so keep an eye on support for the future)
           </li>
           <li>
-            AV1: best compression for quality, but it does not work in many
-            browsers (so keep an eye on support in the future).
+            AV1: best compression for quality, but it does not work in many browsers (so keep an eye
+            on support in the future).
           </li>
         </ol>
 
         <h3>Autoplay</h3>
         <p>
-          In addition to the <code>autoplay</code> and
-          <code>loop</code> attributes, the following attributes should always
-          be added to autoplay video without user-triggering:
+          In addition to the <code>autoplay</code> and <code>loop</code> attributes, the following
+          attributes should always be added to autoplay video without user-triggering:
         </p>
         <ul>
+          <li><code>muted</code> - required for some mobile browsers (Safari)</li>
           <li>
-            <code>muted</code> - required for some mobile browsers (Safari)
-          </li>
-          <li>
-            <code>playsinline</code> - required by Safari to allow autoplay and
-            prevent videos from attempting to trigger a fullscreen flow
+            <code>playsinline</code> - required by Safari to allow autoplay and prevent videos from
+            attempting to trigger a fullscreen flow
           </li>
         </ul>
         <p>
-          Note: only autoplay videos when necessary since it adds download size
-          and can be annoying to users, depending on context.
+          Note: only autoplay videos when necessary since it adds download size and can be annoying
+          to users, depending on context.
         </p>
 
         <p>
           <strong
-            >Always remove audio from hero videos (and other videos that are not
-            intended to have sound).</strong
+            >Always remove audio from hero videos (and other videos that are not intended to have
+            sound).</strong
           >
         </p>
 
         <h3>Preload</h3>
         <p>
-          The default value for <code>preload</code> is not consistent, so
-          prefer being explicit.
+          The default value for <code>preload</code> is not consistent, so prefer being explicit.
         </p>
         <p>
-          Setting <code>preload</code> to <code>"none"</code> is usually best to
-          minimized download size, but if you <em>strongly expect</em> the video
-          to be played and do not have a streamable source, use
-          <code>"metadata"</code> to improve playback start while keeping
-          initial download size minimal (2-5% of the size of the actual video
-          file).
+          Setting <code>preload</code> to <code>"none"</code> is usually best to minimized download
+          size, but if you <em>strongly expect</em> the video to be played and do not have a
+          streamable source, use <code>"metadata"</code> to improve playback start while keeping
+          initial download size minimal (2-5% of the size of the actual video file).
         </p>
         <p>
-          The <code>autoplay</code> attribute will override
-          <code>preload</code>, so rarely leave <code>preload</code> undefined
-          (equivalent to <code>preload="auto"</code>) since the browser is
-          allowed to download the entire video in advance.
+          The <code>autoplay</code> attribute will override <code>preload</code>, so rarely leave
+          <code>preload</code> undefined (equivalent to <code>preload="auto"</code>) since the
+          browser is allowed to download the entire video in advance.
         </p>
         <p>
           In order to populate a thumbnail when setting
-          <code>preload="none"</code>, the <code>poster</code> attribute can be
-          used.
+          <code>preload="none"</code>, the <code>poster</code> attribute can be used.
           <small
-            >(Note: <code>preload="metadata"</code> will often provide the
-            thumbnail, but test to be sure.)</small
+            >(Note: <code>preload="metadata"</code> will often provide the thumbnail, but test to be
+            sure.)</small
           >
         </p>
       </section>
@@ -357,9 +325,9 @@
       <h2>JS Performance</h2>
       <section>
         <p>
-          <strong>Profile your site's performance.</strong> Not all of these
-          strategies are needed all of the time, so do not assume causes of
-          performance issues before <em>measuring</em> network and performance.
+          <strong>Profile your site's performance.</strong> Not all of these strategies are needed
+          all of the time, so do not assume causes of performance issues before
+          <em>measuring</em> network and performance.
         </p>
 
         <h3>Minimize JS Used</h3>
@@ -371,16 +339,16 @@
           <li>
             <strong>Simplify</strong>
             <p>
-              Don't use a framework (which are JS-heavy) for very simple pages /
-              use cases, when it would not add undue complication.
+              Don't use a framework (which are JS-heavy) for very simple pages / use cases, when it
+              would not add undue complication.
             </p>
             <p>
-              Keep things simple, unless improvements are 1) needed/appreciated
-              on the dev-side or 2) appreciated on the user-side.
+              Keep things simple, unless improvements are 1) needed/appreciated on the dev-side or
+              2) appreciated on the user-side.
             </p>
             <p>
-              Use built-in functionality when possible instead of adding complex
-              libraries or your own code.
+              Use built-in functionality when possible instead of adding complex libraries or your
+              own code.
             </p>
           </li>
           <li>
@@ -390,94 +358,84 @@
           <li>
             <strong>Strip</strong>
             <p>
-              Remove unused code. If it isn't being used (whether it's your code
-              or from a framework), it shouldn't be getting downloaded.
+              Remove unused code. If it isn't being used (whether it's your code or from a
+              framework), it shouldn't be getting downloaded.
             </p>
           </li>
           <li>
             <strong>Minify (+ Compress)</strong>
             <p>Reduce characters of your files to reduce download size.</p>
-            <p>
-              Compress files (via Gzip, Brotli, etc.) to further reduce bytes
-              downloaded.
-            </p>
+            <p>Compress files (via Gzip, Brotli, etc.) to further reduce bytes downloaded.</p>
           </li>
         </ol>
-        <p>
-          Much of steps 2 through 4 should be handled by a bundler (like
-          Webpack).
-        </p>
+        <p>Much of steps 2 through 4 should be handled by a bundler (like Webpack).</p>
 
         <h3>When to Load JS</h3>
         <p>
-          JS files, by default, are parser-blocking in that they must be
-          downloaded, parsed, and run, before HTML parsing can continue.
+          JS files, by default, are parser-blocking in that they must be downloaded, parsed, and
+          run, before HTML parsing can continue.
           <small style="display: block"
-            >NOTE: they are not <em>download-blocking</em>, so other previously
-            seen linked resources can still be downloaded in parallel.</small
+            >NOTE: they are not <em>download-blocking</em>, so other previously seen linked
+            resources can still be downloaded in parallel.</small
           >
         </p>
 
         <h4>- Preload Critical Scripts</h4>
         <p class="code-background">
-          <code> &lt;script src="main.js"&gt;&lt;/script&gt; </code> is
-          parser-blocking.
+          <code> &lt;script src="main.js"&gt;&lt;/script&gt; </code> is parser-blocking.
         </p>
         <p class="code-background">
           <code
-            >&lt;link rel=&quot;preload&quot; href=&quot;important-js.js&quot;
-            as=&quot;script&quot; /&gt;</code
+            >&lt;link rel=&quot;preload&quot; href=&quot;important-js.js&quot; as=&quot;script&quot;
+            /&gt;</code
           >
           AND
           <code
-            >&lt;link rel=&quot;modulepreload&quot;
-            href=&quot;important-module.js&quot; /&gt;</code
+            >&lt;link rel=&quot;modulepreload&quot; href=&quot;important-module.js&quot; /&gt;</code
           >
           are not.
         </p>
         <p>
           The file may still be downloading by the time it is referenced (via
-          <code>script</code> element or <code>import</code> call, for a
-          module), at which point the download becomes parser-blocking, but the
-          <em>duration</em> of that block will be reduced.
+          <code>script</code> element or <code>import</code> call, for a module), at which point the
+          download becomes parser-blocking, but the <em>duration</em> of that block will be reduced.
         </p>
 
         <h4>- Defer Non-critical Scripts</h4>
         <p>
-          There are a few ways to defer script execution until after the HTML
-          has been parsed, flowed, and painted
+          There are a few ways to defer script execution until after the HTML has been parsed,
+          flowed, and painted
         </p>
         <ul>
           <li>
-            <code>script async</code> - these scripts download in parallel,
-            execute in any order (do not obey script order in the document), and
-            will <strong>block</strong> parser rendering when they execute upon
-            download finish, if the HTML is still being parsed.
+            <code>script async</code> - these scripts download in parallel, execute in any order (do
+            not obey script order in the document), and will <strong>block</strong> parser rendering
+            when they execute upon download finish, if the HTML is still being parsed.
           </li>
           <li>
-            <code>script defer</code> - these scripts download in parallel, BUT
-            preserve execution order in the document AND do not run until the
-            HTML has painted once (note: module scripte are deferred by
-            default). <code>DOMContentLoaded</code> does not fire until after
-            all deferred scripts complete.
+            <code>script defer</code> - these scripts download in parallel, BUT preserve execution
+            order in the document AND do not run until the HTML has painted once (note: module
+            scripte are deferred by default). <code>DOMContentLoaded</code> does not fire until
+            after all deferred scripts complete.
           </li>
+          <!-- prettier-ignore -->
           <li class="code-background">
             <p>
               Alternatively, if you do not want specific JS code to execute
               until a certain trigger point in the code, you can load it via JS
               like this:
             </p>
-            <code style="display: block; white-space: pre; margin-top: 0.5rem"
-              >const scriptElem = document.createElement("script");
-              scriptElem.src = "index.js"; scriptElem.addEventListener("load",
-              () => { // Run a function contained within index.js once it has
-              definitely loaded init(); });
-              document.head.append(scriptElem);</code
-            >
+            <code style="display: block; white-space: pre; margin-top: 0.5rem" >const scriptElem = document.createElement("script");
+scriptElem.src = "index.js";
+scriptElem.addEventListener("load", () => {
+  // Run a function contained within index.js once it has definitely loaded init();
+});
+document.head.append(scriptElem);</code >
             <p>Or like this:</p>
             <code style="display: block; white-space: pre; margin-top: 0.5rem"
-              >import("./modules/myModule.js").then((module) => { // Do
-              something with the module });</code
+              >import("./modules/myModule.js").then((module) => {
+  // Do something with the module
+});</code
             >
             <p>
               NOTE: Only load JS dependencies like this when necessary (such as
@@ -489,47 +447,54 @@
           </li>
         </ul>
         <p>
-          NOTE: <code>load</code> event fires after all dependencies derived
-          from the HTML+CSS+JS parse tree have downloaded (images, scripts,
-          etc.).
+          NOTE: <code>load</code> event fires after all dependencies derived from the HTML+CSS+JS
+          parse tree have downloaded (images, scripts, etc.).
         </p>
 
         <h3>Break up Long Tasks</h3>
         <p>
-          Promise-based APIS post to the microtask queue while non-Promise-based
-          APIs post to the event queue (such as
-          <code>setTimeout(fun(), 0)</code>). We can utilize this to break up
-          heavy tasks into pieces that allow for other events to be handled in
-          between.
+          Promise-based APIS post to the microtask queue while non-Promise-based APIs post to the
+          event queue (such as
+          <code>setTimeout(fun(), 0)</code>). We can utilize this to break up heavy tasks into
+          pieces that allow for other events to be handled in between.
         </p>
         <p class="code-background">
           Example:
+          <!-- prettier-ignore -->
           <code style="display: block; white-space: pre"
-            >async function longTask() { const tasks = [a, b, c, d, e]; while
-            (tasks.length > 0) { const task = tasks.shift(); task(); await new
-            Promise((resolve) => setTimeout(resolve, 0)); } }</code
+            >async function longTask() {
+  const tasks = [a, b, c, d, e];
+  while (tasks.length > 0) {
+    const task = tasks.shift();
+    task();
+    await new Promise((resolve) => setTimeout(resolve, 0));
+  }
+}</code
           >
         </p>
         <p>
-          Alternatively, use <strong>web workers</strong> for large computations
-          that don't involve much DOM maniupulation (since they cannot access
-          the DOM).
+          Alternatively, use <strong>web workers</strong> for large computations that don't involve
+          much DOM maniupulation (since they cannot access the DOM).
         </p>
 
         <h3>JS Animations</h3>
         <p>
-          Use CSS animations or the Web Animations API (which hooks into CSS
-          animations) <em>whenever</em> possible.
+          Use CSS animations or the Web Animations API (which hooks into CSS animations)
+          <em>whenever</em> possible.
         </p>
         <p class="code-background">
           If you <em>have</em> to use JS directly for an animation, use
-          <code>Window.requestAnimationFrame()</code>, usually with a
-          <code>canvas</code> element, like so:
+          <code>Window.requestAnimationFrame()</code>, usually with a <code>canvas</code> element,
+          like so:
+                    <!-- prettier-ignore -->
+
           <code style="display: block; white-space: pre"
-            >function loop(timestamp) { // Draw some stuff then re-queue for the
-            next frame // Note: always compute the offset from last loop call to
-            avoid animation running faster on high-refresh displays
-            requestAnimationFrame(loop); } requestAnimationFrame(loop)</code
+            >function loop(timestamp) {
+  // Draw some stuff then re-queue for the next frame
+  // Note: always compute the offset from last loop call to avoid animation running faster on high-refresh displays
+  requestAnimationFrame(loop);
+}
+requestAnimationFrame(loop)</code
           >
         </p>
 
@@ -538,9 +503,9 @@
         <ul>
           <li>Remove no longer needed listeners.</li>
           <li>
-            Set listeners on parent elements instead if many child elements will
-            all have the same (or similar click listeners) since you can always
-            determine the target of a click via the event
+            Set listeners on parent elements instead if many child elements will all have the same
+            (or similar click listeners) since you can always determine the target of a click via
+            the event
             <code>target</code> property.
           </li>
         </ul>
@@ -548,15 +513,11 @@
         <h3>DOM Manipulation</h3>
         <ul>
           <li>
+            <p>Reduce changes to the DOM because they are computationally expensive.</p>
             <p>
-              Reduce changes to the DOM because they are computationally
-              expensive.
-            </p>
-            <p>
-              <strong>(Note: Performance benefit debatable)</strong> If you have
-              performance issues when a making a lot of DOM changes at once (a
-              loop or something), test using <code>DocumentFragment</code> to
-              construct the entire tree before updating.
+              <strong>(Note: Performance benefit debatable)</strong> If you have performance issues
+              when a making a lot of DOM changes at once (a loop or something), test using
+              <code>DocumentFragment</code> to construct the entire tree before updating.
             </p>
           </li>
         </ul>
@@ -565,15 +526,15 @@
       <h2>HTML Performance</h2>
       <section>
         <p>
-          <strong>Profile your site's performance.</strong> Not all of these
-          strategies are needed all of the time, so do not assume causes of
-          performance issues before <em>measuring</em> network and performance.
+          <strong>Profile your site's performance.</strong> Not all of these strategies are needed
+          all of the time, so do not assume causes of performance issues before
+          <em>measuring</em> network and performance.
         </p>
 
         <h3><code>iframes</code></h3>
         <p>
-          <code>iframes</code> are more expensive than hosting code natively in
-          the page, so use them wisely.
+          <code>iframes</code> are more expensive than hosting code natively in the page, so use
+          them wisely.
         </p>
         <p>
           They also must download all resources independently
@@ -585,159 +546,137 @@
 
         <p>
           (You can manually provide data to construct an iframe (via
-          <code>src</code> or <code>srcdoc</code>), but this is not a general
-          use case unless your 1st-party iframe usage is heavy.)
+          <code>src</code> or <code>srcdoc</code>), but this is not a general use case unless your
+          1st-party iframe usage is heavy.)
         </p>
       </section>
 
       <h2>CSS Performance</h2>
       <section>
         <p>
-          <strong>Profile your site's performance.</strong> Not all of these
-          strategies are needed all of the time, so do not assume causes of
-          performance issues before <em>measuring</em> network and performance.
+          <strong>Profile your site's performance.</strong> Not all of these strategies are needed
+          all of the time, so do not assume causes of performance issues before
+          <em>measuring</em> network and performance.
         </p>
 
         <h3>The CSSOM</h3>
         <p>
-          The CSSOM and the DOM constructions are <em>not</em> tightly coupled.
-          Thus, they are not blocked on each other.
+          The CSSOM and the DOM constructions are <em>not</em> tightly coupled. Thus, they are not
+          blocked on each other.
         </p>
         <p>
-          <em>However</em>, CSSOM construction is render-blocking, so all
-          stylesheets that match media queries for the page <em>must</em> be
-          loaded before the initial render.
-        </p>
-
-        <p>
-          NOTE: <code>link</code> elements for stylesheets are only
-          render-blocking, not <em>parser-blocking</em> like scripts.
+          <em>However</em>, CSSOM construction is render-blocking, so all stylesheets that match
+          media queries for the page <em>must</em> be loaded before the initial render.
         </p>
 
         <p>
-          Deferred scripts (and thus <code>DOMContentLoaded</code>) are
-          <em>meant to</em> (according to the spec) wait until all
-          render-blocking CSS has been loaded (similar to blocking scripts), but
-          this behavior is not true in all browsers yet. Therefore, if a script
-          must rely on critical CSS to be loaded, preload the script and then
-          call it as a standard blocking script at the end of the document.
+          NOTE: <code>link</code> elements for stylesheets are only render-blocking, not
+          <em>parser-blocking</em> like scripts.
+        </p>
+
+        <p>
+          Deferred scripts (and thus <code>DOMContentLoaded</code>) are <em>meant to</em> (according
+          to the spec) wait until all render-blocking CSS has been loaded (similar to blocking
+          scripts), but this behavior is not true in all browsers yet. Therefore, if a script must
+          rely on critical CSS to be loaded, preload the script and then call it as a standard
+          blocking script at the end of the document.
         </p>
 
         <h3>Optimizing CSS</h3>
         <ul>
+          <li>Tree shake dead CSS (or have some other organizational method).</li>
           <li>
-            Tree shake dead CSS (or have some other organizational method).
-          </li>
-          <li>
-            Split CSS into files according to media query and non-/critical
-            path. They will still be downloaded, but they won't be treated as
-            render-blocking.
+            Split CSS into files according to media query and non-/critical path. They will still be
+            downloaded, but they won't be treated as render-blocking.
           </li>
           <li>Minify and compress.</li>
           <li>
             <p>
               <strong
-                >(NOTE: Low performance gains for these except in very complex /
-                styled cases.)</strong
+                >(NOTE: Low performance gains for these except in very complex / styled
+                cases.)</strong
               >
             </p>
             <p>Keep selectors simple until they need to be complex.</p>
             <p>
-              Also CSS selectors are evaluated right to left, so a more specific
-              selector at the end of a selector list will be more performant.
+              Also CSS selectors are evaluated right to left, so a more specific selector at the end
+              of a selector list will be more performant.
             </p>
           </li>
+          <li>Use SVG/CSS sprites or icon fonts to reduce icon HTTP requests.</li>
           <li>
-            Use SVG/CSS sprites or icon fonts to reduce icon HTTP requests.
-          </li>
-          <li>
-            Preload font faces (or <code>preconnect</code>) and critical images
-            from CSS files to avoid waiting until the line is parsed in a
-            particular CSS file to start the download.
+            Preload font faces (or <code>preconnect</code>) and critical images from CSS files to
+            avoid waiting until the line is parsed in a particular CSS file to start the download.
             <small style="display: block"
-              >Interesting note: fonts are loaded once used instead of when
-              declared via <code>@font-face</code>, which is even more reason to
-              preload them.</small
+              >Interesting note: fonts are loaded once used instead of when declared via
+              <code>@font-face</code>, which is even more reason to preload them.</small
             >
           </li>
           <li>
-            For font formates, use <code>.woff2</code> with
-            <code>.woff</code> as a fallback since these can be compressed
-            (other types cannot).
+            For font formates, use <code>.woff2</code> with <code>.woff</code> as a fallback since
+            these can be compressed (other types cannot).
             <small style="display: block"
-              >NOTE: make sure to include <code>format</code> property since
-              font types are only determined after download completes.</small
+              >NOTE: make sure to include <code>format</code> property since font types are only
+              determined after download completes.</small
             >
           </li>
           <li>
-            For different fonts for different languages w/ different characters,
-            use <code>unicode-range</code> in
-            <code>@font-face</code> declarations so that the font will only be
-            downloaded and used if a particular language's characters are
-            detected.
+            For different fonts for different languages w/ different characters, use
+            <code>unicode-range</code> in <code>@font-face</code> declarations so that the font will
+            only be downloaded and used if a particular language's characters are detected.
           </li>
         </ul>
 
         <h3>CSS Animations</h3>
         <p>
-          Prefer using <code>transform</code> or animating only
-          <code>opacity</code> or <code>filter</code> since these do not trigger
-          reflows. Note that <code>transform</code> <em>never</em> affects the
-          document flow, so other elements will not reposition accordingly.
+          Prefer using <code>transform</code> or animating only <code>opacity</code> or
+          <code>filter</code> since these do not trigger reflows. Note that <code>transform</code>
+          <em>never</em> affects the document flow, so other elements will not reposition
+          accordingly.
         </p>
         <small
-          >Note: Only use <code>will-change</code> property as a last result to
-          improve animation performance (i.e., only when performance is already
-          bad, not preemptively).</small
+          >Note: Only use <code>will-change</code> property as a last result to improve animation
+          performance (i.e., only when performance is already bad, not preemptively).</small
         >
 
         <h3>Font Styling</h3>
         <p>Text loading has 2 main periods:</p>
         <ol>
           <li>
-            <strong>block</strong> - text is rendered with an
-            <em>invisible</em> fallback font.
+            <strong>block</strong> - text is rendered with an <em>invisible</em> fallback font.
           </li>
-          <li>
-            <strong>swap</strong> - text is rendered with a
-            <em>visible</em> fallback font
-          </li>
+          <li><strong>swap</strong> - text is rendered with a <em>visible</em> fallback font</li>
         </ol>
         <small style="display: block"
-          >Technically, there can also be a failure period, but that always
-          kicks off a fallback font usage.</small
+          >Technically, there can also be a failure period, but that always kicks off a fallback
+          font usage.</small
         >
         <p>
-          <code>font-display</code> controls these periods and can provide a
-          better text loading UX:
+          <code>font-display</code> controls these periods and can provide a better text loading UX:
         </p>
 
         <p>
-          The default behavior (usually) is synonymous and then swap to the font
-          once downloaded (known as a <dfn>FOIT</dfn>, Flash of Invisible Text).
-          If a few seconds elapse,
+          The default behavior (usually) is synonymous and then swap to the font once downloaded
+          (known as a <dfn>FOIT</dfn>, Flash of Invisible Text). If a few seconds elapse,
         </p>
-        <p>
-          <code>font-display</code> can tweak this for a snappier experience:
-        </p>
+        <p><code>font-display</code> can tweak this for a snappier experience:</p>
         <ul>
           <li>
-            <code>block</code> (few sec block, infinite swap time) - synonymous
-            (usually) with default behavior usually but good to be explicit if
-            this behavior is desired (causes <dfn>FOIT</dfn>, Flash of Invisible
-            Text).
+            <code>block</code> (few sec block, infinite swap time) - synonymous (usually) with
+            default behavior usually but good to be explicit if this behavior is desired (causes
+            <dfn>FOIT</dfn>, Flash of Invisible Text).
           </li>
           <li>
-            <code>swap</code> (very short block, infinite swap time) - causes
-            <dfn>FOUT</dfn>, Flash of Unstyled Text
+            <code>swap</code> (very short block, infinite swap time) - causes <dfn>FOUT</dfn>, Flash
+            of Unstyled Text
           </li>
           <li>
-            <code>fallback</code> (very short block, few sec swap) - causes
-            FOUT, but prevents text swap at much later point
+            <code>fallback</code> (very short block, few sec swap) - causes FOUT, but prevents text
+            swap at much later point
           </li>
           <li>
-            <code>optional</code> (very short block, no swap) - should only be
-            used if custom font is considered not important to UX
+            <code>optional</code> (very short block, no swap) - should only be used if custom font
+            is considered not important to UX
           </li>
         </ul>
       </section>
@@ -746,26 +685,22 @@
       <section>
         <h3>Performance Budgets</h3>
         <p>
-          Define important limits for your site/page/assets/images/whatever,
-          such as max HTTP requests, max total size, max loading time for a
-          specific user agent or device.
+          Define important limits for your site/page/assets/images/whatever, such as max HTTP
+          requests, max total size, max loading time for a specific user agent or device.
         </p>
-        <p>
-          This provides you breakpoints to know when performance is becoming an
-          issue.
-        </p>
+        <p>This provides you breakpoints to know when performance is becoming an issue.</p>
 
         <h3>KPIs</h3>
         <ul>
           Some important KPIs to monitor:
           <li>Converstion rate / funnels for certain actions/flows</li>
           <li>
-            Average time on site (to determine if users are abandoning due to
-            performance, rather than a specific flow)
+            Average time on site (to determine if users are abandoning due to performance, rather
+            than a specific flow)
           </li>
           <li>
-            Net Promotion Score <dfn>(NPS)</dfn>, which assesses user brand
-            loyalty (likelihood to recommend)
+            Net Promotion Score <dfn>(NPS)</dfn>, which assesses user brand loyalty (likelihood to
+            recommend)
           </li>
         </ul>
       </section>
