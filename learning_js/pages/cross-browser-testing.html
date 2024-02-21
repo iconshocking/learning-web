@@ -167,10 +167,38 @@
         </p>
 
         <p>
-          Use a blank profile or a private browsing session when doing in-person testing to avoid extensions,
-          cookies, or caching from influencing testing.
+          Use a blank profile or a private browsing session when doing in-person testing to avoid
+          extensions, cookies, or caching from influencing testing.
         </p>
       </section>
+
+      <h2>General Tips</h2>
+      <ul>
+        <li>
+          (Very uncommon these days unless using very new elements) Provide HTML fallbacks for
+          unsupported elements
+        </li>
+        <li>
+          Provide either CSS fallbacks for new values for properties OR feature queries to determine
+          branching rules
+          <p>
+            REMEMBER: ONLY use selectors with lacking support or vendor prefixes (though do not use
+            vendor-prefixes if at all possible) when they are by themselves or within a forgiving
+            selector, <code>:is()</code> or <code>:where()</code>.
+          </p>
+        </li>
+        <li>
+          Libraries (and drop-in polyfills) can be used to easily handle cross-browser differences
+          automatically. You should gate loading these libraries/polyfills with feature detection.
+        </li>
+        <li>
+          You should NOT use vendor-prefixed JS objects in production code, but if you must, you can
+          define falbacks like
+          <pre>const AudioContext = window.AudioContext || window.webkitAudioContext;
+const audioCtx = new AudioContext();
+          </pre>
+        </li>
+      </ul>
     </main>
   </body>
 </html>
