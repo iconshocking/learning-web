@@ -225,7 +225,16 @@
         </li>
       </ul>
 
-      <p>ALWAYS make sure an interactive element is tab-accessible.</p>
+      <p>
+        ALWAYS make sure an interactive element is tab-accessible (and keyboard accessible too if
+        needed - <code>document.activeElement</code> is helpful here).
+      </p>
+
+      <p>
+        If it is difficult to set up standard/intuitive tabbing behavior for a custom interactive
+        element, consider creating keyboard controls for the element that are communicated to the
+        user.
+      </p>
 
       <h3>Labels that Don't Require Context</h3>
       <section>
