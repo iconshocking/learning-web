@@ -1,0 +1,7 @@
+@import "style-for-import.css";
+
+body {
+  > p {
+    text-align: center;
+  }
+}
