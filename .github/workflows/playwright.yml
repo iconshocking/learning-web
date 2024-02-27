@@ -1,9 +1,14 @@
 name: Playwright Tests
 on:
   push:
+    paths:
+      - 'learning_js/test_automation_practice/**'
     branches: [ main ]
 jobs:
   test:
+    defaults:
+      run:
+        working-directory: learning_js/test_automation_practice
     timeout-minutes: 5
     runs-on: ubuntu-latest
     steps:
