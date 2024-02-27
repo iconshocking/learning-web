@@ -5,5 +5,11 @@ array.forEach((e, i) => {
   elem.textContent = i + 1 + ". " + e;
   document.body.appendChild(elem);
 });
+const button = document.createElement("button");
+button.addEventListener("click", () => {
+  document.title = "I been clicked!";
+});
+button.textContent = "Click me!";
+document.body.appendChild(button);
 
 export default () => 3.141593;
