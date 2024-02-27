@@ -2,7 +2,7 @@ import { test as baseTest, expect } from "@playwright/test";
 import debug from "debug";
 import * as fs from "fs";
 
-const log = debug("mytest");
+const log = debug("testing:log");
 
 // test fixture
 const test = baseTest.extend({
@@ -21,7 +21,7 @@ const test = baseTest.extend({
       const logs = [];
 
       log.log = (...args) => logs.push(args.map(String).join(""));
-      debug.enable("mytest");
+      debug.enable("testing:log");
       log("logging");
 
       await use();
@@ -50,7 +50,6 @@ test("when page is rendered, text element with Mark is visible", async ({ page }
   await expect(page.getByText("Mark")).toBeVisible();
   log("test 3 end");
 });
-
 
 test("when button is clicked, title is updated", async ({ page }) => {
   log("test 2 start");
