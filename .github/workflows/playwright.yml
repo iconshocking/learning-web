@@ -1,31 +1,36 @@
 name: Playwright Tests
 on:
   push:
+    branches:
+      - main
     paths:
-      - "learning_js/test_automation_practice/**"
-    branches: [main]
+      - "learning_js/test-automation-practice/**"
+  workflow_dispatch:
+    # automatically has last branch/tag and last commit
 jobs:
   test:
     defaults:
       run:
-        working-directory: learning_js/test_automation_practice
+        working-directory: learning_js/test-automation-practice
     timeout-minutes: 5
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           repository: ${{ github.repository }} # default
           ref: "" # defaults to SHA that triggered the workflow
           fetch-depth: 1 # default
-      - uses: actions/setup-node@v3
+      - uses: actions/setup-node@v4
         with:
           node-version: 20
       - name: Install dependencies
         run: npm install -g pnpm && pnpm install
       - name: Install Playwright Browsers
         run: pnpm exec playwright install --with-deps
-      - name: Run Playwright tests
-        run: pnpm exec playwright test
+      - name: Build project
+        run: pnpm build
+      - name: Run Playwright tests on build project
+        run: STAGING=0 pnpm exec playwright test
       - uses: actions/upload-artifact@v3
         if: always()
         with:
