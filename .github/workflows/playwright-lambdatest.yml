@@ -40,8 +40,8 @@ jobs:
         run: ( ./LambdaTestTunnel-Linux --user $LAMBDATEST_USER --key $LAMBDATEST_KEY & )
       - name: Run Playwright tests via LambdaTest on build project
         # can't fully parallelize tests because the returning results from LambdaTest cause only one browser to succeed
-        run: ( pnpm exec playwright test --project=chromium; wait; ) &
+        run: ( pnpm exec playwright test --project=chromium ) &
       - name: Run Playwright tests via LambdaTest on build project - part 2
-        run: ( pnpm exec playwright test --project=webkit; wait; ) &
-      - name: wait till tests finish
+        run: ( pnpm exec playwright test --project=webkit ) &
+      - name: wait till subshells finish
         run: wait
