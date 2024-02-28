@@ -30,8 +30,10 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 20
+      # could benefit from caching
       - name: Install dependencies
         run: npm install -g pnpm && pnpm install
+      # could benefit from caching
       - name: Install Playwright Browsers
         run: pnpm exec playwright install --with-deps chromium
       - name: Build project
@@ -40,7 +42,7 @@ jobs:
         run: ( ./LambdaTestTunnel-Linux --user $LAMBDATEST_USER --key $LAMBDATEST_KEY & )
       - name: Run Playwright tests via LambdaTest on build project
         # Free tier only supports 2 parallel tests, so run two in the background and tests are fast
-        # enough that they don't step on each others toes much with queueing. 
+        # enough that they don't step on each others toes much with queueing.
         #
         # Also, have to run each worker in individual subshells because otherwise the mixed
         # reporting returned to the shell creates false negatives.
