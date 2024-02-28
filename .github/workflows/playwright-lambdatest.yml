@@ -42,9 +42,9 @@ jobs:
         run: sleep 5
       - name: Run Playwright tests via LambdaTest on build project
         # he parentheses create a subshell, so the wait command will wait for all the commands to finish
-        # ( must re-add pnpm due to the subshell )
-        run: ( npm install -g pnpm \
-          pnpm exec playwright test --project=chromium & \
-          pnpm exec playwright test --project=firefox & \
-          pnpm exec playwright test --project=webkit & \
+        # ( must re-source nvm.sh to use npx in the subshell )
+        run: ( . ~/.nvm/nvm.sh \
+          npx playwright test --project=chromium & \
+          npx playwright test --project=firefox & \
+          npx playwright test --project=webkit & \
           wait )
