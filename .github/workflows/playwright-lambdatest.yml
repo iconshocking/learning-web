@@ -39,10 +39,12 @@ jobs:
       - name: Set up LambdaTest Tunnel and background it
         run: ( ./LambdaTestTunnel-Linux --user $LAMBDATEST_USER --key $LAMBDATEST_KEY & )
       - name: Run Playwright tests via LambdaTest on build project
-        # can't fully parallelize tests because the returning results from LambdaTest cause only one browser to succeed
-        run: ( pnpm exec playwright test --project=chromium ) &
-      - name: Run Playwright tests via LambdaTest on build project - part 2
-        run: ( pnpm exec playwright test --project=webkit ) &
+        # Free tier only supports 2 parallel tests, so run two in the background and tests are fast
+        # enough that they don't step on each others toes much with queueing. 
+        #
+        # Also, have to run each worker in individual subshells because otherwise the mixed
+        # reporting returned to the shell creates false negatives.
+        run: ( pnpm exec playwright test --project=chromium ) & ( pnpm exec playwright test --project=webkit ) &
       - name: Check if playwright tests still running
         # YAML folded style (>) replaces newlines with spaces, so this is a single line command
         run: >
