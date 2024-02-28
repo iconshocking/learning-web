@@ -37,7 +37,8 @@ jobs:
       - name: Build project
         run: pnpm build
       - name: Set up LambdaTest Tunnel and background it
-        run: ./LambdaTestTunnel-Linux --user $LAMBDATEST_USER --key $LAMBDATEST_KEY
+        # run in subshell
+        run: ( ./LambdaTestTunnel-Linux --user $LAMBDATEST_USER --key $LAMBDATEST_KEY & )
       - name: Run Playwright tests via LambdaTest on build project
         run: npx playwright test --project=chromium & \
           npx playwright test --project=firefox & \
