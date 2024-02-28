@@ -40,15 +40,15 @@ jobs:
         run: ( ./LambdaTestTunnel-Linux --user $LAMBDATEST_USER --key $LAMBDATEST_KEY & )
       - name: Run Playwright tests via LambdaTest on build project
         # Free tier only supports 2 parallel tests, so run two in the background and tests are fast
-        # enough that they don't step on each others toes much with queueing.
+        # enough that they don't step on each others toes much with queueing. 
         #
         # Also, have to run each worker in individual subshells because otherwise the mixed
         # reporting returned to the shell creates false negatives.
-        run: ( pnpm exec playwright test --project=chromium ) & ( pnpm exec playwright test --project=webkit ) & wait
-      # - name: Check if playwright tests still running
-      #   # YAML folded style (>) replaces newlines with spaces, so this is a single line command
-      #   run: >
-      #     while ps aux | grep "playwright test" | grep -vq "grep"; do
-      #     echo "Playwright tests still running";
-      #     sleep 10;
-      #     done
+        run: ( pnpm exec playwright test --project=chromium ) & ( pnpm exec playwright test --project=webkit ) &
+      - name: Check if playwright tests still running
+        # YAML folded style (>) replaces newlines with spaces, so this is a single line command
+        run: >
+          while ps aux | grep "playwright test" | grep -vq "grep"; do
+          echo "Playwright tests still running";
+          sleep 10;
+          done
