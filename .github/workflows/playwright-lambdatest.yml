@@ -43,5 +43,10 @@ jobs:
         run: ( pnpm exec playwright test --project=chromium ) &
       - name: Run Playwright tests via LambdaTest on build project - part 2
         run: ( pnpm exec playwright test --project=webkit ) &
-      - name: wait till subshells finish
-        run: wait
+      - name: Check if playwright tests still running
+        # YAML folded style (>) replaces newlines with spaces, so this is a single line command
+        run: >
+          while ps aux | grep "playwright test" | grep -vq "grep"; do
+          echo "Playwright tests still running";
+          sleep 10;
+          done
