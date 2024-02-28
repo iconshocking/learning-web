@@ -43,7 +43,9 @@ jobs:
           pnpm exec playwright test --project=firefox > /dev/null 2>&1 & \
           pnpm exec playwright test --project=webkit > /dev/null 2>&1 &
       - name: Check if playwright tests still running
-        run: while ps aux | grep "playwright test" | grep -vq "grep"; do \
-          echo "Playwright tests still running"; \
-          sleep 10; \
+        # YAML folded style (>) replaces newlines with spaces, so this is a single line command
+        run: >
+          while ps aux | grep "playwright test" | grep -vq "grep"; do
+          echo "Playwright tests still running";
+          sleep 10;
           done
