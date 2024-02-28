@@ -37,10 +37,11 @@ jobs:
       - name: Build project
         run: pnpm build
       - name: Set up LambdaTest Tunnel and background it
-        run: ./LambdaTestTunnel-Linux --user $LAMBDATEST_USER --key $LAMBDATEST_KEY &
+        run: ( ./LambdaTestTunnel-Linux --user $LAMBDATEST_USER --key $LAMBDATEST_KEY & )
       - name: Run Playwright tests via LambdaTest on build project
-        # current free plan only allows for 2 parallel tests
-        run: >
-          ( pnpm exec playwright test --project=chromium &
-          pnpm exec playwright test --project=webkit &
-          wait )
+        # can't fully parallelize tests because the returning results from LambdaTest cause only one browser to succeed
+        run: ( pnpm exec playwright test --project=chromium; wait; ) &
+      - name: Run Playwright tests via LambdaTest on build project - part 2
+        run: ( pnpm exec playwright test --project=webkit; wait; ) &
+      - name: wait till tests finish
+        run: wait
