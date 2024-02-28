@@ -37,10 +37,13 @@ jobs:
       - name: Build project
         run: pnpm build
       - name: Set up LambdaTest Tunnel and background it
-        # run in subshell
-        run: ( ./LambdaTestTunnel-Linux --user $LAMBDATEST_USER --key $LAMBDATEST_KEY; ) &
+        run: ./LambdaTestTunnel-Linux --user $LAMBDATEST_USER --key $LAMBDATEST_KEY &
       - name: Run Playwright tests via LambdaTest on build project
         run: pnpm exec playwright test --project=chromium & \
           pnpm exec playwright test --project=firefox & \
-          pnpm exec playwright test --project=webkit & \
-          wait
+          pnpm exec playwright test --project=webkit &
+      - name: Check if playwright tests still running
+        run: while ps aux | grep "playwright test" | grep -vq "grep"; do \
+          echo "Playwright tests still running"; \
+          sleep 10; \
+          done
