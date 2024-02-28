@@ -26,6 +26,7 @@ jobs:
           repository: ${{ github.repository }} # default
           ref: "" # defaults to SHA that triggered the workflow
           fetch-depth: 1 # default
+          lfs: true
       - uses: actions/setup-node@v4
         with:
           node-version: 20
