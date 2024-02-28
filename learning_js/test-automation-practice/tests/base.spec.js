@@ -1,12 +1,13 @@
 import { test as baseTest, expect } from "@playwright/test";
+import child from "child_process";
 import debug from "debug";
 import * as fs from "fs";
 
 const log = debug("testing:log");
 
-// test fixture
-const test = baseTest.extend({
-  page: [
+let page;
+if (!process.env.REMOTE_TEST) {
+  page = [
     async ({ page }, use) => {
       await page.goto("/");
       await use(page);
@@ -14,7 +15,71 @@ const test = baseTest.extend({
     },
     // can set a slower timeout for the fixture while keeping the test timeout low
     { timeout: 5000 },
-  ],
+  ];
+} else {
+  page = [
+    async ({ browserName }, use) => {
+      const { chromium } = await import("@playwright/test");
+      const browserMap = {
+        chromium: "pw-chromium",
+        firefox: "pw-firefox",
+        webkit: "pw-webkit",
+      };
+
+      const capabilities = {
+        browserName: browserMap[browserName], // Browsers allowed: `Chrome`, `MicrosoftEdge`, `pw-chromium`, `pw-firefox` and `pw-webkit`
+        browserVersion: "latest",
+        "LT:Options": {
+          platform: browserMap[browserName] === "pw-webkit" ? "MacOS Big sur" : "Windows 10",
+          build: "Playwright Single Build",
+          name: "Playwright Sample Test",
+          user: process.env.LAMBDATEST_USER,
+          accessKey: process.env.LAMBDATEST_KEY,
+          network: true,
+          video: false,
+          console: true,
+          // screenshots
+          visual: true,
+          // tunnel for local hosting
+          tunnel: true,
+          playwrightClientVersion: child
+            .execSync("npx playwright --version")
+            .toString()
+            .trim()
+            .split(" ")[1],
+        },
+      };
+
+      const browser = await chromium.connect({
+        wsEndpoint: `wss://cdp.lambdatest.com/playwright?capabilities=${encodeURIComponent(JSON.stringify(capabilities))}`,
+      });
+
+      page = await browser.newPage();
+      await page.goto("/");
+      try {
+        await use(page);
+        await page.evaluate(
+          () => {},
+          `lambdatest_action: ${JSON.stringify({ action: "setTestStatus", arguments: { status: "passed", remark: "Title matched" } })}`
+        );
+      } catch (error) {
+        await page.evaluate(
+          () => {},
+          `lambdatest_action: ${JSON.stringify({ action: "setTestStatus", arguments: { status: "failed", remark: error.stack } })}`
+        );
+      }
+
+      await page.close();
+      await browser.close();
+    },
+    // can set a slower timeout for the fixture while keeping the test timeout low
+    { timeout: 30000 },
+  ];
+}
+
+// test fixture
+const test = baseTest.extend({
+  page,
   saveLogs: [
     async ({}, use, testInfo) => {
       // Collecting logs during the test.

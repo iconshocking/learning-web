@@ -9,6 +9,9 @@ on:
     # automatically has last branch/tag and last commit
 jobs:
   test:
+    env:
+      CI: true
+      STAGING: 0
     defaults:
       run:
         working-directory: learning_js/test-automation-practice
@@ -29,8 +32,8 @@ jobs:
         run: pnpm exec playwright install --with-deps
       - name: Build project
         run: pnpm build
-      - name: Run Playwright tests on build project
-        run: STAGING=0 pnpm exec playwright test
+      - name: Run Playwright tests on built project
+        run: pnpm exec playwright test
       - uses: actions/upload-artifact@v4
         if: always()
         with:
