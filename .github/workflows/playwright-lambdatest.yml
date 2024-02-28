@@ -37,14 +37,9 @@ jobs:
       - name: Build project
         run: pnpm build
       - name: Set up LambdaTest Tunnel and background it
-        run: ./LambdaTestTunnel-Linux --user $LAMBDATEST_USER --key $LAMBDATEST_KEY &
-      - name: Wait for LambdaTest Tunnel to be ready
-        run: sleep 5
+        run: ./LambdaTestTunnel-Linux --user $LAMBDATEST_USER --key $LAMBDATEST_KEY
       - name: Run Playwright tests via LambdaTest on build project
-        # he parentheses create a subshell, so the wait command will wait for all the commands to finish
-        # ( must re-source nvm.sh to use npx in the subshell )
-        run: ( . ~/.nvm/nvm.sh \
-          npx playwright test --project=chromium & \
+        run: npx playwright test --project=chromium & \
           npx playwright test --project=firefox & \
           npx playwright test --project=webkit & \
-          wait )
+          wait
