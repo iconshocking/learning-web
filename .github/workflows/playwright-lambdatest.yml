@@ -36,7 +36,7 @@ jobs:
       - name: Build project
         run: pnpm build
       - name: Set up LambdaTest Tunnel and background it
-        run: ./LambdaTestTunnel --user $LAMBDATEST_USER --key $LAMBDATEST_KEY &
+        run: ./LambdaTestTunnel-Linux --user $LAMBDATEST_USER --key $LAMBDATEST_KEY &
       - name: Wait for LambdaTest Tunnel to be ready
         run: sleep 5
       - name: Run Playwright tests via LambdaTest on build project
