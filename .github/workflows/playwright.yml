@@ -20,21 +20,58 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        name: Checkout repo
         with:
           repository: ${{ github.repository }} # default
           ref: "" # defaults to SHA that triggered the workflow
           fetch-depth: 1 # default
+
       - uses: actions/setup-node@v4
         with:
           node-version: 20
+
+      - uses: pnpm/action-setup@v3
+        name: Install pnpm
+        with:
+          version: 8
+          run_install: false
+      - name: Get pnpm store directory
+        shell: bash
+        run: echo "STORE_PATH=$(pnpm store path --silent)" >> $GITHUB_ENV
+      - uses: actions/cache@v4
+        id: cache-pnpm
+        name: Setup pnpm cache
+        with:
+          path: ${{ env.STORE_PATH }}
+          key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
+          # an old cache is still useful if it contains some of the same dependencies
+          restore-keys: |
+            ${{ runner.os }}-pnpm-store-
+      - if: ${{ steps.cache-pnpm.outputs.cache-hit != 'true' }}
+        name: List the state of node modules
+        continue-on-error: true
+        run: echo 'cache miss for node modules' ; pnpm list
+
       - name: Install dependencies
-        run: npm install -g pnpm && pnpm install
-      - name: Install Playwright Browsers
-        run: pnpm exec playwright install --with-deps
+        run: pnpm install
+
+      - uses: actions/cache@v4
+        id: cache-playwright-browsers
+        name: Setup playwright browsers cache
+        with:
+          path: ~/.cache/ms-playwright
+          # use the pnpm-lock hash since these deps may change when the playwright dependency version changes
+          key: ${{ runner.os }}-playwright-browsers-${{ hashFiles('**/pnpm-lock.yaml') }}
+      - if: ${{ steps.cache-playwright-browsers.outputs.cache-hit != 'true' }}
+        name: Install Playwright Browsers
+        run: PLAYWRIGHT_BROWSERS_PATH=0 pnpm exec playwright install --with-deps
+
       - name: Build project
         run: pnpm build
+
       - name: Run Playwright tests on built project
         run: pnpm exec playwright test
+
       - uses: actions/upload-artifact@v4
         if: always()
         with:
