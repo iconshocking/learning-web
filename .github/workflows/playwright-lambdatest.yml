@@ -6,7 +6,6 @@ jobs:
   lambdatest:
     env:
       REMOTE_TEST: true
-      CI: true
       STAGING: 0
       # could define the user locally here, but doing it at the repo level for practice
       LAMBDATEST_USER: ${{ vars.LAMBDATEST_USER }}
@@ -71,6 +70,9 @@ jobs:
       - name: Set up LambdaTest Tunnel and background it
         run: ./LT --user $LAMBDATEST_USER --key $LAMBDATEST_KEY &
 
+      - name: Store env variables for test build
+        run: echo "TIMESTAMP=$(date +%s)" >> $GITHUB_ENV
+        
       - name: Run Playwright tests via LambdaTest on built project
         run: pnpm exec playwright test
         env:

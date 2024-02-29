@@ -18,7 +18,7 @@ if (!process.env.REMOTE_TEST) {
   ];
 } else {
   page = [
-    async ({ browserName }, use) => {
+    async ({ browserName }, use, testInfo) => {
       const { chromium } = await import("@playwright/test");
       const browserMap = {
         chromium: "pw-chromium",
@@ -31,8 +31,8 @@ if (!process.env.REMOTE_TEST) {
         browserVersion: "latest",
         "LT:Options": {
           platform: browserMap[browserName] === "pw-webkit" ? "MacOS Big sur" : "Windows 10",
-          build: "branch:main",
-          name: `base-test-${Date.now()}`,
+          build: `${process.env.GITHUB_REF}-${process.env.GITHUB_SHA}-${process.env.TIMESTAMP}`,
+          name: testInfo.title,
           user: process.env.LAMBDATEST_USER,
           accessKey: process.env.LAMBDATEST_KEY,
           network: true,
