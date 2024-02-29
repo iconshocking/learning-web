@@ -64,6 +64,7 @@ jobs:
       - name: Run Playwright tests on built project
         run: pnpm exec playwright test
         env:
+          # required for running browser in the container
           HOME: /root
 
       - uses: actions/upload-artifact@v4

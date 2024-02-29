@@ -20,33 +20,64 @@ jobs:
         working-directory: learning_js/test-automation-practice
     timeout-minutes: 10
     runs-on: ubuntu-latest
+    # has all playwright browsers and browser deps installed
+    container:
+      image: mcr.microsoft.com/playwright:v1.42.0
     steps:
       - uses: actions/checkout@v4
         with:
           repository: ${{ github.repository }} # default
           ref: "" # defaults to SHA that triggered the workflow
           fetch-depth: 1 # default
-          lfs: true
       - uses: actions/setup-node@v4
         with:
           node-version: 20
-      # could benefit from caching
+
+      - uses: pnpm/action-setup@v3
+        name: Install pnpm
+        with:
+          version: 8
+          run_install: false
+      - name: Get pnpm store directory
+        shell: bash
+        run: echo "STORE_PATH=$(pnpm store path --silent)" >> $GITHUB_ENV
+      - uses: actions/cache@v4
+        id: cache-pnpm
+        name: Setup pnpm cache
+        with:
+          path: ${{ env['STORE_PATH'] }}
+          key: ${{ runner.os }}-pnpm-store-${{ hashFiles('learning_js/test-automation-practice/pnpm-lock.yaml') }}
+          # an old cache is still useful if it contains some of the same dependencies
+          restore-keys: |
+            ${{ runner.os }}-pnpm-store-
+      - if: ${{ steps.cache-pnpm.outputs.cache-hit != 'true' }}
+        name: List the state of node modules
+        continue-on-error: true
+        run: echo 'cache miss for node modules' ; pnpm list
+
       - name: Install dependencies
-        run: npm install -g pnpm && pnpm install
-      # could benefit from caching
-      - name: Install Playwright Browsers
-        run: pnpm exec playwright install --with-deps chromium
+        run: pnpm install
+
       - name: Build project
         run: pnpm build
+
+      - name: Download LambdaTest Tunnel
+        run: >
+          curl --output LambdaTestTunnelLinux.zip https://downloads.lambdatest.com/tunnel/v3/linux/64bit/LT_Linux.zip
+          && unzip LambdaTestTunnelLinux.zip
       - name: Set up LambdaTest Tunnel and background it
-        run: ( ./LambdaTestTunnel-Linux --user $LAMBDATEST_USER --key $LAMBDATEST_KEY & )
-      - name: Run Playwright tests via LambdaTest on build project
+        run: ./LT --user $LAMBDATEST_USER --key $LAMBDATEST_KEY &
+
         # Free tier only supports 2 parallel tests, so run two in the background and tests are fast
         # enough that they don't step on each others toes much with queueing.
         #
         # Also, have to run each worker in individual subshells because otherwise the mixed
         # reporting returned to the shell creates false negatives.
+      - name: Run Playwright tests via LambdaTest on built project
         run: ( pnpm exec playwright test --project=chromium ) & ( pnpm exec playwright test --project=webkit ) &
+        env:
+          # required for running browser in the container
+          HOME: /root
       - name: Check if playwright tests still running
         # YAML folded style (>) replaces newlines with spaces, so this is a single line command
         run: >
