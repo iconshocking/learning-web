@@ -19,8 +19,8 @@ jobs:
     timeout-minutes: 5
     runs-on: ubuntu-latest
     # has all playwright browsers and browser deps installed
-    # container:
-    #   image: mcr.microsoft.com/playwright:v1.42.0
+    container:
+      image: mcr.microsoft.com/playwright:v1.42.0
     steps:
       - uses: actions/checkout@v4
         name: Checkout repo
@@ -58,24 +58,13 @@ jobs:
       - name: Install dependencies
         run: pnpm install
 
-      - uses: actions/cache@v4
-        id: cache-playwright-browsers
-        name: Setup playwright browsers cache
-        with:
-          path: ~/.cache/ms-playwright
-          # use the pnpm-lock hash since these deps may change when the playwright dependency version changes
-          key: ${{ runner.os }}-playwright-browsers-${{ hashFiles('learning_js/test-automation-practice/pnpm-lock.yaml') }}
-      - if: ${{ steps.cache-playwright-browsers.outputs.cache-hit != 'true' }}
-        name: Install Playwright Browsers
-        run: pnpm exec playwright install
-      - name: Install browser dependencies
-        run: pnpm exec playwright install-deps
-
       - name: Build project
         run: pnpm build
 
       - name: Run Playwright tests on built project
         run: pnpm exec playwright test
+        env:
+          HOME: /root
 
       - uses: actions/upload-artifact@v4
         if: always()
