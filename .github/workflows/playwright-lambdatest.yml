@@ -61,6 +61,9 @@ jobs:
       - name: Build project
         run: pnpm build
 
+      - name: Download unzip tool
+        run: sudo apt-get install unzip
+
       - name: Download LambdaTest Tunnel
         run: >
           curl --output LambdaTestTunnelLinux.zip https://downloads.lambdatest.com/tunnel/v3/linux/64bit/LT_Linux.zip
