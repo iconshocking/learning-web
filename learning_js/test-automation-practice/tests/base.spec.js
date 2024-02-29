@@ -31,8 +31,8 @@ if (!process.env.REMOTE_TEST) {
         browserVersion: "latest",
         "LT:Options": {
           platform: browserMap[browserName] === "pw-webkit" ? "MacOS Big sur" : "Windows 10",
-          build: "Playwright Single Build",
-          name: "Playwright Sample Test",
+          build: "branch:main",
+          name: `base-test-${Date.now()}`,
           user: process.env.LAMBDATEST_USER,
           accessKey: process.env.LAMBDATEST_KEY,
           network: true,
