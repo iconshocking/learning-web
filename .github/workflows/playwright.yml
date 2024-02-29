@@ -55,6 +55,9 @@ jobs:
         continue-on-error: true
         run: echo 'cache miss for node modules' ; pnpm list
 
+      - name: Install dependencies
+        run: pnpm install
+
       - uses: actions/cache@v4
         id: cache-playwright-browsers
         name: Setup playwright browsers cache
@@ -65,12 +68,8 @@ jobs:
       - if: ${{ steps.cache-playwright-browsers.outputs.cache-hit != 'true' }}
         name: Install Playwright Browsers
         run: pnpm exec playwright install
-
       - name: Install browser dependencies
         run: pnpm exec playwright install-deps
-
-      - name: Install dependencies
-        run: pnpm install
 
       - name: Build project
         run: pnpm build
