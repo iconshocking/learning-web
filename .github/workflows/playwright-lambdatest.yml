@@ -62,7 +62,7 @@ jobs:
         run: pnpm build
 
       - name: Download unzip tool
-        run: sudo apt-get install unzip
+        run: apt-get install unzip
 
       - name: Download LambdaTest Tunnel
         run: >
