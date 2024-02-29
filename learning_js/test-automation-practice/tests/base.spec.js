@@ -73,7 +73,7 @@ if (!process.env.REMOTE_TEST) {
       await browser.close();
     },
     // can set a slower timeout for the fixture while keeping the test timeout low
-    { timeout: 30000 },
+    { timeout: 40000 },
   ];
 }
 
