@@ -1,3 +1,6 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable no-inner-declarations */
+
 // shadowing (overriding in traditional class-based languages)
 const myDate = new Date(1995, 11, 17);
 console.log(myDate.getYear());
@@ -9,22 +12,27 @@ console.log(myDate.getYear());
   class Person {
     constructor(name) {
       this.name = name;
+      /* this section would override the greet function from the prototype when called from a Person instace */
+      // this.greet = function () {
+      //   console.log("hi", this.name);
+      // }
     }
     greet() {
-      console.log("hi", this.name);
+      console.log("hi from proto", this.name);
     }
   }
-  Person.prototype.greet = function () {};
+  console.log("has proto 'greet'?", Object.hasOwn(Person.prototype, "greet"));
   const person = new Person("Carl");
   person.greet();
-  console.log("has is", Object.hasOwn(person.__proto__, "greet"));
   console.log(person.__proto__.constructor);
 }
 {
   function Person(name) {
     this.name = name;
   }
-  Person.prototype.greet = function () {};
+  Person.prototype.greet = function () {
+    console.log("hi from proto", this.name);
+  };
   const person = new Person("Carl");
   person.greet();
   console.log(person.__proto__.constructor);
@@ -92,7 +100,7 @@ Extend2.prototype.name = "static2";
 //     - for classes without explicit superclasses and for non-class functions,
 //       [[Prototype]] is equal to Function.prototype, whose [[Prototype]] is Object.prototype and whose [[Prototype]] is null
 // - prototype property is an instance created from its [[Prototype]] constructor function
-//   (i.e., `Subthing.prototype = Object.create(Thing.prototype; Subthing.prototype.constructor = Subthing;`)
+//   (i.e., `Subthing.prototype = Object.create(Thing.prototype); Subthing.prototype.constructor = Subthing;`)
 
 // only constructors (not instances) have a prototype property
 console.log(Extend2.prototype);
