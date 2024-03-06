@@ -1,6 +1,14 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable no-inner-declarations */
 
+// primitive types that aren't objects wrap themselves in the relvant object when a property is
+// accessed so that the prototype can be used
+let str = "hi";
+// indices are properties of the String object instance itself
+console.log(Object.getOwnPropertyNames(str));
+// all other properties are on the String prototype
+console.log(Object.getOwnPropertyNames(String.prototype));
+
 // shadowing (overriding in traditional class-based languages)
 const myDate = new Date(1995, 11, 17);
 console.log(myDate.getYear());
