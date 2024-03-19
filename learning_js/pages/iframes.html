@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>iframes</title>
+    <style>
+      iframe {
+        border: 2px solid black;
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <iframe id="frame1" title="frame1" src="about:blank" frameborder="0"></iframe>
+      <iframe id="frame2" title="frame2" src="about:blank" frameborder="0"></iframe>
+      <iframe id="frame3" title="frame3" src="iframes.html" frameborder="0"></iframe>
+    </main>
+    <script>
+      // window.frames is a collection of all the iframes on the page
+      const frames = window.frames;
+      for (let i = 0; i < frames.length; i++) {
+        console.log(frames[i]);
+        console.log(frames[i] === document.querySelector("#frame" + (i + 1)).contentWindow);
+      }
+    </script>
+  </body>
+</html>
