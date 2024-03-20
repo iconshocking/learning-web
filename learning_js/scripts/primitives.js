@@ -1,3 +1,4 @@
+/* eslint-disable no-compare-neg-zero */
 import { log } from "console";
 
 /* There are 7 primitive data types in JavaScript:
@@ -28,6 +29,11 @@ log(`2 + 2 = ${2 + 2}`);
 
 log(0xff); // hexadecimal
 log(0o77); // octal
+log(0b111); // binary
+log("isNaN?", isNaN(Number("string"))); // true
+log(1 / 0 === Infinity);
+log(-1 / 0 === -Infinity);
+
 // math operations
 1 + 1;
 1 - 1;
