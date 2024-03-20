@@ -1,11 +1,15 @@
 import { log } from "console";
 
 /* There are 7 primitive data types in JavaScript:
-Number, String, Boolean, Symbol, BigInt, undefined, and null.
-Everything else is an object (including arrays). */
+- Number: always 64-bit floating point, but can represent integers exactly up to 2^53
+- String: immutable, supports template literals
+- Boolean
+- Symbol: unique and immutable, can be stored in the global symbol registry
+- BigInt: for integers of arbitrary size
+- undefined: what all uninitialized variables are set to (never set manually)
+- null: used to signify an intentional absence of a value (OKAY to set manually)
 
-// null should be used to signify an intentional absence of a value,
-// whereas undefined should never be assigned manually (it is a result of a lack of initialization)
+Everything else is an object (including arrays). */
 
 // BigInt is for integers of greater size than the limits enforced by Number, but you can't perform
 // operations between BigInt and Number without conversion, so stick to one depending on your use
@@ -16,12 +20,14 @@ log(a);
 try {
   log(3 * 3n);
 } catch (e) {
-  log("caught error");
+  log(e.message);
 }
 
 // template literals still evaluate to string primitives
 log(`2 + 2 = ${2 + 2}`);
 
+log(0xff); // hexadecimal
+log(0o77); // octal
 // math operations
 1 + 1;
 1 - 1;
@@ -36,7 +42,7 @@ log(num++); // post-return-increment, so 1 is logged
 log(num); // 2
 log(++num); // pre-return-increment, so 3 is logged
 log(num); // 3
-num = 1
+num = 1;
 num += 1;
 num -= 1;
 num *= 1;
