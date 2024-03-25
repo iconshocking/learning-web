@@ -1,13 +1,14 @@
 # import syntax is similar to JS, but a bit more limited
 
 import for_import.module as alias
-from for_import import module
+from for_import import module, moduleFunctionMadeTopLevelFunction
 from for_import.module import importFunction
 from for_import.module import importFunction as subalias
 
 # 'from module import *' not recommended since it pollutes namespace (possibly shadowing other
 # imports higher in the file) and static linters can't tell if called functions actually exist
 
+moduleFunctionMadeTopLevelFunction()
 module.importFunction()
 print(module.globalVar)
 alias.importFunction()

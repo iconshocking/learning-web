@@ -9,5 +9,7 @@ print("package initing")
 # (AGAIN generally this isn't useful since 'import *' is not recommended)
 __all__ = ["module"]  # doesn't expose explicit_only_module
 
-# NOTE: any import statement within submodules or __init__ files will expose those
-# transitive imports (safely via namespace chaining) to importers of the package
+# NOTE: any import statement within submodules or __init__ files will expose those transitive
+# imports (safely via namespace chaining) to importers of the package (this can be useful for tools
+# such as  Django that expect a specific module structure)
+from .module import importFunction as moduleFunctionMadeTopLevelFunction
