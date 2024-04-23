@@ -1,4 +1,12 @@
-# required to make this directory a package (a collection of modules, aka scripts)
+"""Python defines packages as a collection of modules (aka scripts/files), but there are 2 kinds:
+1. Standard packages: a directory with an __init__.py file (can be empty) that defines the package
+   as a single directory
+2. Namespace packages: directories without __init__.py that are imported by modules and can be a
+   collection of different dirs with the same top-level paths
+    - Ex: 'root/packageA/path/file/moduleA.py' and 'root/packageB/path/file/moduleB.py' allows for
+      calling 'from path.file import moduleA, moduleB' (with no name-clash issues) if 'packageA' and
+      'packageB' are in sys.path
+    - Exists in Python 3.3+ (2012, so supported in all modern versions)"""
 
 # make sure package name is not a keyword or built-in to avoid import issues
 
