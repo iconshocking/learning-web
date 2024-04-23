@@ -20,85 +20,82 @@
       <p>Detect possible bugs and issues in your code.</p>
       <p>- <strong>ESLint</strong> is the defacto JS linter.</p>
       <p>
-        - <strong>Stylelint</strong> is the most common CSS linter (can be
-        extended to support SCSS, CSS-in-JS, etc.).
+        - <strong>Stylelint</strong> is the most common CSS linter (can be extended to support SCSS,
+        CSS-in-JS, etc.).
       </p>
-      <p>
-        - <strong>webhint</strong> to address common issues in general
-        web-facing code.
-      </p>
+      <p>- <strong>webhint</strong> to address common issues in general web-facing code.</p>
 
       <h3>Formatters</h3>
       <p>Format code according to generally agreed-upon ruleset.</p>
       <p>
-        - <strong>Prettier</strong> is common for web-facing files. Anything is
-        good and stick to the default unless you have a very good reason not to
-        in order to avoid bikeshedding.
+        - <strong>Prettier</strong> is common for web-facing files. Anything is good and stick to
+        the default unless you have a very good reason not to in order to avoid bikeshedding.
       </p>
 
       <h3>Bundlers</h3>
       <p>
-        Package code/assets for deployment, tree shake so that only necessary
-        code is bundled, can run local dev server with live reloads.
+        Package code/assets for deployment, tree shake so that only necessary code is bundled, can
+        (usually) run local dev server with live reloads.
       </p>
       <p>
-        - For most projects: <strong>Vite</strong> is focused on developer speed
-        and runs two different internal bundlers for prod vs dev. This means it
-        is very fast, but the bundle created is different between dev and prod,
-        which can be a problem for testing complex applications.
+        - For most projects: <strong>Vite</strong> is focused on developer speed and runs two
+        different internal bundlers for prod (<strong>Rollup</strong>) vs dev
+        (<strong>ESBuild</strong>, which uses native ES modules). This means it is very fast, but
+        the code is different between dev and prod, which can be sometimes be a problem for testing
+        complex applications.
       </p>
       <p>
-        - For very large, complex applications: <strong>Webpack</strong> has the
-        largest ecosystem and most flexibility but it can be quite a burden to
-        use and is losing favorability.
+        - For very large, complex applications: <strong>Webpack</strong> has the largest ecosystem
+        and most flexibility but it can be quite a burden to use and is losing favorability.
+        <br />
+        (Does not contain a transpiler by default, but <strong>Babel</strong> is common.)
       </p>
       <p>
-        Note: bundlers will <strong><dfn>cache bust</dfn></strong> the files for
-        distribution, which means that the output files will have different
-        names each time to prevent browsers from caching an outdate version of
-        the page.
+        Note: bundlers will <strong><dfn>cache bust</dfn></strong> the files for distribution, which
+        means that the output files will have different names each time to prevent browsers from
+        caching an outdate version of the page.
       </p>
+
+      <div style="padding-left: 1rem">
+        <h4>- Minifiers</h4>
+        <p>Bundlers ususally incorporate default minifiers, but they can usually be swapped.</p>
+
+        <p>
+          <strong>SWC</strong> or <strong>esbuild</strong> are the fastest and generally more
+          desirable than <strong>terser</strong>, <strong>Uglify</strong>, or
+          <strong>Babel</strong>.
+        </p>
+      </div>
 
       <h3>Random Useful Librarires</h3>
       <ul>
         <li>
-          <strong>Lodash</strong> - JS convenience functions BUT a lot of these
-          can be achieved effectively natively
+          <strong>Lodash</strong> - JS convenience functions BUT a lot of these can be achieved
+          effectively natively
         </li>
         <li>
-          <strong>RxJS</strong> - when a reactive library is needed (some
-          frameworks/librarie, like React,already have their own reactive
-          patterns, so do not layer RxJS on top)
+          <strong>RxJS</strong> - when a reactive library is needed (some frameworks/librarie, like
+          React,already have their own reactive patterns, so do not layer RxJS on top)
         </li>
         <li>
-          <strong>Redux (maybe w/ Redux Toolkit)</strong> - for complex
-          application state management
+          <strong>Redux (maybe w/ Redux Toolkit)</strong> - for complex application state management
         </li>
-        <li>
-          <strong>Immer</strong> - convenience for immutable state
-          management/updates
-        </li>
+        <li><strong>Immer</strong> - convenience for immutable state management/updates</li>
         <li><strong>Day.js</strong> - date/timestamp management</li>
+        <li><strong>Zod</strong> - schema validation and runtime type checking</li>
         <li>
-          <strong>Zod</strong> - schema validation and runtime type checking
-        </li>
-        <li>
-          <strong>Chart.js (D3 if lots of customization required)</strong> - for
-          rendering charts
+          <strong>Chart.js (D3 if lots of customization required)</strong> - for rendering charts
         </li>
         <li><strong>Express</strong> - Node backend routing</li>
+        <li><strong>Mapbox GL (or Maplibre GL for OSS)</strong> - Displaying maps</li>
         <li>
-          <strong>Mapbox GL (or Maplibre GL for OSS)</strong> - Displaying maps
+          <strong>Axios</strong> - making HTTP requests (not really necessary anymore unless you
+          can't use Node 18+, which supports <code>fetch</code> API, or you just want to not
+          write/find your own wrappers)
         </li>
         <li>
-          <strong>Axios</strong> - making HTTP requests (not really necessary
-          anymore unless you can't use Node 18+, which supports
-          <code>fetch</code> API, or you just want to not write/find your own
-          wrappers)
-        </li>
-        <li>
-          <strong>Tailwind / CSSModules</strong> - CSS organizational libraries
-          (some prefer to just use vanilla CSS or CC-in-JS)
+          <strong>Tailwind / CSSModules</strong> - CSS organizational libraries (some prefer to just
+          use vanilla CSS or CC-in-JS)
         </li>
       </ul>
     </section>
@@ -108,53 +105,65 @@
       <h3>Backporting Language Features</h3>
       <p>
         Allow for using up-to-date JS/CSS features but for all browsers. A
-        <dfn>polyfill</dfn> is generated that turns modern JS/CSS into code that
-        effectively reproduces the behavior (note: sometimes this may not
-        performant).
+        <dfn>polyfill</dfn> is generated that turns modern JS/CSS into code that effectively
+        reproduces the behavior (note: sometimes this may not performant).
       </p>
       <ul>
-        <li>For JS: <strong>Babel</strong></li>
         <li>
-          For CSS: <strong>PostCSS</strong> (generates JS polyfill if older CSS
-          cannot reproduce behavior)
+          For JS:
+          <ul>
+            <li>
+              <strong>SWC</strong> is very fast (built in Rust), but less mature and so has less
+              plugins available.
+            </li>
+            <li><strong>Babel</strong> if you need particular configurations and compatibility.</li>
+          </ul>
+        </li>
+        <li>
+          For CSS: <strong>PostCSS</strong> (generates JS polyfill if older CSS cannot reproduce
+          behavior)
         </li>
       </ul>
 
       <h3>Transpilers/Frameworks</h3>
       <p>
-        Allow for writing code that is not native, valid JS/CSS, but that
-        generates into valid syntax that can be run in the browser.
+        Allow for writing code that is not native, valid JS/CSS, but that generates into valid
+        syntax that can be run in the browser.
       </p>
       <ul>
         <li>
-          For CSS: <strong>SCSS</strong> allows for more code-like operations
-          (functions, substitutions (called mixins), etc.) and convenient syntax
-          that are not currently supported (or at least widely supported) in
-          CSS.
+          For CSS: <strong>SCSS</strong> allows for more code-like operations (functions,
+          substitutions (called mixins), etc.) and convenient syntax that are not currently
+          supported (or at least widely supported) in CSS.
         </li>
         <li>
-          For JS: <strong>Typescript</strong> is a superset of JS in that all JS
-          is valid TS, but TS provides type-safety during development but
-          <em>not in the browser</em>. TS types are only for development and
-          have no resulting effect on the output JS.
+          <p>
+            For JS: <strong>Typescript</strong> is a superset of JS in that all JS is valid TS, but
+            TS provides type-checking during development but <em>not in the browser</em>. TS types
+            are only for development and have no resulting effect on the output JS.
+          </p>
+
+          <p>
+            <strong>tsc</strong> is the default TS transpiler, but it is slow. It should generally
+            only be used for type-checking and allow general purpose transpilers to do that work.
+          </p>
         </li>
         <li>
           For frameworks/libraries:
           <ul>
             <li>
               For new projects that can afford some growing pains:
-              <strong>Svelte</strong> (possibly with <strong>SvelteKit</strong>)
-              ships smaller bundles, better performance in browser, and good DX.
+              <strong>Svelte</strong> (possibly with <strong>SvelteKit</strong>) ships smaller
+              bundles, better performance in browser, and good DX.
             </li>
             <li>
-              For standard projects: <strong>React</strong> (possibly with
-              <strong>Next.js</strong>) has the largest ecosystem and most
-              developers have some knowledge of it.
+              For standard projects: <strong>React</strong> (possibly with <strong>Next.js</strong>)
+              has the largest ecosystem and most developers have some knowledge of it.
             </li>
             <li>
               For very large projects or legacy projects:
-              <strong>Angular</strong> is an opinonated framework with a lot of
-              built-in tooling that allows for consistency across projects.
+              <strong>Angular</strong> is an opinonated framework with a lot of built-in tooling
+              that allows for consistency across projects.
             </li>
           </ul>
         </li>
@@ -164,51 +173,39 @@
       <ul>
         <li>
           <strong><dfn title="Content Management System">CMS</dfn></strong
-          >: good when content is simple, will be created mainly by
-          non-programmers, and/or can fit into certain templates with limited
-          flexibility (sometimes referred to as <dfn>WYSIWYG</dfn>, "what you
-          see is what you get").
+          >: good when content is simple, will be created mainly by non-programmers, and/or can fit
+          into certain templates with limited flexibility (sometimes referred to as
+          <dfn>WYSIWYG</dfn>, "what you see is what you get").
           <p>
-            - There is a variant called <strong>Headless CMS</strong>, which is
-            for content storage, but replaces the presentation layer with an API
-            that allows a different framework to composit the page itself
-            (require more programming language than monolithic CMS).
+            - There is a variant called <strong>Headless CMS</strong>, which is for content storage,
+            but replaces the presentation layer with an API that allows a different framework to
+            composit the page itself (require more programming language than monolithic CMS).
           </p>
-          <p>
-            Best options are dependent on non-technical users' requirements.
-          </p>
+          <p>Best options are dependent on non-technical users' requirements.</p>
         </li>
         <li>
           <strong><dfn title="Server-Side Rendering">SSR</dfn></strong>
-          frameworks: optimizes the initial loading of the page (since content
-          fetched is closer to the source, which avoids DNS hops, and it avoids
-          the initial round trip of downloading a stub HTML file) and best
-          supports SEO (since links are not easy to crawl via CSR apps rendered
-          entirely via an initial JS).
+          frameworks: optimizes the initial loading of the page (since content fetched is closer to
+          the source, which avoids DNS hops, and it avoids the initial round trip of downloading a
+          stub HTML file) and best supports SEO (since links are not easy to crawl via CSR apps
+          rendered entirely via an initial JS).
           <p>
-            Common options are <strong>Next.js</strong> or
-            <strong>Remix</strong> for React and <strong>SvelteKit</strong> for
-            Svelte.
+            Common options are <strong>Next.js</strong> or <strong>Remix</strong> for React and
+            <strong>SvelteKit</strong> for Svelte.
           </p>
         </li>
         <li>
           <strong><dfn title="Static Site Generators">SSG</dfn></strong
-          >: via serving HTML that is generated at build time, it is good for
-          content that is always the same for all users and/or doesn't change
-          often.
-          <p>
-            Common options are <strong>Next.js</strong> and
-            <strong>Astro</strong>.
-          </p>
+          >: via serving HTML that is generated at build time, it is good for content that is always
+          the same for all users and/or doesn't change often.
+          <p>Common options are <strong>Next.js</strong> and <strong>Astro</strong>.</p>
         </li>
         <li>
           <strong><dfn title="Content Deliver Networks">CDN</dfn></strong
-          >: cache assets on distributed servers to serve to users as fast as
-          possible.
+          >: cache assets on distributed servers to serve to users as fast as possible.
           <p>
-            Common options are <strong>Cloudflare</strong> and
-            <strong>Cloudfront</strong> and some larger S/IAAS products include
-            this.
+            Common options are <strong>Cloudflare</strong> and <strong>Cloudfront</strong> and some
+            larger S/IAAS products include this.
           </p>
         </li>
       </ul>
@@ -216,75 +213,75 @@
 
     <h2>Post-Development (Testing/Deployment)</h2>
     <section>
-      <p>
-        This part of development should ideally be as automated as possible.
-      </p>
+      <p>This part of development should ideally be as automated as possible.</p>
 
       <h3>Testing</h3>
       <ul>
         <li>
           General scanning tools for web page issues:
-          <strong>Lighthouse, webhint, aXe</strong> (for accessibility). These should be integrated with CI/CD in some way usually.
+          <strong>Lighthouse, webhint, aXe</strong> (for accessibility). These should be integrated
+          with CI/CD in some way usually.
         </li>
         <li>
-          Unit testing: <strong>Vitest</strong> works out-of-the-box with Vite
-          and supports <dfn>ESM</dfn>, ECMAScript Modules.
+          Unit testing: <strong>Vitest</strong> works out-of-the-box with Vite and supports
+          <dfn>ESM</dfn>, ECMAScript Modules.
           <small
-            >NOTE: Some awareness of <strong>Jest</strong> is good since it is
-            more popular.</small
+            >NOTE: Some awareness of <strong>Jest</strong> is good since it is more popular.</small
           >
         </li>
-        <li>
-          E2E testing: <strong>Playwright</strong> is relatively new but
-          language agnostic.
-        </li>
+        <li>E2E testing: <strong>Playwright</strong> is relatively new but language agnostic.</li>
       </ul>
 
       <p>Most important kinds of testing:</p>
       <ul>
         <li><strong>Unit</strong> testing - components in isolation</li>
-        <li>
-          <strong>Integration</strong> testing - components integrating with
-          each other
-        </li>
-        <li>
-          <strong>E2E</strong> testing - simulates a flow that a user would
-          experience
-        </li>
+        <li><strong>Integration</strong> testing - components integrating with each other</li>
+        <li><strong>E2E</strong> testing - simulates a flow that a user would experience</li>
       </ul>
       <p>
-        Note: <strong>Regression testing</strong> is not a particular stlye of
-        test as much as a test suite that should be run to ensure existing
-        features remain workign correctly.
+        Note: <strong>Regression testing</strong> is not a particular stlye of test as much as a
+        test suite that should be run to ensure existing features remain workign correctly.
       </p>
 
       <p>
-        Note: there is a difference between <strong>test runners</strong> (Jest,
-        Vitetest, etc.), which find/run/evaluate the tests, and
-        <strong>testing libraries</strong> (React/Svelte Testing Library, etc.)
-        that provide APIs for more easily creating tests for that particular
+        Note: there is a difference between <strong>test runners</strong> (Jest, Vitetest, etc.),
+        which find/run/evaluate the tests, and <strong>testing libraries</strong> (React/Svelte
+        Testing Library, etc.) that provide APIs for more easily creating tests for that particular
         library/framework.
       </p>
 
       <h3>CI/CD (Continuous Integration/Delivery/Deployment)</h3>
       <p>
         For CI: <strong>GitHub Actions</strong> or (<strong>GitLab CI</strong>
-        if hosting on GitLab) is the closest to the repos and so easiest to
-        integrate with git commits/merges.
+        if hosting on GitLab) is the closest to the repos and so easiest to integrate with git
+        commits/merges.
       </p>
       <p>
-        - Note: <strong>Husky</strong> is useful for a local pre-CI stage, for
-        linters, tests, etc.
+        - Note: <strong>Husky</strong> is useful for a local pre-CI stage, for linters, tests, etc.
       </p>
       <p>
         For CD (also possibly for CI):
-        <strong
-          >whatever SAAS controls your deploys (Vercel/Azure/AWS/etc.)</strong
-        >
+        <strong>whatever SAAS controls your deploys (Vercel/Azure/AWS/etc.)</strong>
       </p>
       <p>
-        Note: Include package manager dependency audit command in CI/CD to catch
-        vulnerabilities early.
+        Note: Include package manager dependency audit command in CI/CD to catch vulnerabilities
+        early.
+      </p>
+    </section>
+
+    <h2>Heirarchy of How Tools Combine</h2>
+    <section>
+      <p style="margin: 0">
+        <!-- prettier-ignore --><code style="white-space: pre-wrap;">
+- Libraries (the definition of all the tools/dependencies in package.json)
+- Bundlers (configures most other non-CI/CD tooling)
+  - Transpilers (via loaders/plugins)
+    - Frameworks (via plugins that are compatabile with a related transpiler)
+  - Minifiers (often included in bundlers, but can be swapped out)
+- CI/CD (defined via hooks or config files)
+  - Linters/Formatters
+  - Testing
+      </code>
       </p>
     </section>
   </body>
