@@ -3,7 +3,7 @@ self.addEventListener("install", (e) => {
   // waitUntil() holds the resolution of the event until the passed promise resolves successfully (or rejects -
   // for 'install' events, the service worker is discarded)
   e.waitUntil(
-    caches.open("video-store").then((cache) =>
+    caches.open("v1").then((cache) =>
       // fetches the responses and then adds them
       cache.addAll([
         "/pages/offline/offline.html",
