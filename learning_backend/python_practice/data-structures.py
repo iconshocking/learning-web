@@ -89,13 +89,23 @@ print(tuple)
 # dictionaries function like JS objects EXCEPT that the keys must be immutable (tuples are supported
 # if all elements are immutable)
 a = {"a": 1, "b": 2}
-a.update({"c": 3})
+a["c"] = 3 # single key-value assignment
+print(a)
+a.update({"c": 4, "cc": 5}) # multiple key-value assignment
 print(a)
 a = dict(c=-1, d=-2)  # keyword arguments
 print(a)
 a = dict([("e", 10), ("f", 11)])  # list of key-value tuples
 print(a)
 print({} == dict())  # empty dict
+print(a["e"])  # retrieval
+# retrieval will throw KeyError if not found
+try:
+    print(a["g"]) # type: ignore
+except KeyError as e:
+    print(e)
+# use get(key, optional_default) to avoid KeyError when key is not guaranteed (default is None)
+print(a.get("g", "default")) # type: ignore
 
 # sets use the same synatx as dicts, but without key-pairs
 a = {1, 2}

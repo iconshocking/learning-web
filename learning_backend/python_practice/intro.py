@@ -66,8 +66,11 @@ print("line 1", end=", ")
 print("same line")
 # formatted string literals are like JS template literals
 print(f"2 + 2 = {2 + 2}")
-# can also create strings with the format() method like Java, but probably only need to do this when
+# you can also use the format() method (like Java), but probably only need to do this when
 # performing sophisticated logging or output formatting
+#
+# you may also see string formattin with the legacy % operator
+print("2 + 2 = %d" % (2 + 2))
 
 # for regexes, use the 're' module
 import re

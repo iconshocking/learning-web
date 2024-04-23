@@ -40,9 +40,15 @@ class Example:
     def returnValue(self):
         return self.value
 
+    # static methods receive no implicit first argument
     @staticmethod
     def __len__():
         return 100
+
+    # class methods receive the class object as the first argument
+    @classmethod
+    def classMethod(cls):
+        return cls.value
 
     def getValue(self):
         return self.value
@@ -60,6 +66,8 @@ class Example:
         self._propertyVariable = value
 
     # can also include deleter, which override del obj.propertyVariable calls
+
+    # can also write these as get/set/del[attribute name] methods, but decorators are more readable
 
     # code can be run anywhere within a class in python, but it will only be evaluated the first
     # time the class namespace is created (i.e., when the class is parsed in the file)
