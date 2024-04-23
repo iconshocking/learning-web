@@ -16,7 +16,8 @@ const fun2 = function fun2() { // name is optional
 })();
 // this can be written shorter using an exclamation point to make it an expression without parens,
 // but parens will often be added by formatters, so you can leave out the exclamation point unless
-// you are really trying to signal to others this is an IIF (immediately invoked function)
+// you are really trying to signal to others this is an IIFE (immediately invoked function
+// expression)
 !(function () {
   return "fun2";
 })();
