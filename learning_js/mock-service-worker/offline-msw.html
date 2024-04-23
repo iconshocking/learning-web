@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <!-- using vite to package dependencies -->
+    <script src="./offline-msw-main.js" type="module" defer></script>
+  </head>
+  <body>
+    <h1>
+      Source modified from
+      <a href="https://github.com/vite-pwa/vite-plugin-pwa/blob/main/examples/vanilla-js-custom-sw"
+        >here</a
+      >
+    </h1>
+    <h2>Mock Service Worker package will NOT intercept navigation</h2>
+    <button type="button">Intercept</button>
+    <form action="" method="post">
+      <button type="submit">Does not intercept</button>
+    </form>
+    <script>
+      button = document.querySelector("button");
+      button.addEventListener("click", (event) => {
+        event.preventDefault();
+        fetch(window.location, { method: "POST" })
+          .then((response) => response.text())
+          .then((data) => {
+            const p = document.createElement("p");
+            p.textContent = data;
+            document.body.appendChild(p);
+          });
+      });
+    </script>
+  </body>
+</html>
