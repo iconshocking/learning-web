@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Observability</title>
+    <style>
+      body {
+        padding-left: 1rem;
+      }
+      
+      h3 {
+        text-decoration: underline;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Observability</h1>
+    <p>
+      Note: APM (application performance monitoring) was the precursor to observability with a focus
+      on a single application whereas observability has a more distributed connotation to it.
+    </p>
+
+    <h2>Observability vs Monitoring</h2>
+    <section>
+      <p>
+        Essentially, observability is proactive, able to determine system state and uncover
+        <em>unknown</em> unknowns, while monitoring is reactive, focused on assesing metrics and
+        alerting for <em>known</em> unknowns.
+      </p>
+
+      <p>
+        Observability's goal is to diagnose the issue without requiring manual intervention of
+        deploying new code.
+      </p>
+    </section>
+
+    <h2>Telemetry</h2>
+    <section>
+      <p>
+        Telemetry data is data automatically recorded and transmitted from a remote/opaque source.
+        It falls into 3 main categories.
+      </p>
+      <h3>Logs</h3>
+      <section>
+        <p>
+          Chronologically ordered records of events in the system, snapshots of state, including the
+          <em>what</em>, <em>why</em>, and/or <em>how</em> of a state.
+        </p>
+        <ul>
+          <li>
+            <strong>Debug logs:</strong> for debugging and are not generated in production or at
+            least not stored long-term
+          </li>
+          <li>
+            <strong>Error logs:</strong> to capture issues with system state (NOTE: don't ignore
+            expected errors because they can sometimes indicate a larger issue)
+          </li>
+          <li>
+            <strong>Audit logs:</strong> a sequential record of system activities (useful for
+            compliance and security)
+          </li>
+          <li>
+            <strong>Application logs:</strong> important actions taken via/related to the
+            application (often extracted into metrics)
+          </li>
+          <li>
+            <strong>Security logs:</strong> for security-related events, such as logins and
+            accessing sensitive/protected data
+          </li>
+        </ul>
+        <h4>Pros</h4>
+        <ul>
+          <li>Compliance</li>
+          <li>Security</li>
+          <li>Debugging</li>
+          <li>User behavior</li>
+        </ul>
+        <h4>Cons</h4>
+        <ul>
+          <li>Volume</li>
+          <li>Management</li>
+          <li>Performance hit</li>
+          <li>Logging of sensitive data privacy/security</li>
+        </ul>
+      </section>
+
+      <h3>Metrics</h3>
+      <section>
+        <p>Aggregate data over time (with less detail than logs).</p>
+        <p>
+          Metrics allow for issue identification while logging allows for detail/context for
+          investigation.
+        </p>
+        <h4>Pros</h4>
+        <ul>
+          <li>Performance and optimization tuning</li>
+          <li>Numbers for decision making</li>
+          <li>Incident scope determination</li>
+        </ul>
+        <h4>Cons</h4>
+        <ul>
+          <li>Which metrics to measure</li>
+          <li>How much context to measure to avoid volume cost</li>
+          <li>Time lag in reporting</li>
+        </ul>
+      </section>
+
+      <h3>Traces</h3>
+      <section>
+        <p>
+          Details the path and duration of an operation through the system on a specific cadence
+          (e.g., 1 out of 100 requests to the desired endpoint)
+        </p>
+        <p>
+          Distributed traces are composed of spans, where each span is a singular operation within a
+          distributed system.
+        </p>
+        <p>Contains:</p>
+        <ul>
+          <li>Desired function involved</li>
+          <li>Duration of execution</li>
+          <li>Parameters passed to/from</li>
+          <li>Extent of function completed (to catch partial completions)</li>
+        </ul>
+        <h4>Pros</h4>
+        <ul>
+          <li>Optimization of systems</li>
+          <li>Allows for discovering unknown unknowns</li>
+        </ul>
+        <h4>Cons</h4>
+        <ul>
+          <li>
+            <p>Volume</p>
+            <p>
+              <strong>Tail-based sampling</strong> is a strategy (instead of
+              <strong>head-base sampling</strong>) to reduce volume of traces by conditionally
+              retaining a trace at the end of a the operation's execution, but this can be more
+              complex to implement/maintain
+            </p>
+          </li>
+          <li>Manual (complex) vs automatic (possibly lacking detail) implementation</li>
+        </ul>
+      </section>
+    </section>
+  </body>
+</html>
