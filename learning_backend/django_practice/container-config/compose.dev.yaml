@@ -1,0 +1,12 @@
+services:
+  django:
+    # override the cmd to run the dev server (0 is short for 0.0.0.0)
+    command: python manage.py runserver 0:8000
+    ports:
+      - 127.0.0.1:8000:8000
+    env_file:
+      - ./secrets/.dev.env
+
+  redis:
+    env_file:
+      - ./secrets/.dev.env

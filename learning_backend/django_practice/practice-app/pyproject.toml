@@ -1,0 +1,18 @@
+# configuring with setuptools for more versatility and practice with non-poetry tools
+[project]
+name = "practice"
+version = "0.1.0"
+description = ""
+authors = [{ email = "shockconrad@gmail.com>" }]
+requires-python = ">=3.10"
+
+[tool.setuptools.packages.find]
+exclude = ["practice.tests*"]
+
+[tool.setuptools]
+# this will include any non-python files listed in MANIFEST.in
+include-package-data = true
+
+[build-system]
+requires = ["setuptools"]
+build-backend = "setuptools.build_meta"

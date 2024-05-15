@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="keywords" content="">
+    <title>Example form</title>
+  </head>
+  <body>
+    <form action="" method="post">
+      {% csrf_token %}
+      {% comment %} errors render in a <ul class="errorlist"> to assist with styling
+      ('non_field_errors' also includes 'nonfield' CSS class) {% endcomment %}
+      {{ form.non_field_errors }}
+      <div>
+        {{ form.example.errors }}
+        <label for="{{ form.example.id_for_label }}">Field 1:</label>
+        {{ form.example }}
+      </div>
+      <div>
+        {% comment %} can loop over errors individually {% endcomment %}
+        {% if form.boolean.errors %}
+          <ol>
+            {% for error in form.boolean.errors %}
+              <li>
+                <strong>{{ error|escape }}</strong>
+              </li>
+            {% endfor %}
+          </ol>
+        {% endif %}
+        {% comment %} field.label_tag generates the label element {% endcomment %}
+        {{ form.boolean.label_tag }}
+        {{ form.boolean }}
+        {{ form.boolean.help_text }}
+      </div>
+      <div>
+        {% comment %} field.as_field_group renders the label, input, errors, and help text {% endcomment %}
+        {{ form.char.as_field_group }}
+      </div>
+      <input type="submit" value="Submit">
+    </form>
+  </body>
+</html>

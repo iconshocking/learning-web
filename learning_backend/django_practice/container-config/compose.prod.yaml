@@ -1,0 +1,24 @@
+services:
+  django:
+    expose:
+      - 8000
+    env_file:
+      - ./secrets/.prod.env
+      - ./git-safe/.prod.safe.env
+
+  nginx:
+    container_name: nginx
+    build:
+      context: ../nginx
+      # relative to the context
+      dockerfile: ../container-config/Dockerfile_nginx
+    # share statics with django volume for convenience for development
+    volumes:
+      - statics:/static
+    ports:
+      - 80:80
+    env_file:
+      - ./secrets/.prod.env
+      - ./git-safe/.prod.safe.env
+    depends_on:
+      - django

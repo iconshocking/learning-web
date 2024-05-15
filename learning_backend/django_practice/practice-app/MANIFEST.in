@@ -1,0 +1,2 @@
+recursive-include practice/static *
+recursive-include practice/templates *

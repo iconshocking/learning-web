@@ -1,0 +1,10 @@
+# merge with prod compose file
+
+services:
+  django:
+    env_file:
+      - ./git-safe/.preprod.safe.env
+
+  nginx:
+    env_file:
+      - ./git-safe/.preprod.safe.env

@@ -1,0 +1,11 @@
+FROM nginx:1.26.0
+
+COPY nginx.conf /etc/nginx/
+COPY static.conf /etc/nginx/conf.d/
+# template used for environment variables susbstitution
+COPY vars.conf.template /etc/nginx/templates/
+
+RUN mkdir -p /log && touch /log/error.log && touch /log/access.log
+
+# shouldn't need to increase max conenctions supported because linux kernel was updated in 2019 to
+# default to 4096 (no longer need 'net.core.somaxconn = 4096')

@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="keywords" content="">
+    <title>Example form</title>
+  </head>
+  <body>
+    <form action="" method="post">
+      {% csrf_token %}
+      {% comment %} can generically loop through all fields using {% for field in form %} {% endcomment %}
+      {% for hidden in form.hidden_fields %}{{ hidden }}{% endfor %}
+      {% comment %} field has a variety of attributes that can be used to render the field HTML
+      elements correctly {% endcomment %}
+      {% for field in form.visible_fields %}
+        <div>
+          {{ field.errors }}
+          {% comment %} fieldsets/legends are used for MultiValueFields {% endcomment %}
+          {% if field.use_fieldset %}
+            <fieldset>
+              {% if field.label %}{{ field.legend_tag }}{% endif %}
+            {% else %}
+              {% if field.label %}{{ field.label_tag }}{% endif %}
+            {% endif %}
+            {{ field }}
+            {% if field.help_text %}
+              <small style="display: block" class="help" id="{{ field.auto_id }}_helptext">{{ field.help_text|safe }}</small>
+            {% endif %}
+            {% if field.use_fieldset %}</fieldset>{% endif %}
+        </div>
+      {% endfor %}
+      <input type="submit" value="Submit">
+    </form>
+    {{ form.non_field_errors }}
+  </body>
+</html>
