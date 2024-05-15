@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Caching</title>
+    <style>
+      code {
+        background-color: rgb(235, 235, 235);
+      }
+
+      li + li {
+        margin-top: 0.5rem;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Caching</h1>
+    <main>
+      <h2>Different Caches</h2>
+      <section>
+        <ul>
+          <li>
+            <strong>Server-based</strong> caching: this is application dependent and depends
+            entirely on your own configuration
+          </li>
+          <li><strong>Browser Cache:</strong> cache the browser stores for response files</li>
+          <li>
+            <strong>Shared Cache:</strong> refers to a cache between the server and client, like a
+            CDN
+          </li>
+        </ul>
+      </section>
+
+      <h2>Cache Headers</h2>
+      <section>
+        <ul>
+          <li>
+            <p>
+              <strong>Cache-Control </strong>(successor to 'Expires'): defines a number of
+              directives for how a request/response file should be cached.
+            </p>
+
+            <p>Response headers:</p>
+            <ul>
+              <li>
+                <code>max-age</code>: how many seconds until a response is considered stale, after
+                which the cached response will not be used unless revalidated by the server on the
+                next request of the file (<code>s-max-age</code>
+                for shared caches)
+              </li>
+              <li>
+                <code>stale-while-revalidate</code>: how many seconds to serve a stale response
+                while trying to revalidate asnychronously to update the response cache
+              </li>
+              <li>
+                <code>immmutable</code>: prevents browser revalidating still fresh responses in the
+                cache when a user reloads the page (except for the primary response, usually the
+                HTML)
+              </li>
+              <li>
+                <code>no-cache</code>: requires server revalidation before using cached response
+                file (must be used with 'ETag' header)
+              </li>
+              <li><code>no-store</code>: do not cache response at all</li>
+              <li>
+                <code>must-revalidate</code>: disallows use of cache when response is stale unless
+                it is revalidated (via ETag) (<code>proxy-revalidate</code> is for shared caches)
+                <p>
+                  Note: this is the default expected caching behavior, but this value enforces it to
+                  prevent browsers in certain circumstances allowing for using a stale response.
+                </p>
+              </li>
+              <li>
+                <code>private</code>: should not be cached in shared caches, only browser caches
+                (<code>public</code> is the default but can be set explicitly to override default
+                automatic caching-prevention when <code>Authorization</code> header is present)
+              </li>
+              <li>
+                <code>no-transform</code>: prevents any transformation of the file via an
+                intermediary (mobile network proxy, etc.) (generally recommended to not add this)
+              </li>
+            </ul>
+
+            <p>Request headers:</p>
+            <ul>
+              <li>
+                <code>no-cache/no-store</code>: same as response headers (<code>no-cache</code>
+                used for force reload of page)
+              </li>
+              <li>
+                <code>max-age</code>: same as response header (value of 0 used for reloading page)
+              </li>
+              <li><code>no-transform</code>: same as response header</li>
+              <li>
+                <code>only-if-cached</code>: <em>only</em> request-only header that returns only
+                from browser cache, even if stale, or returns a 504 if response not in the cache
+              </li>
+            </ul>
+          </li>
+
+          <li>
+            <strong>ETag </strong>(response) / <strong>If-Match</strong> (request): tag often
+            generated from file last modification time and content size (implementation varies),
+            which is used to determine a cache hit and prompt a '304: Not Modified' response.
+
+            <p><strong>Required</strong> for cache checking.</p>
+          </li>
+
+          <li>
+            <strong>Last-Modified</strong> (response) / <strong>If-Modified_since</strong>:
+            date-time for when a file was last changed, which is used the same way an ETag is.
+
+            <p><strong>Optional but suggested</strong> for cache checking.</p>
+          </li>
+        </ul>
+      </section>
+
+      <h2>Cache Strategies for Different Types of Content</h2>
+      <section>
+        <p><strong>Static content:</strong></p>
+        <ul>
+          <li>Long cache period (like a year) & <code>immutable</code> cache option</li>
+          <li>Cache busting URLs</li>
+          <li>Do NOT set <code>private</code> unless the content is specific to a user</li>
+          <li>Note: ETag doesn't really matter due to the long cache</li>
+        </ul>
+
+        <p><strong>HTML that rarely changes:</strong></p>
+        <ul>
+          <li>
+            Short <code>max-age</code> (5 minutes-ish) - long enough to be reused only throughout
+            the current session
+          </li>
+          <li>
+            If usable while revalidating, short <code>stale-while-revalidate</code> (maybe a day)
+          </li>
+          <li>ETag if possible</li>
+        </ul>
+
+        <p><strong>Dynamic HTML</strong></p>
+        <ul>
+          <li>
+            <code
+              >no-store or a short <code>max-age</code> (5 minutes) with
+              <code>must-revalidate</code></code
+            >
+          </li>
+          <li><code>private</code> if content is dynamic to a user</li>
+        </ul>
+      </section>
+
+      <h2>Nginx vs CDN vs Varnish</h2>
+      <section>
+        <p>
+          Nginx is not as full-featured as Varnish for creating complex caching logic, but it is
+          comparable for simple scenarios. (NOTE: Nginx does not do in-memory caching; that is
+          handled by the OS via simple paging.)
+        </p>
+        <p>
+          Usually if you need/want caching (especially if serving lots of media), a CDN in front on
+          Nginx is usally your best strategy.
+        </p>
+        <p>
+          NOTE: don't cache in both places since both caches will go have response go stale at the
+          same time, so it is just useless overhead having the second cache.
+        </p>
+      </section>
+    </main>
+  </body>
+</html>
