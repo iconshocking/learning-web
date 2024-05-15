@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Reverse Proxy and Nginx</title>
+    <style>
+      table,
+      th,
+      td {
+        border: 1px solid black;
+        border-collapse: collapse;
+        padding: 0.25rem;
+      }
+
+      th {
+        text-align: left;
+      }
+
+      li + li {
+        margin-top: 0.5rem;
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <h1>Reverse Proxy and Nginx</h1>
+      <h2>What are proxies?</h2>
+      <section>
+        <p>Proxies are opaque gateways to participants in a connection:</p>
+        <ul>
+          <li>
+            <strong>Forward proxy:</strong> intercepts client-side and makes clients unkown to
+            server. Use cases:
+            <ul>
+              <li>User privacy</li>
+              <li>
+                Security / data policies since traffic can be inspected before leaving the network
+              </li>
+              <li>Traffic monitoring</li>
+              <li>Shadow IT detection (detecting non-IT-approved devices)</li>
+            </ul>
+          </li>
+          <li>
+            <strong>Reverse proxy:</strong> intercepts server-side and makes servers unkown to
+            client. Use cases:
+            <ul>
+              <li>Load balancing</li>
+              <li>URL routing & rewriting</li>
+              <li>Traffic monitoring</li>
+              <li>Security by hiding backend servers structure</li>
+              <li>
+                TLS termination (allowing simpler use of HTTP communication between networked
+                servers)
+              </li>
+              <li>Caching and serving static content</li>
+            </ul>
+          </li>
+        </ul>
+      </section>
+
+      <h2>Proxy Headers</h2>
+      <section>
+        <p>
+          Since reverse proxies intercept requests, certain HTTP headers are used to relay the
+          information about the original client request:
+        </p>
+        <ul>
+          <li>
+            <strong>X-Forwarded-For:</strong> chain of IP addresses for the request, starting with
+            the original sender and followed by each additional proxy
+          </li>
+          <li>
+            <strong>X-Forwarded-Proto:</strong> original protocol of the request ('http' vs 'https'
+            usually)
+          </li>
+          <li><strong>X-Forwarded-Port:</strong> original port of the request</li>
+          <li>
+            <strong>X-Forwarded-Host:</strong> original target host of the request (i.e., the URL
+            the client requested)
+          </li>
+          <li>
+            <strong>Via:</strong> the protocol and host in each step of the proxied request chain
+            (most useful for determining protocol)
+          </li>
+        </ul>
+        <p>
+          Because these headers are not 'forbidden' (which mean 'cannot be modified programmatically
+          / by code other than the user-agent itself'), these headers cannot be trusted and so
+          should always be overwritten by the proxy server with the values it knows to be true.
+        </p>
+      </section>
+
+      <h2>Nginx</h2>
+      <section>
+        <p>
+          Nginx is a very common web server often used as a reverse proxy, where 'upstream' refers
+          to the servers being proxied.
+        </p>
+        <p>
+          There are four phases of the request/response communication that are described in the
+          table below:
+        </p>
+        <table>
+          <thead>
+            <tr>
+              <th>from</th>
+              <th>to</th>
+              <th>type</th>
+              <th>read header (variable)</th>
+              <th>write header (directive)</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>client</td>
+              <td>nginx</td>
+              <td>request</td>
+              <td>$http_[header_name]</td>
+              <td></td>
+            </tr>
+            <tr>
+              <td>nginx</td>
+              <td>upstream</td>
+              <td>request</td>
+              <td></td>
+              <td>proxy_set_header</td>
+            </tr>
+            <tr>
+              <td>upstream</td>
+              <td>nginx</td>
+              <td>response</td>
+              <td>$upstream_http_[header_name]</td>
+              <td></td>
+            </tr>
+            <tr>
+              <td>nginx</td>
+              <td>client</td>
+              <td>response</td>
+              <td>$sent_http_[header_name]</td>
+              <td>add_header</td>
+            </tr>
+          </tbody>
+        </table>
+        <p>
+          Nginx buffers proxied responses until the entire response returns, which allows servers to
+          quickly return responses, and then slow clients don't eat up resources with long download
+          times.
+        </p>
+        <p>
+          Note: statics should generally be resolved under a different sub/domain so that cookies
+          aren't sent in requests, eating up bandwidth (usually called a "cookie-less domain").
+          However, a CDN achieves this same result, so a cookie-less domain is usually not
+          necessary.
+        </p>
+      </section>
+
+      <h2>Security w/ Compression</h2>
+      <section>
+        <p>
+          Due to the BREACH vulnerability, compressed HTTPS (and HTTP, trivially) is vulnerable to
+          deciphering. Therefore gzip/brotli compression should never be used when transmitting
+          sensitive information.
+        </p>
+        <p>
+          Therefore, compress text-based static content (media is already compressed), but don't
+          ever compress HTML (to avoid accidentally compressing when sensitive information is
+          present).
+        </p>
+        <p>
+          NOTE: compressed <em>requests</em> are never supported to avoid vulnerabilites like
+          opening a compression bomb.
+        </p>
+      </section>
+    </main>
+  </body>
+</html>
