@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Download</title>
+  </head>
+  <body>
+    <button type="button">Download</button>
+    <script>
+      const button = document.body.querySelector("button");
+      button.addEventListener("click", () => {
+        fetch("../media/alice.svg")
+          .then((response) => response.blob())
+          .then((blob) => {
+            const blobURL = URL.createObjectURL(blob);
+            // Create the `<a download>` element and append it invisibly.
+            const a = document.createElement("a");
+            a.href = blobURL;
+            a.download = "alice.svg";
+            a.style.display = "none";
+            document.body.append(a);
+            // Programmatically click the element.
+            a.click();
+          });
+      });
+    </script>
+  </body>
+</html>
