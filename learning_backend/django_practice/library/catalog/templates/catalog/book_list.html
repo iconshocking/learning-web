@@ -22,6 +22,11 @@
               <button>Delete</button>
             </a>
           {% endif %}
+          {% if book.cover_image and book.cover_image.url %}
+            <div>
+              <img src="{{ book.cover_image.url }}" alt="cover_image" height="400" width="400">
+            </div>
+          {% endif %}
         </li>
       {% endfor %}
     </ul>

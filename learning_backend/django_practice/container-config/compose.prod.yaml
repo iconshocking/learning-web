@@ -12,9 +12,10 @@ services:
       context: ../nginx
       # relative to the context
       dockerfile: ../container-config/Dockerfile_nginx
-    # share statics with django volume for convenience for development
+    # share statics & user media with django volume for convenience for development
     volumes:
       - statics:/static
+      - user-media:/user-media
     ports:
       - 80:80
     env_file:

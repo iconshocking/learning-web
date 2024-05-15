@@ -110,7 +110,7 @@ TEMPLATES = [
             # Cached template loader is enabled by default when DEBUG = False and stores compiled
             # templates in memory to skip  the file system on successive calls
             # - NOTE: built-in template tags are safe to use with cached loader, but make sure any
-            #   custom tags are thread-safe
+            #   custom tags are thread-safe (if multi-threading)
             #
             # "loaders": [ ( "django.template.loaders.cached.Loader", [
             #     "django.template.loaders.filesystem.Loader",
@@ -167,10 +167,16 @@ CACHES = {
 }
 
 STORAGES = {
+    # storage for uploaded files from models
+    "default": {
+        # custom storage from 'django-storages' package (ideally should use, but requires extra configuration)
+        # "BACKEND": "storages.backends.s3.S3Storage" if PROD else "django.core.files.storage.FileSystemStorage"
+        "BACKEND": "django.core.files.storage.FileSystemStorage",
+    },
     # cache busts statics
     "staticfiles": {
         "BACKEND": "django.contrib.staticfiles.storage.ManifestStaticFilesStorage"
-    }
+    },
 }
 
 # write-through cache to the db, but cache-only for reads
@@ -218,8 +224,10 @@ STATICFILES_DIRS = [
 STATIC_ROOT = BASE_DIR / "prod/static"
 STATIC_URL = os.environ.get("STATICS_URL", "") if PROD else "static/"
 
-MEDIA_URL = "media/"
-MEDIA_ROOT = BASE_DIR / "prod/media"
+# path root for uploaded files
+MEDIA_ROOT = "/user-media/" if PROD else BASE_DIR / "/user-media"
+# should be served from a different domain to avoid subdomain-based attacks
+MEDIA_URL = os.environ.get("MEDIA_URL", "") if PROD else "user-media/"
 
 
 # Default primary key field type

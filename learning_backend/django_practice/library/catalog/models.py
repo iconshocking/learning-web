@@ -61,6 +61,8 @@ class Book(models.Model):
 
     language = models.ForeignKey("Language", on_delete=models.SET_NULL, null=True)
 
+    cover_image = models.ImageField("Cover Image", upload_to="cover-images/", null=True, blank=True)
+
     def __str__(self):
         """String for representing the Model object."""
         return self.title

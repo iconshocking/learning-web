@@ -46,15 +46,15 @@ RUN adduser \
     --uid "${UID}" \
     appuser
 
-COPY pyproject.toml ./
 COPY ./practice-app ./practice-app
+# generated locally via script beforehand
+COPY requirements.txt ./
 
 # Download dependencies as a separate step to take advantage of Docker's caching.
 # Leverage a cache mount to /root/.cache/pip to speed up subsequent builds.
 # Leverage a bind mount to requirements.txt to avoid having to copy them into
 # into this layer.
 RUN --mount=type=cache,target=/root/.cache/pip \
-    --mount=type=bind,source=requirements.txt,target=requirements.txt \
     python -m pip install -r requirements.txt
 
 # copy AFTER installing dependencies to take advantage of Docker's caching (the cache mount avoids
@@ -64,6 +64,9 @@ RUN mkdir -p /app/library/log
 RUN touch /app/library/log/django-errors.log && touch /app/library/log/gunicorn-error.log && touch /app/library/log/gunicorn-access.log
 # allows for writing to the django and gunicorn logging files
 RUN chown appuser -R /app/library/
+# writing to store user-uploaded media
+RUN mkdir -p /user-media
+RUN chown appuser -R /user-media/
 
 # Switch to the non-privileged user to run the application.
 USER appuser
@@ -74,6 +77,8 @@ EXPOSE ${DJANGO_PORT}
 
 WORKDIR /app/library
 RUN python manage.py collectstatic --noinput --clear
+# can't run migrations here since this is the IMAGE, not the container, so no DB will be available
+
 # Run the application
 # - (NOTE: can only have one CMD instruction in a Dockerfile)
 # - (NOTE: CMD is the only instruction that runs when a container is started from an existing

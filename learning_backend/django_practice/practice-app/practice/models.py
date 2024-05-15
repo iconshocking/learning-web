@@ -48,7 +48,8 @@ class SimpleModel(models.Model):
     - File/ImageField: a CharField stores path to uploaded image within 'upload_to' dir (w/
       validation if for images)
         - 'upload_to': directory to upload files to (supports '.../%Y/%m/%d/' or can be a callable)
-        - 'storage': custom storage system to use
+        - 'storage': storage system to use
+        - NOTE: ImageField requires Pillow package to be installed
 
     - FilePathField: a CharField to a PATH in the the filesystem (can be restricted to a certain
       path)
@@ -367,6 +368,7 @@ class ConcreteOfAbstractModel(AbstractModel, AbstractModel2):
         editable=False,
         help_text="auto-generated from field and field2 at record creation only",
     )
+
     # overriding clean() to auto-generate the slug
     @override
     def clean(self) -> None:

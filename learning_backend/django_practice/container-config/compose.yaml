@@ -38,6 +38,7 @@ services:
       - ./secrets/.env
     volumes:
       - statics:/app/library/prod/statics
+      - user-media:/user-media
     # tells Docker Compose to start the database before your application
     depends_on:
       postgres:
@@ -91,3 +92,4 @@ services:
 volumes:
   postgres-data:
   statics:
+  user-media:
