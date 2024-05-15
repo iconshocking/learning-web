@@ -106,6 +106,13 @@ except KeyError as e:
     print(e)
 # use get(key, optional_default) to avoid KeyError when key is not guaranteed (default is None)
 print(a.get("g", "default")) # type: ignore
+# can delete a key with del or pop()
+a= {"a": 1, "b": 2, "c": 3}
+del a["a"]
+a.pop("b") # useful for getting the value at the same time
+print(a.pop("b", "Not found")) # also useful to avoid KeyError if key doesn't exist
+print(a)
+
 
 # sets use the same synatx as dicts, but without key-pairs
 a = {1, 2}
