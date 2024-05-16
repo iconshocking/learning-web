@@ -148,10 +148,22 @@
           times.
         </p>
         <p>
+          Nginx and web servers must generally start the master process from the root user because
+          binding to ports 0-1023 (the well-known ports) requires superuser privileges to prevent
+          processes being able to pretend to be the owner of the host without permission.
+        </p>
+        <p>
           Note: statics should generally be resolved under a different sub/domain so that cookies
           aren't sent in requests, eating up bandwidth (usually called a "cookie-less domain").
           However, a CDN achieves this same result, so a cookie-less domain is usually not
           necessary.
+        </p>
+        <p>
+          <strong
+            >Security note: media should be hosted from a separate domain (not subdomain) because
+            cookies can be set by subdomians on parent domains, so subdomians with user-uploaded
+            content risk more XSS/CSRF vectors than when on a separate domain.</strong
+          >
         </p>
       </section>
 

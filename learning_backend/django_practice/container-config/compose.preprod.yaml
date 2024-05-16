@@ -6,5 +6,7 @@ services:
       - ./git-safe/.preprod.safe.env
 
   nginx:
+    build:
+      target: preprod
     env_file:
       - ./git-safe/.preprod.safe.env

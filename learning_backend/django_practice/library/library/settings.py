@@ -108,7 +108,8 @@ TEMPLATES = [
                 "django.contrib.messages.context_processors.messages",
             ],
             # Cached template loader is enabled by default when DEBUG = False and stores compiled
-            # templates in memory to skip  the file system on successive calls
+            # templates in memory to skip the file system on successive calls (does not reference
+            # CACHES setting - always in-memory)
             # - NOTE: built-in template tags are safe to use with cached loader, but make sure any
             #   custom tags are thread-safe (if multi-threading)
             #
@@ -142,29 +143,29 @@ DATABASES = {
     }
 }
 
-
-CACHES = {
-    "default": {
-        "BACKEND": "django.core.cache.backends.redis.RedisCache",
-        # 'redis://' is TCP connection w/o SSL while 'rediss://' has SSL
-        "LOCATION": "redis://"
-        + os.environ.get(
-            "DJANGO_REDIS_USERNAME",
-            "",
-        )
-        + ":"
-        + os.environ.get(
-            "DJANGO_REDIS_PASSWORD",
-            "",
-        )
-        + "@"
-        + os.environ.get("REDIS_HOST", "")
-        + ":"
-        + os.environ.get("REDIS_PORT", ""),
-        # can pass an array to 'LOCATION' of a lead server for writes, followed by replicas for
-        # reads
+if PROD:
+    CACHES = {
+        "default": {
+            "BACKEND": "django.core.cache.backends.redis.RedisCache",
+            # 'redis://' is TCP connection w/o SSL while 'rediss://' has SSL
+            "LOCATION": "redis://"
+            + os.environ.get(
+                "DJANGO_REDIS_USERNAME",
+                "",
+            )
+            + ":"
+            + os.environ.get(
+                "DJANGO_REDIS_PASSWORD",
+                "",
+            )
+            + "@"
+            + os.environ.get("REDIS_HOST", "")
+            + ":"
+            + os.environ.get("REDIS_PORT", ""),
+            # can pass an array to 'LOCATION' of a lead server for writes, followed by replicas for
+            # reads
+        }
     }
-}
 
 STORAGES = {
     # storage for uploaded files from models
