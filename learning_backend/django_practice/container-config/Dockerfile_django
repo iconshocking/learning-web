@@ -9,6 +9,8 @@ ARG PYTHON_VERSION=3.12.2
 FROM bash:5.2.26 as hello
 RUN echo "Hello, World!" > example.txt
 
+
+
 # Can use 'target' option to only build up to a certain stage (`docker build --target=hello-next
 # .`), which is very useful for defining a base stage followed by split development and production
 # stages.
@@ -21,13 +23,28 @@ FROM hello as hello-next
 COPY --from=hello /example.txt /example.txt
 RUN echo "The next world is upon you!" >> example.txt
 
+
 # Use the official Python image as the base image. The slim variant is used to reduce the image
 FROM python:${PYTHON_VERSION}-slim as base
 COPY --from=hello-next /example.txt /example.txt
 
+# generated locally via script beforehand
+COPY requirements.txt ./
+COPY ./practice-app ./practice-app
+# Install dependencies as a separate step to take advantage of Docker's caching.
+# Leverage a cache mount to /root/.cache/pip to speed up subsequent builds.
+RUN --mount=type=cache,target=/root/.cache/pip \
+    python -m pip install -r requirements.txt
+# use the line below if generating wheels in a builder image step (I'm not because it made the final
+# image bigger somehow)
+#
+# python -m pip wheel --no-cache-dir --wheel-dir /usr/src/app/wheels -r requirements.txt
+
+# if using wheel-builder image:
+# FROM python:${PYTHON_VERSION}-slim as base
+
 # Prevents Python from writing pyc files.
 ENV PYTHONDONTWRITEBYTECODE=1
-
 # Keeps Python from buffering stdout and stderr to avoid situations where
 # the application crashes without emitting any logs due to buffering.
 ENV PYTHONUNBUFFERED=1
@@ -36,26 +53,21 @@ WORKDIR /app
 
 # Create a non-privileged user that the app will run under.
 # See https://docs.docker.com/go/dockerfile-user-best-practices/
-ARG UID=10001
 RUN adduser \
     --disabled-password \
     --gecos "" \
     --home "/nonexistent" \
     --shell "/sbin/nologin" \
     --no-create-home \
-    --uid "${UID}" \
+    --uid 10001 \
     appuser
 
-COPY ./practice-app ./practice-app
-# generated locally via script beforehand
-COPY requirements.txt ./
-
-# Download dependencies as a separate step to take advantage of Docker's caching.
-# Leverage a cache mount to /root/.cache/pip to speed up subsequent builds.
-# Leverage a bind mount to requirements.txt to avoid having to copy them into
-# into this layer.
-RUN --mount=type=cache,target=/root/.cache/pip \
-    python -m pip install -r requirements.txt
+# deps install if using wheel-builder pattern
+#
+# COPY --from=builder /usr/src/app/wheels ./wheels
+# COPY --from=builder /requirements.txt ./
+# RUN pip install --no-cache ./wheels/*
+# RUN rm -rf ./wheels
 
 # copy AFTER installing dependencies to take advantage of Docker's caching (the cache mount avoids
 # needing to redownload dependencies, but it still needs to re-install the dependencies)
