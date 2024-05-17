@@ -18,7 +18,7 @@ if [ "$1" = "dev" ]; then
     --env-file ./git-safe/.safe.env \
     -f compose.yaml \
     -f compose.dev.yaml \
-    up -d --build
+    up --build "${@:2}"
 fi
 
 if [ "$1" = "preprod" ]; then
@@ -31,7 +31,7 @@ if [ "$1" = "preprod" ]; then
     -f compose.yaml \
     -f compose.prod.yaml \
     -f compose.preprod.yaml \
-    up -d --build
+    up --build "${@:2}"
 fi
 
 
@@ -42,7 +42,7 @@ if [ "$1" = "prod" ]; then
     --env-file ./git-safe/.prod.safe.env \
     -f compose.yaml \
     -f compose.prod.yaml \
-    up -d --build
+    up "${@:2}"
 fi
 
 if [ "$1" = "down" ]; then
