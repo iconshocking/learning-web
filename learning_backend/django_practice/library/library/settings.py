@@ -33,6 +33,13 @@ HTTPS_REQUIRED = os.environ.get("HTTPS_REQUIRED", "False") == "True"
 
 # defines the IP addresses or domain names that can be used to access the Django web application
 ALLOWED_HOSTS = ["127.0.0.1", "nginx"]
+# only set this if you need to allow forms submitted from other sub/domains (like an API) - it is
+# safest by default because it requires that 'Origin' header matches the 'Host' header on
+# POST/unsafe requests (which is only true on same-origin requests)
+# - NOTE: if 'Origin' is not present, checks that the 'Referer' header matches the 'Host' header
+# - NOTE: non-browser requests are not a security risk for this because they have no cookies and so
+# can't perform CSRF attacks
+CSRF_TRUSTED_ORIGINS = []
 
 if DEBUG:
     # hack to allow debug toolbar to work with Docker since the IP calculation seems to fail every
