@@ -20,7 +20,11 @@
     <!-- Add additional CSS in static file -->
     {% load static %}
     <link rel="stylesheet" href="{% static 'core/css/styles.css' %}" />
-    <style>{% block style %}{% endblock style %}</style>
+    <style>
+      {% comment %} inline to have access to static template tag {% endcomment %}
+      {% include "core/inlined/styles.css" %}
+      {% block style %}{% endblock style %}
+    </style>
   </head>
   <body>
     <div class="container-fluid">

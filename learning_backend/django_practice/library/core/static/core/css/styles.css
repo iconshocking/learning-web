@@ -12,9 +12,3 @@
   padding: 0;
   margin: 0;
 }
-
-body {
-  /* note this doesn't use a tag (this is not a template), but instead relative URLs */
-  background: no-repeat top right url("../images/django-logo-negative.png");
-  background-size: 100px;
-}
