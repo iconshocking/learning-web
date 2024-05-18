@@ -1,7 +1,9 @@
 import datetime
 import uuid
+from typing import override
 
 from django.conf import settings
+from django.core.exceptions import ValidationError
 from django.db import models
 from django.db.models import UniqueConstraint
 from django.db.models.functions import Lower
@@ -61,7 +63,9 @@ class Book(models.Model):
 
     language = models.ForeignKey("Language", on_delete=models.SET_NULL, null=True)
 
-    cover_image = models.ImageField("Cover Image", upload_to="cover-images/", null=True, blank=True)
+    cover_image = models.ImageField(
+        "Cover Image", upload_to="cover-images/", null=True, blank=True
+    )
 
     def __str__(self):
         """String for representing the Model object."""
@@ -70,6 +74,14 @@ class Book(models.Model):
     def get_absolute_url(self):
         """Returns the URL to access a detail record for this book."""
         return reverse("catalog:book_detail", args=[str(self.id)])  # type: ignore
+
+    @override
+    def clean(self) -> None:
+        if self.cover_image and self.cover_image.size > 1024 * 1024:
+            raise ValidationError(
+                "Image file too large: must be less than 1MB",
+                code="cover_image_too_large",
+            )
 
 
 class BookInstance(models.Model):
