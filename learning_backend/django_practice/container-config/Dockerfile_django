@@ -88,7 +88,6 @@ ENV DJANGO_PORT_ENV=$DJANGO_PORT
 EXPOSE ${DJANGO_PORT}
 
 WORKDIR /app/library
-RUN python manage.py collectstatic --noinput --clear
 # can't run migrations here since this is the IMAGE, not the container, so no DB will be available
 
 # Run the application
@@ -98,4 +97,7 @@ RUN python manage.py collectstatic --noinput --clear
 
 # 0.0.0.0 not an issue since the container is isolated from the host network and we'll only get
 # called from gunicon
-CMD gunicorn library.wsgi -b 0.0.0.0:${DJANGO_PORT_ENV}
+
+# have to call collectstatic here in order to end up in the shared volume for docker compose
+CMD python manage.py collectstatic --noinput --clear && \
+    gunicorn library.wsgi -b 0.0.0.0:${DJANGO_PORT_ENV}
