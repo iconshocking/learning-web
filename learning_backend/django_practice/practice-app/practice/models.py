@@ -442,7 +442,7 @@ class ProxyModel(BaseForProxyModel):
 # is_valid()/save(), but with a few additional steps:
 #
 # 1. Model calls clean_fields(), which, for each fields calls clean(), which runs to_python(),
-#    validate(), and run_validators() and the result is stored in the 'cleaned_self.ict' attribute
+#    validate(), and run_validators() and the result is stored in the 'cleaned_self.dict' attribute
 #    on the form
 #    - You should usually not need to override these methods - just provide validators
 #    - NOTE: this is the same as form validation
