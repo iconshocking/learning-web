@@ -28,7 +28,6 @@ SECRET_KEY = os.environ.get(
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.environ.get("DJANGO_DEBUG", "") == "True"
-PROD = os.environ.get("DJANGO_ENV", "") == "prod"
 HTTPS_REQUIRED = os.environ.get("HTTPS_REQUIRED", "False") == "True"
 
 # defines the IP addresses or domain names that can be used to access the Django web application
@@ -72,29 +71,53 @@ INSTALLED_APPS = [
     "django.contrib.contenttypes",
     "django.contrib.sessions",
     "django.contrib.messages",
-    # required to serve statics
-    "django.contrib.staticfiles",
     "catalog.apps.CatalogConfig",
     # importing 'practice' as a reusable package
     "practice.apps.PracticeConfig",
     "core.apps.CoreConfig",
-    "debug_toolbar",
-]
+    # required to serve statics when using 'runserver' command and run 'collectstatic' command
+    "django.contrib.staticfiles",
+] + (
+    [
+        "debug_toolbar",
+    ]
+    if DEBUG
+    else []
+)
 
-MIDDLEWARE = [
+
+USING_WHITENOISE = os.environ.get("USE_WHITENOISE", "False") == "True"
+
+
+def middleware_list():
+    middleware = []
     # debug_toolbar must come as soon as possible in the middleware list, but behind any encoding
     # middleware (like gzip)
-    "debug_toolbar.middleware.DebugToolbarMiddleware",
-    "django.middleware.security.SecurityMiddleware",
-    "django.contrib.sessions.middleware.SessionMiddleware",
-    "django.middleware.common.CommonMiddleware",
-    "django.middleware.csrf.CsrfViewMiddleware",
-    "django.contrib.auth.middleware.AuthenticationMiddleware",
-    "django.contrib.messages.middleware.MessageMiddleware",
-    "django.middleware.clickjacking.XFrameOptionsMiddleware",
-    "django.contrib.admindocs.middleware.XViewMiddleware",
-]
+    if DEBUG:
+        middleware.append("debug_toolbar.middleware.DebugToolbarMiddleware")
 
+    middleware.append("django.middleware.security.SecurityMiddleware")
+
+    if USING_WHITENOISE:
+        middleware.append("whitenoise.middleware.WhiteNoiseMiddleware")
+
+    middleware.extend(
+        [
+            "django.contrib.sessions.middleware.SessionMiddleware",
+            "django.middleware.common.CommonMiddleware",
+            "django.middleware.csrf.CsrfViewMiddleware",
+            "django.contrib.auth.middleware.AuthenticationMiddleware",
+            "django.contrib.messages.middleware.MessageMiddleware",
+            "django.middleware.clickjacking.XFrameOptionsMiddleware",
+            "django.contrib.admindocs.middleware.XViewMiddleware",
+        ]
+    )
+    return middleware
+
+
+MIDDLEWARE = middleware_list()
+
+# Set this BEFORE initial DB migrations because it is very hard to switch to a different user model
 AUTH_USER_MODEL = "core.User"
 
 LOGIN_REDIRECT_URL = "/"
@@ -147,14 +170,14 @@ DATABASES = {
         "PASSWORD": os.environ.get("POSTGRES_PASSWORD"),
         "HOST": os.environ.get("POSTGRES_HOST"),
         "PORT": os.environ.get("POSTGRES_PORT"),
-        # defaults to 0; set to something or None if you want connection reuse
+        # defaults to 0; set to something or None if you want connection reuse (not needed for our low traffic site)
         "CONN_MAX_AGE": 0,
         # usually set this to True if you want to use persistent connections, but check for performance penalties
         "CONN_HEALTH_CHECKS": False,
     }
 }
 
-if PROD:
+if os.environ.get("USE_REDIS_CACHE", "") == "True":
     CACHES = {
         "default": {
             "BACKEND": "django.core.cache.backends.redis.RedisCache",
@@ -178,6 +201,17 @@ if PROD:
         }
     }
 
+
+def static_files_storage():
+    if USING_WHITENOISE:
+        return "whitenoise.storage.CompressedManifestStaticFilesStorage"
+    # can't use hash-only on debug because deug-toolbar doesn't properly use static template tag
+    elif not DEBUG:
+        return "core.storage.HashOnlyManifestStaticFilesStorage"
+    else:
+        return "django.contrib.staticfiles.storage.ManifestStaticFilesStorage"
+
+
 STORAGES = {
     # storage for uploaded files from models
     "default": {
@@ -187,7 +221,7 @@ STORAGES = {
     },
     # cache busts statics
     "staticfiles": {
-        "BACKEND": "django.contrib.staticfiles.storage.ManifestStaticFilesStorage"
+        "BACKEND": static_files_storage(),
     },
 }
 
@@ -233,13 +267,13 @@ STATICFILES_DIRS = [
     BASE_DIR / "static",
 ]
 # where static files will be collected for deployment
-STATIC_ROOT = BASE_DIR / "prod/static"
-STATIC_URL = os.environ.get("STATICS_URL", "") if PROD else "static/"
+STATIC_ROOT = BASE_DIR / "prod/statics"
+STATIC_URL = os.environ.get("STATICS_URL", "static/")
 
 # path root for uploaded files
-MEDIA_ROOT = "/user-media/" if PROD else BASE_DIR / "/user-media"
+MEDIA_ROOT = "/user-media/" if not DEBUG else BASE_DIR / "/user-media"
 # should be served from a different domain to avoid subdomain-based attacks
-MEDIA_URL = os.environ.get("MEDIA_URL", "") if PROD else "user-media/"
+MEDIA_URL = os.environ.get("MEDIA_URL", "user-media/")
 
 
 # Default primary key field type
