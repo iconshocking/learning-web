@@ -50,8 +50,12 @@ if DEBUG:
 CSRF_COOKIE_SECURE = HTTPS_REQUIRED
 SESSION_COOKIE_SECURE = HTTPS_REQUIRED
 
-# something very low to make sure I don't break anything
-SECURE_HSTS_SECONDS = 30 if HTTPS_REQUIRED else 0
+# something low to make sure it doesn't break anything
+SECURE_HSTS_SECONDS = 600 if HTTPS_REQUIRED else 0
+SECURE_HSTS_INCLUDE_SUBDOMAINS = HTTPS_REQUIRED
+# ONLY enable this if you are ABSOLUTELY sure that your site will only be served over HTTPS (the
+# minimum requirement is 1 year, so this is a very strong commitment)
+SECURE_HSTS_PRELOAD = False
 
 # should have this on in production
 SECURE_SSL_REDIRECT = HTTPS_REQUIRED
