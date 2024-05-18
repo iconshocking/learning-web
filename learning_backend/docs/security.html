@@ -167,6 +167,7 @@
       Server should check origin header and reject if not allowed (this can be spoofed, but it's better than nothing in case CORS or cookie samesite was set poorly)
       Same-Origin Policy (origin is defined as scheme-host-port) applies to iframe, link, form, img, audio/video, script
       Same-origin also applies to local/session storage as well, but not cookies (why the flag is called 'samesite')
+      Origin header is the origin from where a request was SENT, it is present on all requests except GET/HEAD same-origin requests, but even if present it can be null in various circumstances
       Cookie security? SameSite, Secure, HttpOnly, and Domain/Path
       NOTE: SameSite=Strict is often not desired because it breaks the back button and external links to your site, so Lax is often used
       Basic auth is username@passowrd
