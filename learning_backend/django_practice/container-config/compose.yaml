@@ -24,6 +24,7 @@ services:
           target: ./app/library
           ignore:
             - "*.log"
+            - "prod/statics/"
           action: sync
         - path: ./requirements.txt
           action: rebuild
