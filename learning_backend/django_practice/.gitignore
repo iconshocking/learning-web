@@ -3,3 +3,4 @@ __pycache__/
 **.env
 !**.safe.env
 warnings_and_errors.log
+**/prod/statics/
