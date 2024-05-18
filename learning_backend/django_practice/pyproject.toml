@@ -15,6 +15,8 @@ authors = ["Conrad Shock <shockconrad@gmail.com>"]
 #   'relative_path'
 # - NOTE: option '--without-hashes' to exclude hash values
 #
+# alternatively, can use 'pip freeze > requirements.txt if in the venv shell'
+
 # Dependencies in this format of requirements.txt can be added by poetry via `poetry add $(cat requirements.txt)`
 [tool.poetry.dependencies]
 python = "^3.12"
@@ -26,14 +28,15 @@ coverage = "^7.4.4"
 build = "^1.2.1"
 # include the 'editable' flag to link to a local package's source code instead of a built
 # distributable
-practice = {path = "./practice-app/dist/practice-0.1.0-py3-none-any.whl"}
+practice = { path = "./practice-app/dist/practice-0.1.0-py3-none-any.whl" }
 redis = "^5.0.4"
 hiredis = "^2.3.2"
-psycopg = {extras = ["binary"], version = "^3.1.18"}
+psycopg = { extras = ["binary"], version = "^3.1.18" }
 gunicorn = "^22.0.0"
 dj-database-url = "^2.1.0"
 pillow = "^10.3.0"
 django-storages = "^1.14.3"
+whitenoise = "^6.6.0"
 
 [build-system]
 requires = ["poetry-core"]
