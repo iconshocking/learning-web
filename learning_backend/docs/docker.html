@@ -217,7 +217,10 @@
             </li>
             <li>
               <code>127.0.0.1</code> is equivalent to <code>localhost</code> (mostly) and is the
-              self-lookup address
+              self-lookup address for IPv4 addresses.
+              <ul>
+                <li><code>[::1]</code> is the self-lookup for IPv6 addresses.</li>
+              </ul>
             </li>
             <li>
               <code>192.168.x.x</code>, <code>10.x.x.x</code>, and <code>172.16-31.x.x</code> are
@@ -225,7 +228,15 @@
               network
             </li>
             <li>
-              <code>0.0.0.0</code> is the "no particular address" placeholder, and can be used to
+              <code>0.0.0.0</code> is the "no particular address" placeholder for IPv4 addresses,
+              and is used to listen to a connection from any IPv4 address, i.e., open to the
+              internet.
+              <ul>
+                <li><code>[::]</code> is the equivalent for IPv6 addresses</li>
+              </ul>
+              Note that some network adapters can map IPv4 addresses to IPv6 addresses, but
+              generally these catch-all unspecified addressed only work for their respective
+              formats, so listening on both is necessary to support both address formats.
             </li>
             <li>
               <p>
@@ -349,8 +360,8 @@
             <code>.env</code> file or files set using
             <code>docker compose --env-file [file array]</code> are <em>ONLY</em> relevant to
             <em>compose</em> files; variables defined here will be automatically loaded by Docker
-            compose before running any CLI command for a compose file and substituted into the compose
-            file. These variables are <strong>not</strong> arg or env variables.
+            compose before running any CLI command for a compose file and substituted into the
+            compose file. These variables are <strong>not</strong> arg or env variables.
           </p>
 
           <p>You can only inject <strong>args</strong> via:</p>
