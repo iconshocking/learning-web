@@ -1,3 +1,6 @@
+# shouldn't need to increase max connections supported anymore for production because linux kernel was updated in 2019 to
+# default to 4096 (no longer need 'net.core.somaxconn = 4096')
+
 # 'auto' sets value to number of cores (default value is 1)
 worker_processes auto;
 # default for the docker image
@@ -17,8 +20,9 @@ events {
 
 # no caching configured for this config
 http {
-  log_format real_ip '$http_x_forwarded_for $remote_addr [$time_local] '
-  '"$request" $status $body_bytes_sent "$http_referer" "$http_user_agent"';
+  log_format real_ip
+    '$http_x_forwarded_for $remote_addr [$time_local] '
+    '"$request" $status $body_bytes_sent "$http_referer" "$http_user_agent"';
   # since this is behind a proxy, we want to log the real address of the client in "X-Forwarded-For" header
   access_log /log/access.log real_ip;
 
@@ -39,7 +43,7 @@ http {
   upstream django {
     # domain / ip address and port of the upstream server
     server ${DJANGO_IP}:${DJANGO_PORT};
-    
+
     # could define multiple server to support load balancing
     # options:
     # - weight=[number]: weights servers according to how many requests they should receive
@@ -80,7 +84,9 @@ http {
     # HTTPS redirect on prod handled by fly.io
     listen ${NGINX_LISTEN_PORT} backlog=4096;
     # defines the required options for HOST header on request (can use wildcard * and multiple space separated domains
-    server_name playground.fly-io.cshock.tech cshock-library-nginx.fly.dev 127.0.0.1;
+    server_name playground.fly-io.cshock.tech
+      cshock-library-nginx.fly.dev
+      127.0.0.1;
 
     # - 'location @[name]' allows for referencing via name by other directives (instead of URL)
     # - possible to nest location directives
@@ -110,7 +116,7 @@ http {
       proxy_set_header X-Real-IP $http_fly_client_id;
       proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
       proxy_set_header X-Forwarded-Host $http_host;
-      
+
       # replaces the 'Location' header in a proxied server's redirect response to remove the internal network part of the URL
       # ('default' strips 'proxy_pass' value + 'location' value; e.g., '127.0.0.1:8000/index/' becomes 'index/',
       # which is fine because Location header supports relative URLs.)
@@ -123,9 +129,5 @@ http {
       # 'proxy_bind' allows for setting the source IP address for connecting to the proxied server
       # (e.g. 'proxy_bind 127.0.0.2' for a different proxy)
     }
-
-    # for production, should increase the max number of connections in the Dockerfile
-    # (https://docs.nginx.com/nginx/admin-guide/web-server/serving-static-content/#optimizing-the-backlog-queue))
   }
-
 }
