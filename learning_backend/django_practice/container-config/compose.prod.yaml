@@ -21,6 +21,7 @@ services:
       - 80:80
     env_file:
       - ./secrets/.prod.env
+      - ./git-safe/.safe.env
       - ./git-safe/.prod.safe.env
     depends_on:
       - django
