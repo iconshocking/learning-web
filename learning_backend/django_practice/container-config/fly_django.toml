@@ -11,8 +11,8 @@ swap_size_mb = 512
 image = "registry.fly.io/cshock-library-django:latest"
 
 [deploy]
-# initial command to run before the container runs its image's normal start command
-release_command = "python manage.py migrate --noinput"
+# 'release_command' is an initial command to run before the container runs its image's normal start
+# command
 
 [[vm]]
 memory = '256mb'

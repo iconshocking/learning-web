@@ -100,4 +100,4 @@ WORKDIR /app/library
 
 # ideally would like to bind only to requests from the host IP, but 'fly-local-6pn' seems to be
 # inconsistent across runtimes and doesn't seem to work here
-CMD gunicorn library.wsgi -b [::]:${DJANGO_PORT}
+CMD python manage.py migrate --noinput && gunicorn library.wsgi -b [::]:${DJANGO_PORT}
