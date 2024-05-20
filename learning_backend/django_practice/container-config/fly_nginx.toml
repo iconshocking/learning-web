@@ -16,7 +16,7 @@ auto_start_machines = true
 min_machines_running = 0
 [http_service.http_options]
 # couldn't get this configured to work with nginx without much more debugging
-h2_backend = true
+h2_backend = false
 [http_service.tls_options]
 # h2 and TLS offloading at the edge
 alpn = ["h2", "http/1.1"]
