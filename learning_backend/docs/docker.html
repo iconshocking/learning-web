@@ -208,68 +208,17 @@
             to TCP port 80 in the container
           </li>
         </ul>
-        <section style="border: 1px black solid; padding-left: 1rem">
-          <h3>IP address notes</h3>
-          <ul>
-            <li>
-              A <strong>gateway</strong> is the host that acts as the intermediary between local and
-              remote network communication.
-            </li>
-            <li>
-              <code>127.0.0.1</code> is equivalent to <code>localhost</code> (mostly) and is the
-              self-lookup address for IPv4 addresses.
-              <ul>
-                <li><code>[::1]</code> is the self-lookup for IPv6 addresses.</li>
-              </ul>
-            </li>
-            <li>
-              <code>192.168.x.x</code>, <code>10.x.x.x</code>, and <code>172.16-31.x.x</code> are
-              private network addresses and so never refer to an IP address outside the local
-              network
-            </li>
-            <li>
-              <code>0.0.0.0</code> is the "no particular address" placeholder for IPv4 addresses,
-              and is used to listen to a connection from any IPv4 address, i.e., open to the
-              internet.
-              <ul>
-                <li><code>[::]</code> is the equivalent for IPv6 addresses</li>
-              </ul>
-              Note that some network adapters can map IPv4 addresses to IPv6 addresses, but
-              generally these catch-all unspecified addressed only work for their respective
-              formats, so listening on both is necessary to support both address formats.
-            </li>
-            <li>
-              <p>
-                IP addresses consist of a <strong>network</strong> and
-                <strong>host</strong> portion, determined by the <strong>subnet mask</strong>.
-              </p>
-              <ul>
-                <li>
-                  <strong>network</strong> is the address of the <em>network</em>, not a specific
-                  device/host
-                </li>
-                <li><strong>host</strong> is the address of a specific</li>
-              </ul>
-              <p>
-                For example: IP address <code>192.168.0.1/24</code> means the subnet mask is
-                <code>255.255.255.0</code> (24 bits), which means the network address is
-                <code>192.168.0</code> and the host address is <code>.1</code>
-              </p>
-              <p>
-                Note: there is also a <strong>broadcast IP address</strong> which is the address
-                that can be communicated with to send data to <em>all</em> hosts on that network
-              </p>
-            </li>
-          </ul>
-          <p>
-            These local-network-only addresses can be useful for safe restriction of ports. For
-            example: <code>docker run -p 127.0.0.1:8080:80 [container_name]</code> will only expose
-            that container port to the <em>Docker host</em>. But if no IP is provided, the container
-            port is exposed to any outside network that hits port 8080 on the Docker host. The
-            distinction is that the Docker host must initiate the connection to the container in the
-            first example, via explicit loopback address forwarding.
-          </p>
-        </section>
+
+        <p>
+          Lcal-network-only addresses can be useful for safe restriction of ports. For example:
+          <code>docker run -p 127.0.0.1:8080:80 [container_name]</code> will only expose that
+          container port to the <em>Docker host</em>. But if no IP is provided, the container port
+          is exposed to any outside network communication that hits port 8080 on the Docker host.
+          The distinction in the provided example is that the Docker host must initiate the
+          connection to the container, via explicit loopback address forwarding instead of the
+          container being called directly.
+        </p>
+
         <p>
           <code>EXPOSE</code> (in Dockerfile) and <code>expose</code> (in Docker compose file) do
           not actually <em>DO</em> anything, but are documentation stating which ports to

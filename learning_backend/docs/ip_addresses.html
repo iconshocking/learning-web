@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>IP Addresses</title>
+    <style>
+      code {
+        background-color: #e2e1e1;
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <h1>IP address notes</h1>
+
+      <p>
+        A <strong>gateway</strong> is the host that acts as the intermediary between local and
+        remote network communication.
+      </p>
+
+      <h2>IPv4 vs IPv6 Addresses</h2>
+      <section>
+        <p>IPv4 addresses are 4 8-bit numbers separated by periods (eg., 3.44.0.255)</p>
+        <p>
+          IPv6 addressses are 8 sequences of 16-bit numbers represented in hex and separated by
+          colons (e.g., a:2:33:4561:f:0:65:1)
+        </p>
+        <p>
+          NOTE: IPv6 addresses can be ambiguous with ports because any sequence of zeros can be
+          represented as <code>::</code> (e.g., 1::1 has the inner six sequences as just zeros). To
+          solve this IPv6 addresses can be disambiguated by wrapping them in square brackets (e.g.,
+          <code>[1::1]:8080</code> makes clear that 8080 is the port and not part of the IPv6
+          address).
+        </p>
+      </section>
+
+      <h2>Important Addresses</h2>
+      <section>
+        <p>
+          <code>127.0.0.1</code> is equivalent to <code>localhost</code> (mostly) and is the
+          self-lookup address for IPv4 addresses.
+        </p>
+        <ul>
+          <li><code>[::1]</code> is the self-lookup for IPv6 addresses.</li>
+        </ul>
+        <p>
+          <code>192.168.x.x</code>, <code>10.x.x.x</code>, and <code>172.16-31.x.x</code> are
+          private network addresses and so never refer to an IP address outside the local network
+        </p>
+        <p>
+          <code>0.0.0.0</code> is the "no particular address" placeholder for IPv4 addresses, and is
+          used to listen to a connection from any IPv4 address, i.e., open to the internet.
+        </p>
+        <ul>
+          <li><code>[::]</code> is the equivalent for IPv6 addresses</li>
+          <li>
+            Note: <code>::</code> <em>actually</em> means that all values between the colons are to
+            be considered <code>0</code> (e.g., 1::1)
+          </li>
+        </ul>
+        <p>
+          Note that some network adapters can map IPv4 addresses to IPv6 addresses, but generally
+          these catch-all unspecified addressed only work for their respective formats, so listening
+          on both is necessary to support both address formats.
+        </p>
+      </section>
+
+      <h2>Subnet Masks</h2>
+      <section>
+        <p>
+          IP addresses consist of a <strong>network</strong> and <strong>host</strong> portion,
+          determined by the <strong>subnet mask</strong>.
+        </p>
+        <ul>
+          <li>
+            <strong>network</strong> is the address of the <em>network</em>, not a specific
+            device/host
+          </li>
+          <li><strong>host</strong> is the address of a specific</li>
+        </ul>
+        <p>
+          For example: IP address <code>192.168.0.1/24</code> means the subnet mask is
+          <code>255.255.255.0</code> (24 bits), which means the network address is
+          <code>192.168.0</code> and the host address is <code>.1</code>
+        </p>
+        <p>Note: the <code>/</code> notation for the subnet mask is known as CIDR notation.</p>
+        <p>
+          Note: there is also a <strong>broadcast IP address</strong> which is the address that can
+          be communicated with to send data to <em>all</em> hosts on that network
+        </p>
+
+        <h3>IPv6 Subnetting</h3>
+        <p>
+          IPv6 addresses are slightly different in that they always have their first 4 sequences as
+          network addresses and then subnetting is determined by a <em>prefix</em>, represented the
+          same as a subnet mask, which must always be a multiple of 16 in order to split subnets at
+          the 16-bit boundary of an address sequence.
+        </p>
+        <p>
+          For example: <code>2001:db8:abcd:0012::0/96</code> means the first 96 bits are the network
+          address, so the subnet consists of devices <code>2001:0DB8:ABCD:0012::</code> through
+          <code>2001:0DB8:ABCD:0012::FFFF:FFFF</code>.
+        </p>
+        <p>
+          Note: this means that <strong>64</strong> is the minimum prefix because the first 4
+          sequences of an IPv6 address is always the network address.
+        </p>
+      </section>
+    </main>
+  </body>
+</html>
