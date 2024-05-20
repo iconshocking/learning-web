@@ -17,7 +17,7 @@ services:
       dockerfile: ./container-config/Dockerfile_django
       target: base
       args:
-        - DJANGO_PORT=8000
+        - DJANGO_PORT=$DJANGO_PORT
     develop:
       watch:
         - path: ../library

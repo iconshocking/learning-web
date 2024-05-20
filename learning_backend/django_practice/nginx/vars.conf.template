@@ -1,4 +1,0 @@
-map $http_x_forwarded_proto $https_redirect_needed {
-  default ${HTTPS_REQUIRED};
-  https False;
-}

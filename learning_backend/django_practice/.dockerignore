@@ -4,6 +4,8 @@
 # For more help, visit the .dockerignore file reference guide at
 # https://docs.docker.com/go/build-context-dockerignore/
 
+# must be in the root of the build context
+
 **/.DS_Store
 **/__pycache__
 **/.venv

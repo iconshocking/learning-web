@@ -28,10 +28,10 @@ SECRET_KEY = os.environ.get(
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.environ.get("DJANGO_DEBUG", "") == "True"
-HTTPS_REQUIRED = os.environ.get("HTTPS_REQUIRED", "False") == "True"
+HTTPS_REQUIRED = os.environ.get("NGINX_LISTEN_PORT", "80") == "443"
 
 # defines the IP addresses or domain names that can be used to access the Django web application
-ALLOWED_HOSTS = ["127.0.0.1", "nginx"]
+ALLOWED_HOSTS = ["127.0.0.1", "cshock-library-nginx.fly.dev", "playground.fly-io.cshock.tech"]
 # only set this if you need to allow forms submitted from other sub/domains (like an API) - it is
 # safest by default because it requires that 'Origin' header matches the 'Host' header on
 # POST/unsafe requests (which is only true on same-origin requests)
@@ -165,7 +165,7 @@ WSGI_APPLICATION = "library.wsgi.application"
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql",
-        "NAME": os.environ.get("POSTGRES_DB"),
+        "NAME": os.environ.get("POSTGRES_DB_NAME"),
         "USER": os.environ.get("POSTGRES_USER"),
         "PASSWORD": os.environ.get("POSTGRES_PASSWORD"),
         "HOST": os.environ.get("POSTGRES_HOST"),
@@ -174,6 +174,9 @@ DATABASES = {
         "CONN_MAX_AGE": 0,
         # usually set this to True if you want to use persistent connections, but check for performance penalties
         "CONN_HEALTH_CHECKS": False,
+        "OPTIONS": {
+            "sslmode": "disable",
+        }
     }
 }
 
