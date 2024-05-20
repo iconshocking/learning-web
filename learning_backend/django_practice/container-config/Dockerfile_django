@@ -87,17 +87,17 @@ ARG DJANGO_PORT
 EXPOSE ${DJANGO_PORT}
 
 WORKDIR /app/library
-# can't run migrations here since this is the IMAGE, not the container, so no DB will be available
+# can't run migrations here since this is the image, not the container, so no DB is available
 
 # Run the application
 # - (NOTE: can only have one CMD instruction in a Dockerfile)
 # - (NOTE: CMD is the only instruction that runs when a container is started from an existing
 #   container, so it should usually be idempotent and not require any user input)
 
-# 0.0.0.0 not an issue since the container is isolated from the host network and we'll only get
-# called from nginx
-
 # have to call collectstatic here in order to end up in the shared volume for docker compose
 # CMD python manage.py collectstatic --noinput --clear && \
 #     gunicorn library.wsgi -b 0.0.0.0:${DJANGO_PORT_ENV}
+
+# ideally would like to bind only to requests from the host IP, but 'fly-local-6pn' seems to be
+# inconsistent across runtimes and doesn't seem to work here
 CMD gunicorn library.wsgi -b [::]:${DJANGO_PORT}

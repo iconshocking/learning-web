@@ -21,5 +21,5 @@ if [ "$2" != "deploy-only" ]; then
   docker push "registry.fly.io/cshock-library-${1}"
 fi
 
-# deploy to fly.io
+# deploy to fly.io without high availability, which always spins up 1 more than min instances set
 fly deploy -c "fly_${1}_with_env.toml" --ha=false

@@ -33,8 +33,7 @@ http {
   # fly.io supports http2 ('proxy_pass' does not and converts to HTTP/1.1, but this has less
   # performance overhead on the back channel side since the multiplexing of responses is mostly
   # beneficial just for the client making requests in parallel)
-  # - disabling for now because the debugging is giving me a headache
-  http2 off;
+  # - disabling for now in fly_nginx.toml because the debugging is giving me a headache
 
   # can support HTTP/2 server push too, which allows pushing additional resources when another resource is requested
 
