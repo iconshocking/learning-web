@@ -73,11 +73,17 @@ http {
 
   server {
     server_name static.playground.fly-io.cshock.tech;
-
     listen ${NGINX_LISTEN_PORT};
-
     include /etc/nginx/conf.d/static.conf;
   }
+
+  # redirect www to non-www
+  server {
+    server_name www.playground.fly-io.cshock.tech;
+    listen ${NGINX_LISTEN_PORT};
+    return 301 https://playground.fly-io.cshock.tech$request_uri;
+  }
+
 
   server {
     # HTTPS redirect on prod handled by fly.io
