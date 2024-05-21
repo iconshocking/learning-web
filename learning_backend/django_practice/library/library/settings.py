@@ -16,7 +16,6 @@ from pathlib import Path
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
 
@@ -31,7 +30,11 @@ DEBUG = os.environ.get("DJANGO_DEBUG", "") == "True"
 HTTPS_REQUIRED = os.environ.get("NGINX_LISTEN_PORT", "80") == "443"
 
 # defines the IP addresses or domain names that can be used to access the Django web application
-ALLOWED_HOSTS = ["127.0.0.1", "cshock-library-nginx.fly.dev", "playground.fly-io.cshock.tech"]
+ALLOWED_HOSTS = [
+    "127.0.0.1",
+    "cshock-library-nginx.fly.dev",
+    "playground.fly-io.cshock.tech",
+]
 # only set this if you need to allow forms submitted from other sub/domains (like an API) - it is
 # safest by default because it requires that 'Origin' header matches the 'Host' header on
 # POST/unsafe requests (which is only true on same-origin requests)
@@ -176,7 +179,7 @@ DATABASES = {
         "CONN_HEALTH_CHECKS": False,
         "OPTIONS": {
             "sslmode": "disable",
-        }
+        },
     }
 }
 
@@ -269,12 +272,12 @@ USE_TZ = True
 STATICFILES_DIRS = [
     BASE_DIR / "static",
 ]
-# where static files will be collected for deployment
-STATIC_ROOT = BASE_DIR / "prod/statics"
-STATIC_URL = os.environ.get("STATICS_URL", "static/")
+# where static files will be collected for deployment (more convenient if kept out of directory)
+STATIC_ROOT = BASE_DIR / "../nginx/statics"
+STATIC_URL = os.environ.get("STATICS_URL", "statics/")
 
 # path root for uploaded files
-MEDIA_ROOT = "/user-media/" if not DEBUG else BASE_DIR / "/user-media"
+MEDIA_ROOT = "/user-media" if not DEBUG else BASE_DIR / "user-media"
 # should be served from a different domain to avoid subdomain-based attacks
 MEDIA_URL = os.environ.get("MEDIA_URL", "user-media/")
 

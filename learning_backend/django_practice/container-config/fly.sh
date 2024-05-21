@@ -8,11 +8,14 @@ set -e
 cp "fly_${1}.toml" "fly_${1}_with_env.toml"
 # sort 'unique' keys (equal keys are not overwritten, so use reverse order of standard env override)
 # separated by '=' and only use first column (range 1 to 1) to sort on
-sort -u -t '=' -k 1,1 git-safe/.prod.safe.env git-safe/.safe.env >> "fly_${1}_with_env.toml"
+sort -u -t '=' -k 1,1 git-safe/.prod.safe.env git-safe/.dev.safe.env >>"fly_${1}_with_env.toml"
+# sed wraps all appended env line values with single quotes (other lines have spaces surrounding the
+# '=', so we check for the absence of that)
+sed -E -i '' "s%([^ ]+)=([^ ]+)%\1='\2'%g" "fly_${1}_with_env.toml"
 
 # build the image if needed
 if [ "$2" = "build" ]; then
-  ./docker-compose.sh prod ${1}
+  ./docker_compose.sh prod "${1}"
 fi
 
 if [ "$2" != "deploy-only" ]; then

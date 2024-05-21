@@ -79,6 +79,8 @@ RUN chown appuser -R /app/library/
 # writing to store user-uploaded media
 RUN mkdir -p /user-media
 RUN chown appuser -R /user-media/
+# copy mapping of static files to their hashed names
+COPY ./nginx/statics/staticfiles.json /app/nginx/statics/staticfiles.json
 
 # Switch to the non-privileged user to run the application.
 USER appuser

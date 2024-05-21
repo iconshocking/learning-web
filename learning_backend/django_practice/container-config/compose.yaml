@@ -24,7 +24,6 @@ services:
           target: ./app/library
           ignore:
             - "*.log"
-            - "prod/statics/"
           action: sync
         - path: ./requirements.txt
           action: rebuild
@@ -35,10 +34,9 @@ services:
       REDIS_PORT: "6379"
       POSTGRES_PASSWORD: $POSTGRES_PASSWORD
     env_file:
-      - ./git-safe/.safe.env
-      - ./secrets/.env
+      - ./git-safe/.dev.safe.env
+      - ./secrets/.dev.env
     volumes:
-      - statics:/app/library/prod/statics
       - user-media:/user-media
     # tells Docker Compose to start the database before your application
     depends_on:
@@ -73,8 +71,8 @@ services:
     volumes:
       - postgres-data:/var/lib/postgresql/data
     env_file:
-      - ./git-safe/.safe.env
-      - ./secrets/.env
+      - ./git-safe/.dev.safe.env
+      - ./secrets/.dev.env
     environment:
       POSTGRES_PASSWORD: $POSTGRES_PASSWORD
     ports:
@@ -92,5 +90,4 @@ services:
 
 volumes:
   postgres-data:
-  statics:
   user-media:

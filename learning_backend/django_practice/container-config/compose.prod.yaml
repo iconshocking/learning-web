@@ -15,13 +15,12 @@ services:
       target: prod
     # share statics & user media with django volume for convenience for development
     volumes:
-      - statics:/static
       - user-media:/user-media
     ports:
       - 80:80
     env_file:
       - ./secrets/.prod.env
-      - ./git-safe/.safe.env
+      - ./git-safe/.dev.safe.env
       - ./git-safe/.prod.safe.env
     depends_on:
       - django

@@ -10,3 +10,8 @@ services:
       target: preprod
     env_file:
       - ./git-safe/.preprod.safe.env
+    develop:
+      watch:
+        - path: ./statics
+          target: /statics
+          action: sync

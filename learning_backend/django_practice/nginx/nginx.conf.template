@@ -74,7 +74,7 @@ http {
   server {
     server_name static.playground.fly-io.cshock.tech;
     listen ${NGINX_LISTEN_PORT};
-    include /etc/nginx/conf.d/static.conf;
+    include /etc/nginx/conf.d/statics.conf;
   }
 
   # redirect www to non-www
@@ -98,8 +98,8 @@ http {
     # - use 'location ~ [regex]' syntax if not using simple prefix matching (use '~*' for case-insensitive)
 
     # statics
-    location /static/ {
-      include /etc/nginx/conf.d/static.conf;
+    location /statics/ {
+      include /etc/nginx/conf.d/statics.conf;
     }
 
     include /etc/nginx/conf.d/user-media.conf;
