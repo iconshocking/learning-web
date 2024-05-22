@@ -27,6 +27,7 @@ SECRET_KEY = os.environ.get(
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.environ.get("DJANGO_DEBUG", "") == "True"
+PROD = os.environ.get("DJANGO_ENV", "") == "prod"
 HTTPS_REQUIRED = os.environ.get("NGINX_LISTEN_PORT", "80") == "443"
 
 # defines the IP addresses or domain names that can be used to access the Django web application
@@ -80,6 +81,10 @@ INSTALLED_APPS = [
     "core.apps.CoreConfig",
     # required to serve statics when using 'runserver' command and run 'collectstatic' command
     "django.contrib.staticfiles",
+    # deletes old file when a new file name is uploaded for a model field (probably avoid using
+    # this, or at least heavily configure, if you are performing more complex or persistent media
+    # storage)
+    "django_cleanup.apps.CleanupConfig",
 ] + (
     [
         "debug_toolbar",
@@ -217,14 +222,31 @@ def static_files_storage():
     else:
         return "django.contrib.staticfiles.storage.ManifestStaticFilesStorage"
 
+def media_files_storage():
+    if PROD:
+        return {
+            # custom storage from 'django-storages' package (actually using Cloudflare R2, which is S3 API compatible)
+            "BACKEND": "storages.backends.s3.S3Storage",
+            "OPTIONS": {
+                "access_key": os.environ.get("CLOUDFLARE_R2_S3_ACCESS_KEY_ID"),
+                "secret_key": os.environ.get("CLOUDFLARE_R2_S3_ACCESS_KEY_SECRET"),
+                # "security_token": os.environ.get("CLOUDFLARE_R2_API_TOKEN"),
+                "bucket_name": os.environ.get("CLOUDFLARE_R2_BUCKET_NAME"),
+                # bucket is public, so no need for this
+                "querystring_auth": False,
+                # max size of file that can be held in memory without being written to a temp-file
+                "max_memory_size": 20 * 1024 * 1024,
+                "endpoint_url": os.environ.get("CLOUDFLARE_R2_API_URL"),
+                "custom_domain": os.environ.get("CLOUDFLARE_R2_CUSTOM_DOMAIN"),
+            },
+        }
+    else:
+        return {"BACKEND": "django.core.files.storage.FileSystemStorage"}
+
 
 STORAGES = {
     # storage for uploaded files from models
-    "default": {
-        # custom storage from 'django-storages' package (ideally should use, but requires extra configuration)
-        # "BACKEND": "storages.backends.s3.S3Storage" if PROD else "django.core.files.storage.FileSystemStorage"
-        "BACKEND": "django.core.files.storage.FileSystemStorage",
-    },
+    "default": media_files_storage(),
     # cache busts statics
     "staticfiles": {
         "BACKEND": static_files_storage(),
@@ -276,9 +298,11 @@ STATICFILES_DIRS = [
 STATIC_ROOT = BASE_DIR / "../nginx/statics"
 STATIC_URL = os.environ.get("STATICS_URL", "statics/")
 
-# path root for uploaded files
-MEDIA_ROOT = "/user-media" if not DEBUG else BASE_DIR / "user-media"
+# absolute file path root for uploaded files (only relevant for local storage)
+MEDIA_ROOT = BASE_DIR / "user-media"
 # should be served from a different domain to avoid subdomain-based attacks
+# - NOTE: this is only relevant if the Storage class used references it (though it can be used to
+#   manually construct URLs by using 'settings.MEDIA_URL + File/ImageField.name')
 MEDIA_URL = os.environ.get("MEDIA_URL", "user-media/")
 
 

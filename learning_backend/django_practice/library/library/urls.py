@@ -15,15 +15,13 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 
-import re
 from typing import List
 
 from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib import admin
-from django.urls import URLPattern, URLResolver, include, path, re_path
+from django.urls import URLPattern, URLResolver, include, path
 from django.views.generic import RedirectView
-from django.views.static import serve
 
 urlpatterns: List[URLResolver | URLPattern] = (
     [
@@ -38,19 +36,12 @@ urlpatterns: List[URLResolver | URLPattern] = (
         path("practice/", include("practice.urls")),
         path("__debug__/", include("debug_toolbar.urls")),
     ]
-    + [
-        # this duplicates the static serving function to be able to serve media files from django in
-        # production for now (not ideal, but better than nothing for now)
-        re_path(
-            r"^%s(?P<path>.*)$" % re.escape(settings.MEDIA_URL.lstrip("/")),
-            serve,
-            kwargs={"document_root": settings.MEDIA_ROOT},
-        )
-    ]
-    + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+) + static(
+    settings.MEDIA_URL, document_root=settings.MEDIA_ROOT
 )  # serve media files in development
-# + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 
+# + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+#
 # The line above only serves static assets when DEBUG=True in settings.py (production serving is
 # handled elsewhere) and ONLY serves the STATIC_ROOT folder (no discovery like the
 # django.contrib.staticfiles app).
