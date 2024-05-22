@@ -114,8 +114,15 @@ http {
       proxy_set_header Host $host;
       proxy_pass_request_headers on;
 
+      # django CSRF token masking mititgates BREACH attacks, so we can enable compression on HTML responses
+      gzip on;
+      # requires 'Content-Length' response header to be set
+      gzip_min_length 1000;
+      # must set this when receiving a proxied request (disable if proxy is a CDN that wants un-compressed files for caching)
+      gzip_proxied any;
+
       # don't cache and set private for extra clarity
-      add_header Cache-Control "no-store, private";
+      add_header Cache-Control "no-transform, no-store, private";
 
       # 'X-Forwarded-Proto' is already provided by fly.io, so no need to set it
       proxy_set_header X-Real-IP $http_fly_client_id;
