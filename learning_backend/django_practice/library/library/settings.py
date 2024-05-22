@@ -188,7 +188,9 @@ DATABASES = {
     }
 }
 
-if os.environ.get("USE_REDIS_CACHE", "") == "True":
+USE_REDIS_CACHE = os.environ.get("USE_REDIS_CACHE", "") == "True"
+
+if USE_REDIS_CACHE:
     CACHES = {
         "default": {
             "BACKEND": "django.core.cache.backends.redis.RedisCache",
@@ -222,6 +224,7 @@ def static_files_storage():
     else:
         return "django.contrib.staticfiles.storage.ManifestStaticFilesStorage"
 
+
 def media_files_storage():
     if PROD:
         return {
@@ -254,7 +257,13 @@ STORAGES = {
 }
 
 # write-through cache to the db, but cache-only for reads
-SESSION_ENGINE = "django.contrib.sessions.backends.cached_db"
+SESSION_ENGINE = (
+    "django.contrib.sessions.backends.cached_db"
+    if USE_REDIS_CACHE
+    # do not use cache when not using redis as the cache because the default cache is local memory
+    # per-process, which breaks session data consistency
+    else "django.contrib.sessions.backends.db"
+)
 
 # Password validation
 # https://docs.djangoproject.com/en/5.0/ref/settings/#auth-password-validators

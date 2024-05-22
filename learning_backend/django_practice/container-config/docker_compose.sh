@@ -23,7 +23,7 @@ if [ "$1" = "dev" ]; then
     --env-file ./git-safe/.dev.safe.env \
     -f compose.yaml \
     -f compose.dev.yaml \
-    up --build "${@:2}"
+    up "${@:2}"
 fi
 
 if [ "$1" = "preprod" ]; then
@@ -42,7 +42,7 @@ if [ "$1" = "preprod" ]; then
     -f compose.yaml \
     -f compose.prod.yaml \
     -f compose.preprod.yaml \
-    up --build "${@:2}"
+    up "${@:2}"
 fi
 
 # note this just builds the image for pushing to registries; it doesn't run it since a local
