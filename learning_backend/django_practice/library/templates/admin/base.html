@@ -8,3 +8,7 @@
 }
   </style>
 {% endblock extrastyle %}
+{% block extrahead %}
+  {% load static %}
+  <link rel="icon" type="image/jpeg" href="{% static "core/images/favicon.jpg" %}">
+{% endblock extrahead %}
