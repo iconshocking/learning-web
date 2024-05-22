@@ -1,6 +1,9 @@
 #!/bin/bash
 # run from container-config directory
 
+# NOTE: make sure to add any secrets with 'fly secrets set --stage' before running this script
+# ('--stage' prevents the new secrets from re-deploying apps)!
+
 # exit on any error
 set -e
 
