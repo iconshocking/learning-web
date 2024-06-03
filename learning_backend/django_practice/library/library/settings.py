@@ -13,9 +13,6 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 import os
 from pathlib import Path
 
-import sentry_sdk
-from sentry_sdk.integrations.django import DjangoIntegration
-
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -23,35 +20,6 @@ ENV = os.environ.get("DJANGO_ENV", "dev")
 DEBUG = os.environ.get("DJANGO_DEBUG", "") == "True"
 PROD = os.environ.get("DJANGO_ENV", "") == "prod"
 
-# monitoring (note: 400 errors are not monitored by default, only 500 errors, i.e., unhandled exceptions)
-sentry_sdk.init(
-    dsn=os.environ.get("SENTRY_URL"),
-    # can filter by environment
-    environment=ENV,
-    debug=DEBUG,
-    enable_tracing=True,
-    # percentage of transactions to sample for tracing
-    traces_sample_rate=1.0,
-    # percentage of traced transactions to sample for profiling (i.e., time stack trace during the
-    # transaction) - this has more overhead, so do not profile all of your traces
-    profiles_sample_rate=1.0 if DEBUG else 0.1,
-    integrations=[
-        DjangoIntegration(
-            # can use "endpoint" to name transaction after the view endpoint (less recommended for
-            # consistency with other non-django application monitoring)
-            transaction_style="url",
-            # trace middleware (default True)
-            middleware_spans=True,
-            # trace signals (default True)
-            signals_spans=False,
-            # trace cache reads (default False)
-            cache_spans=True,
-        )
-    ],
-    # send default PII (Personally Identifiable Information) data (default False) - allows for
-    # associating errors with users (if using default Django auth)
-    send_default_pii=False,
-)
 
 SECRET_KEY = os.environ.get(
     "DJANGO_SECRET_KEY",
@@ -149,7 +117,6 @@ def middleware_list():
             "django.contrib.messages.middleware.MessageMiddleware",
             "django.middleware.clickjacking.XFrameOptionsMiddleware",
             "django.contrib.admindocs.middleware.XViewMiddleware",
-            "core.middleware.RequestIdMiddlware",
         ]
     )
     return middleware

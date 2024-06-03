@@ -33,10 +33,6 @@ urlpatterns = [
     path("practice/", include("practice.urls")),
 ]
 if settings.DEBUG:
-
-    def throw_error(request):
-        raise Exception("This is a test exception")
-
     urlpatterns += (
         # serve media files in development
         static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
@@ -47,8 +43,6 @@ if settings.DEBUG:
         # It is mostly redundant to django.contrib.staticfiles
         + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
         + [
-            # test sentry
-            path("sentry-debug/", throw_error),
             path("__debug__/", include("debug_toolbar.urls")),
         ]
     )
