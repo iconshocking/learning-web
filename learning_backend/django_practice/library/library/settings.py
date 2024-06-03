@@ -79,6 +79,7 @@ INSTALLED_APPS = [
     # importing 'practice' as a reusable package
     "practice.apps.PracticeConfig",
     "core.apps.CoreConfig",
+    "crispy_forms",
     # required to serve statics when using 'runserver' command and run 'collectstatic' command
     "django.contrib.staticfiles",
     # deletes old file when a new file name is uploaded for a model field (probably avoid using
