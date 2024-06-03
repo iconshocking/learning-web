@@ -5,3 +5,4 @@ __pycache__/
 warnings_and_errors.log
 /nginx/statics/
 *_with_env.toml
+requirements.txt
