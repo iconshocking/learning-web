@@ -20,11 +20,29 @@ events {
 
 # no caching configured for this config
 http {
-  log_format real_ip
-    '$http_x_forwarded_for $remote_addr [$time_local] '
-    '"$request" $status $body_bytes_sent "$http_referer" "$http_user_agent"';
+  log_format real_ip_with_request_id
+    '{'
+    '"request_id":"$request_id",'
+    '"time_iso8601":"$time_iso8601",'
+    '"htto_x_forwarded_for":"$http_x_forwarded_for",'
+    '"remote_addr":"$remote_addr",'
+    '"remote_user":"$remote_user",'
+    '"http_host":"$http_host",'
+    '"request":"$request",'
+    '"status":"$status",'
+    '"body_bytes_sent":"$body_bytes_sent",'
+    '"request_time":"$request_time",'
+    '"request_length":"$request_length",'
+    '"http_referrer":"$http_referer",'
+    '"http_user_agent":"$http_user_agent",'
+    '"request_completion":"$request_completion",'
+    '"upstream_bytes_received":"$upstream_bytes_received",'
+    '"upstream_connect_time":"$upstream_connect_time",'
+    '"upstream_response_length":"$upstream_response_length",'
+    '"upstream_response_time":"$upstream_response_time"'
+    '}';
   # since this is behind a proxy, we want to log the real address of the client in "X-Forwarded-For" header
-  access_log /log/access.log real_ip;
+  access_log /log/access.log real_ip_with_request_id;
 
   # 'include' imports settings from another file (this is a default that ships with nginx)
   include mime.types;
@@ -128,6 +146,8 @@ http {
       proxy_set_header X-Real-IP $http_fly_client_id;
       proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
       proxy_set_header X-Forwarded-Host $http_host;
+      # pass this to allow linking trace from sentry with access logs
+      proxy_set_header X-Request-Id $request_id;
 
       # replaces the 'Location' header in a proxied server's redirect response to remove the internal network part of the URL
       # ('default' strips 'proxy_pass' value + 'location' value; e.g., '127.0.0.1:8000/index/' becomes 'index/',
