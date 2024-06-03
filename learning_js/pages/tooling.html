@@ -9,6 +9,12 @@
         border: solid black 1px;
         padding: 0.5rem;
       }
+
+      li {
+        margin-bottom: 1rem;
+        & li {
+        margin-top: 1rem;
+      }
     </style>
   </head>
 
@@ -38,10 +44,34 @@
         (usually) run local dev server with live reloads.
       </p>
       <p>
-        - For most projects: <strong>Vite</strong> is focused on developer speed and runs two
-        different internal bundlers for prod (<strong>Rollup</strong>) vs dev
-        (<strong>ESBuild</strong>, which uses native ES modules). This means it is very fast, but
-        the code is different between dev and prod, which can be sometimes be a problem for testing
+        - For most projects: <strong>Vite</strong> is focused on developer speed and runs different
+        internal bundlers depending on the environment:
+      </p>
+      <ul>
+        <li>
+          <strong>Rollup</strong> for production (uses esbuild for transpiling and minification
+          since Rollup is not a transpiler)
+        </li>
+        <li>
+          <p></p>
+          <strong>esbuild</strong> for development (which uses native ES modules for hot reloading
+          via module replacement)
+          <ul>
+            <li>
+              <strong>Hot reloading</strong> is when only the files changed are automatically
+              reloaded, preserving the state of the app
+            </li>
+            <li>
+              <strong>Live reloading</strong> is when the app is restarted automatically when files
+              are changes, so app state is lost
+            </li>
+          </ul>
+        </li>
+      </ul>
+      <p>
+        for prod (<strong>Rollup</strong>) vs dev (<strong>esbuild</strong>, which uses native ES
+        modules - can also use <strong>SWC</strong> if enabled). This means it is very fast, but the
+        code is different between dev and prod, which can be sometimes be a problem for testing
         complex applications.
       </p>
       <p>
@@ -105,12 +135,14 @@
 
     <h2>Transformation (??? -> JS/CSS/HTML)</h2>
     <section>
-      <h3>Backporting Language Features</h3>
+      <h3>Transpilers</h3>
       <p>
-        Allow for using up-to-date JS/CSS features but for all browsers. A
+        Convert either non-native JS/CSS/HTML into valid code or replaces valid code using modern
+        features with code that will run on older browsers (A
         <dfn>polyfill</dfn> is generated that turns modern JS/CSS into code that effectively
-        reproduces the behavior (note: sometimes this may not performant).
+        reproduces the behavior - note sometimes this may not performant).
       </p>
+
       <ul>
         <li>
           For JS:
@@ -118,6 +150,10 @@
             <li>
               <strong>SWC</strong> is very fast (built in Rust), but less mature and so has less
               plugins available.
+            </li>
+            <li>
+              <strong>esbuild</strong> is a transpiler as well as bundler and is the transpiler in
+              Vite.
             </li>
             <li><strong>Babel</strong> if you need particular configurations and compatibility.</li>
           </ul>
@@ -128,9 +164,9 @@
         </li>
       </ul>
 
-      <h3>Transpilers/Frameworks</h3>
+      <h3>Extension Languages</h3>
       <p>
-        Allow for writing code that is not native, valid JS/CSS, but that generates into valid
+        Allow for writing code that is not native JS/CSS/HTML but that can be transpiled into valid
         syntax that can be run in the browser.
       </p>
       <ul>
@@ -140,35 +176,52 @@
           supported (or at least widely supported) in CSS.
         </li>
         <li>
-          <p>
-            For JS: <strong>Typescript</strong> is a superset of JS in that all JS is valid TS, but
-            TS provides type-checking during development but <em>not in the browser</em>. TS types
-            are only for development and have no resulting effect on the output JS.
-          </p>
-
-          <p>
-            <strong>tsc</strong> is the default TS transpiler, but it is slow. It should generally
-            only be used for type-checking and allow general purpose transpilers to do that work.
-          </p>
-        </li>
-        <li>
-          For frameworks/libraries:
+          <p>For JS:</p>
           <ul>
             <li>
-              For new projects that can afford some growing pains:
-              <strong>Svelte</strong> (possibly with <strong>SvelteKit</strong>) ships smaller
-              bundles, better performance in browser, and good DX.
+              <p>
+                <strong>Typescript</strong> is a superset of JS in that all JS is valid TS, but TS
+                provides type-checking during development but <em>not in the browser</em>. TS types
+                are only for development and have no resulting effect on the output JS.
+              </p>
+              <p>
+                Note: <strong>tsc</strong> is the default TS transpiler, but it is slow. It should
+                generally only be used for type-checking and allow general purpose transpilers to do
+                that work.
+              </p>
+            </li>
+            <li><strong>JSX</strong> used to write React components</li>
+          </ul>
+        </li>
+        <li>
+          <p>For HTML:</p>
+          <ul>
+            <li>
+              <strong>Svelte</strong>, which is written similarly to HTML, but inserts JS into it
             </li>
             <li>
-              For standard projects: <strong>React</strong> (possibly with <strong>Next.js</strong>)
-              has the largest ecosystem and most developers have some knowledge of it.
-            </li>
-            <li>
-              For very large projects or legacy projects:
-              <strong>Angular</strong> is an opinonated framework with a lot of built-in tooling
-              that allows for consistency across projects.
+              <strong>Templates</strong> are used in backend frameworks like
+              <strong>Django</strong> and <strong>Angular</strong> to generate dynamic HTML
             </li>
           </ul>
+        </li>
+      </ul>
+
+      <h3>Frameworks</h3>
+      <ul>
+        <li>
+          For new projects that can afford some growing pains:
+          <strong>Svelte</strong> (possibly with <strong>SvelteKit</strong>) ships smaller bundles,
+          better performance in browser, and good DX.
+        </li>
+        <li>
+          For standard projects: <strong>React</strong> (possibly with <strong>Next.js</strong>) has
+          the largest ecosystem and most developers have some knowledge of it.
+        </li>
+        <li>
+          For very large projects or legacy projects:
+          <strong>Angular</strong> is an opinonated framework with a lot of built-in tooling that
+          allows for consistency across projects.
         </li>
       </ul>
 
