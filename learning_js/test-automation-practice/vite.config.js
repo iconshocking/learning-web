@@ -1,4 +1,3 @@
-import { default as devEslint } from "@nabla/vite-plugin-eslint";
 import eslint from "@rollup/plugin-eslint";
 import legacy from "@vitejs/plugin-legacy";
 import { defineConfig } from "vite";
@@ -20,10 +19,29 @@ export default defineConfig(({ command, mode, isSsrBuild, isPreview }) => {
     targets: "esnext",
     // postcss is supported by default via postcss.config.cjs
     plugins: [
-      eslint({
-        include: ["**/*.js"],
-        exclude: ["node_modules", "dist"],
-      }),
+      // eslint plugin default includes standard JS/TS/JSX/Vue/Svelte files and excludes node_modules
+      {
+        ...eslint(),
+        // only applies to the build command
+        apply: "build",
+      },
+      {
+        ...eslint({
+          failOnWarning: false,
+          failOnError: false,
+        }),
+        // only applies to the serve command, so won't fail the dev server
+        apply: "serve",
+        // Vite plugin execution order:
+        // - Alias
+        // - enforce: 'pre'
+        // - Vite core plugins
+        // - plugins without enforce value
+        // - Vite build plugins
+        // - enforce: 'post'
+        // - Vite post build plugins (minify, manifest, reporting)
+        enforce: "post",
+      },
       legacy({ targets: ["defaults", "IE 11"] }),
       /* Proof of concept for adding babel into the plugin pipeline, but legacy() is generally more
       useful since vite already supports transpilation to specific targets while legacy() transpiles

@@ -16,7 +16,6 @@
   "devDependencies": {
     "@axe-core/cli": "^4.8.5",
     "@babel/preset-env": "^7.23.9",
-    "@nabla/vite-plugin-eslint": "^2.0.2",
     "@playwright/test": "^1.42.0",
     "@rollup/plugin-eslint": "^9.0.5",
     "@types/node": "^20.11.20",
@@ -32,7 +31,6 @@
     "stylelint": "^16.2.1",
     "stylelint-config-standard": "^36.0.0",
     "supports-color": "^9.4.0",
-    "terser": "^5.27.2",
     "test": "link:@types/playwright/test",
     "vite": "^5.1.4",
     "vite-plugin-babel": "^1.2.0"
