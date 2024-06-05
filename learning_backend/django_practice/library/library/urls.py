@@ -31,6 +31,8 @@ urlpatterns = [
     # "" instead of "/" since django always computes urls from the project root
     path("", RedirectView.as_view(url="/catalog/", permanent=True)),
     path("practice/", include("practice.urls")),
+    # metrics URL for prometheus scraping
+    path("", include("django_prometheus.urls")),
 ]
 if settings.DEBUG:
     urlpatterns += (

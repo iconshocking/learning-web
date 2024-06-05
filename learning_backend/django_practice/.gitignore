@@ -4,5 +4,5 @@ __pycache__/
 !**.safe.env
 warnings_and_errors.log
 /nginx/statics/
-*_with_env.toml
+*_with_env.*
 requirements.txt

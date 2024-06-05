@@ -31,6 +31,7 @@ HTTPS_REQUIRED = os.environ.get("NGINX_LISTEN_PORT", "80") == "443"
 # defines the IP addresses or domain names that can be used to access the Django web application
 ALLOWED_HOSTS = [
     "127.0.0.1",
+    "django",
     "cshock-library-nginx.fly.dev",
     "playground.fly-io.cshock.tech",
 ]
@@ -63,6 +64,8 @@ SECURE_SSL_REDIRECT = HTTPS_REQUIRED
 # only use if behind a reverse proxy that strips any client-set header and sets
 # 'X-Forwarded-Proto' manually when connection is HTTPS
 SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
+# used for prometheus scraping
+SECURE_REDIRECT_EXEMPT = ["^metrics/$"]
 
 # this is the same order that templates/statics are searched for
 INSTALLED_APPS = [
@@ -84,6 +87,7 @@ INSTALLED_APPS = [
     # this, or at least heavily configure, if you are performing more complex or persistent media
     # storage)
     "django_cleanup.apps.CleanupConfig",
+    "django_prometheus",
 ] + (
     [
         "debug_toolbar",
@@ -98,6 +102,9 @@ USING_WHITENOISE = os.environ.get("USE_WHITENOISE", "False") == "True"
 
 def middleware_list():
     middleware = []
+
+    middleware.append("django_prometheus.middleware.PrometheusBeforeMiddleware")
+
     # debug_toolbar must come as soon as possible in the middleware list, but behind any encoding
     # middleware (like gzip)
     if DEBUG:
@@ -119,6 +126,9 @@ def middleware_list():
             "django.contrib.admindocs.middleware.XViewMiddleware",
         ]
     )
+
+    middleware.append("django_prometheus.middleware.PrometheusAfterMiddleware")
+
     return middleware
 
 
@@ -171,7 +181,7 @@ WSGI_APPLICATION = "library.wsgi.application"
 
 DATABASES = {
     "default": {
-        "ENGINE": "django.db.backends.postgresql",
+        "ENGINE": "django_prometheus.db.backends.postgresql",
         "NAME": os.environ.get("POSTGRES_DB_NAME"),
         "USER": os.environ.get("POSTGRES_USER"),
         "PASSWORD": os.environ.get("POSTGRES_PASSWORD"),
@@ -192,7 +202,7 @@ USE_REDIS_CACHE = os.environ.get("USE_REDIS_CACHE", "") == "True"
 if USE_REDIS_CACHE:
     CACHES = {
         "default": {
-            "BACKEND": "django.core.cache.backends.redis.RedisCache",
+            "BACKEND": "django_prometheus.cache.backends.redis.RedisCache",
             # 'redis://' is TCP connection w/o SSL while 'rediss://' has SSL
             "LOCATION": "redis://"
             + os.environ.get(

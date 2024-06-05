@@ -8,9 +8,10 @@ from django.db import models
 from django.db.models import UniqueConstraint
 from django.db.models.functions import Lower
 from django.urls import reverse
+from django_prometheus.models import ExportModelOperationsMixin
 
-
-class Genre(models.Model):
+# mixin only computes counters for lifecycle operations, not the number of records being affected
+class Genre(ExportModelOperationsMixin("genre"), models.Model):
     """Model representing a book genre."""
 
     name = models.CharField(
@@ -41,7 +42,7 @@ class Genre(models.Model):
         ]
 
 
-class Book(models.Model):
+class Book(ExportModelOperationsMixin("book"), models.Model):
     """Model representing a book (but not a specific copy of a book)."""
 
     title = models.CharField(max_length=200)
@@ -84,7 +85,7 @@ class Book(models.Model):
             )
 
 
-class BookInstance(models.Model):
+class BookInstance(ExportModelOperationsMixin("bookinstance"), models.Model):
     """Model representing a specific copy of a book (i.e. that can be borrowed from the library)."""
 
     id = models.UUIDField(
@@ -126,7 +127,7 @@ class BookInstance(models.Model):
         permissions = (("can_mark_returned", "Set book as returned"),)
 
 
-class Author(models.Model):
+class Author(ExportModelOperationsMixin("author"), models.Model):
     """Model representing an author."""
 
     first_name = models.CharField(max_length=100)
@@ -146,7 +147,7 @@ class Author(models.Model):
         return f"{self.last_name}, {self.first_name}"
 
 
-class Language(models.Model):
+class Language(ExportModelOperationsMixin("language"), models.Model):
     """Model representing a Language (e.g. English, French, Japanese, etc.)"""
 
     name = models.CharField(
