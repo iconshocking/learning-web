@@ -203,7 +203,10 @@ USE_REDIS_CACHE = os.environ.get("USE_REDIS_CACHE", "") == "True"
 if USE_REDIS_CACHE:
     CACHES = {
         "default": {
-            "BACKEND": "django_prometheus.cache.backends.redis.RedisCache",
+            # don't generate prometheus metrics from redis cache because it requires using 3rd party
+            # backend IN ADDITION to django-prometheus (which is not necessary right now since we
+            # are lacking redis on prod atm)
+            "BACKEND": "django.core.cache.backends.redis.RedisCache",
             # 'redis://' is TCP connection w/o SSL while 'rediss://' has SSL
             "LOCATION": "redis://"
             + os.environ.get(
@@ -393,11 +396,11 @@ LOGGING = {
     # top-level logging object (name does not have any relation to module, so make sure to propagate
     # any log you don't consider completely "handled")
     "loggers": {
+        # this is the name of the logger you need to provide when calling 'logger.getLogger([name])'
         "django": {
             "handlers": ["console", "file"],
-            "propagate": True,
         },
-        # BEWARE: failing email logging appears to prevent propagation (DON'T USE EMAIL LOGGING)
+        # BEWARE: failing email logging appears to prevent propagation??? (DON'T USE EMAIL LOGGING)
         #
         # "django.request": {
         #     "handlers": ["mail_admins"],
