@@ -13,6 +13,8 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 import os
 from pathlib import Path
 
+from corsheaders.defaults import default_headers, default_methods
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -42,6 +44,23 @@ ALLOWED_HOSTS = [
 # - NOTE: non-browser requests are not a security risk for this because they have no cookies and so
 # can't perform CSRF attacks
 CSRF_TRUSTED_ORIGINS = []
+
+# used by the 'django-cors-headers' package to automate CORS headers
+CORS_ALLOWED_ORIGINS = []
+# same as not defining it at all
+CORS_ALLOW_METHODS = [
+    *default_methods,
+]
+# must define any headers you want to allow (purpose of this header is to make sure server is aware
+# of any special headers that are being sent, so it can decide whether to allow them or not)
+CORS_ALLOW_HEADERS = [
+    *default_headers,
+]
+# purpose of this is to default preserve behavior from pre-CORS days where the server would not
+# expose any of the response headers
+CORS_EXPOSE_HEADERS = [] # default
+# whether cookies are included
+CORS_ALLOW_CREDENTIALS = False # default
 
 if DEBUG:
     # hack to allow debug toolbar to work with Docker since the IP calculation seems to fail every
