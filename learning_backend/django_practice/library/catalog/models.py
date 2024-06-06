@@ -2,6 +2,7 @@ import datetime
 import uuid
 from typing import override
 
+import auto_prefetch
 from django.conf import settings
 from django.core.exceptions import ValidationError
 from django.db import models
@@ -9,6 +10,7 @@ from django.db.models import UniqueConstraint
 from django.db.models.functions import Lower
 from django.urls import reverse
 from django_prometheus.models import ExportModelOperationsMixin
+
 
 # mixin only computes counters for lifecycle operations, not the number of records being affected
 class Genre(ExportModelOperationsMixin("genre"), models.Model):
@@ -42,11 +44,13 @@ class Genre(ExportModelOperationsMixin("genre"), models.Model):
         ]
 
 
-class Book(ExportModelOperationsMixin("book"), models.Model):
+# auto-prefetching optimizes many-to-one/many relationship queries where if a field in a related
+# model is accessed, it performs a prefretch_related() call equivalent
+class Book(ExportModelOperationsMixin("book"), auto_prefetch.Model):
     """Model representing a book (but not a specific copy of a book)."""
 
     title = models.CharField(max_length=200)
-    author = models.ForeignKey("Author", on_delete=models.RESTRICT, null=True)
+    author = auto_prefetch.ForeignKey("Author", on_delete=models.RESTRICT, null=True)
 
     summary = models.TextField(
         max_length=1000, help_text="Enter a brief description of the book"
@@ -62,7 +66,9 @@ class Book(ExportModelOperationsMixin("book"), models.Model):
 
     genre = models.ManyToManyField(Genre, help_text="Select a genre for this book")
 
-    language = models.ForeignKey("Language", on_delete=models.SET_NULL, null=True)
+    language = auto_prefetch.ForeignKey(
+        "Language", on_delete=models.SET_NULL, null=True
+    )
 
     cover_image = models.ImageField(
         "Cover Image", upload_to="cover-images/", null=True, blank=True
@@ -84,8 +90,11 @@ class Book(ExportModelOperationsMixin("book"), models.Model):
                 code="cover_image_too_large",
             )
 
+    class Meta(auto_prefetch.Model.Meta):
+        pass
 
-class BookInstance(ExportModelOperationsMixin("bookinstance"), models.Model):
+
+class BookInstance(ExportModelOperationsMixin("bookinstance"), auto_prefetch.Model):
     """Model representing a specific copy of a book (i.e. that can be borrowed from the library)."""
 
     id = models.UUIDField(
@@ -93,7 +102,7 @@ class BookInstance(ExportModelOperationsMixin("bookinstance"), models.Model):
         default=uuid.uuid4,
         help_text="Unique ID for this particular book across whole library",
     )
-    book = models.ForeignKey(Book, on_delete=models.RESTRICT, null=True)
+    book = auto_prefetch.ForeignKey(Book, on_delete=models.RESTRICT, null=True)
     imprint = models.CharField(max_length=200)
     due_back = models.DateField(null=True, blank=True)
 
@@ -111,7 +120,7 @@ class BookInstance(ExportModelOperationsMixin("bookinstance"), models.Model):
         help_text="Book availability",
     )
 
-    borrower = models.ForeignKey(
+    borrower = auto_prefetch.ForeignKey(
         settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True, blank=True
     )
 
@@ -122,7 +131,7 @@ class BookInstance(ExportModelOperationsMixin("bookinstance"), models.Model):
         """String for representing the Model object."""
         return f"{self.id} ({self.book.title if self.book is not None else "no title"})"
 
-    class Meta:
+    class Meta(auto_prefetch.Model.Meta):
         ordering = ["due_back"]
         permissions = (("can_mark_returned", "Set book as returned"),)
 

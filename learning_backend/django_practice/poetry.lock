@@ -233,6 +233,20 @@ argon2 = ["argon2-cffi (>=19.1.0)"]
 bcrypt = ["bcrypt"]
 
 [[package]]
+name = "django-auto-prefetch"
+version = "1.8.0"
+description = "Automatically prefetch foreign key values as needed."
+optional = false
+python-versions = ">=3.8"
+files = [
+    {file = "django_auto_prefetch-1.8.0-py3-none-any.whl", hash = "sha256:46a45a1cadae6d82d0b83294b0195203d514d6d65f24b10a163b3cd70bb84dc1"},
+    {file = "django_auto_prefetch-1.8.0.tar.gz", hash = "sha256:f466d4d512885c929e24362104e76f02547bacde0d9eab9b8ef8fd4a2a24a960"},
+]
+
+[package.dependencies]
+Django = ">=3.2"
+
+[[package]]
 name = "django-cleanup"
 version = "8.1.0"
 description = "Deletes old files."
@@ -1122,4 +1136,4 @@ brotli = ["Brotli"]
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.12"
-content-hash = "a9f1753cb91d9abfe5a36d5fe5e832da790ce44ffc79b4924c7251f73dd4e359"
+content-hash = "aa39d50dc20b9b6213f238b9e6ffe1796ebc41d8a902abcd8041296e34b90ed3"
