@@ -327,6 +327,10 @@ MEDIA_ROOT = BASE_DIR / "user-media"
 #   manually construct URLs by using 'settings.MEDIA_URL + File/ImageField.name')
 MEDIA_URL = os.environ.get("MEDIA_URL", "user-media/")
 
+# crispy forms settings
+CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
+CRISPY_TEMPLATE_PACK = "bootstrap5"
+CRISPY_FAIL_SILENTLY = not DEBUG
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
