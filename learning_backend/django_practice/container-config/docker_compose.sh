@@ -28,9 +28,8 @@ fi
 
 if [ "$1" = "preprod" ]; then
   # get statics ready for non-Django hosting
-  # - note: squelch output to avoid leaking secrets into terminal
   poetry run ./collect_statics.sh ./secrets/.dev.env ./secrets/.preprod.env \
-    ./git-safe/.dev.safe.env ./git-safe/.prod.safe.env ./git-safe/.preprod.safe.env 1>/dev/null
+    ./git-safe/.dev.safe.env ./git-safe/.prod.safe.env ./git-safe/.preprod.safe.env
 
   # don't include prod secrets in preprod; use secrets which should emulate prod requirements
   docker compose \

@@ -96,10 +96,6 @@ WORKDIR /app/library
 # - (NOTE: CMD is the only instruction that runs when a container is started from an existing
 #   container, so it should usually be idempotent and not require any user input)
 
-# have to call collectstatic here in order to end up in the shared volume for docker compose
-# CMD python manage.py collectstatic --noinput --clear && \
-#     gunicorn library.wsgi -b 0.0.0.0:${DJANGO_PORT_ENV}
-
 # ideally would like to bind only to requests from the host IP, but 'fly-local-6pn' seems to be
 # inconsistent across runtimes and doesn't seem to work here
 CMD python manage.py migrate --noinput && gunicorn library.wsgi -b [::]:${DJANGO_PORT}
