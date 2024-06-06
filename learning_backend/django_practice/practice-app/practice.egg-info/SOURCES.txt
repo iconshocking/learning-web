@@ -32,6 +32,7 @@ practice/migrations/0017_alter_concreteofabstractmodel_slug.py
 practice/migrations/__init__.py
 practice/templates/admin/practice/change_form.html
 practice/templates/practice/concrete_of_abstract_model_form.html
+practice/templates/practice/crispy_form.html
 practice/templates/practice/example_form.html
 practice/templates/practice/example_form_alt.html
 practice/templates/practice/example_form_simple.html

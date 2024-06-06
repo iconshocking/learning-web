@@ -11,7 +11,7 @@ from django.views import View
 from django.views.generic import UpdateView
 from django.views.generic.edit import FormView
 
-from .forms import RestrictableExampleForm, ConcreteOfAbstractModelForm
+from .forms import CrispyRestrictableExampleForm, RestrictableExampleForm, ConcreteOfAbstractModelForm
 from .models import ConcreteOfAbstractModel
 
 
@@ -29,6 +29,9 @@ class ExampleFormViewSimple(FormView):
     form_class = RestrictableExampleForm
     template_name = "practice/example_form_simple.html"
 
+class CrispyFormView(FormView):
+    form_class = CrispyRestrictableExampleForm
+    template_name = "practice/crispy_form.html"
 
 class ConcreteOfAbstractModelFormView(UpdateView):
     model = ConcreteOfAbstractModel

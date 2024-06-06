@@ -1,8 +1,10 @@
+from ast import Div
 from typing import Any, override
 
+from crispy_forms.helper import FormHelper
+from crispy_forms.layout import HTML, Div, Field, Fieldset, Hidden, Layout, Submit
 from django import forms
 from django.core import validators
-from django.urls import include
 
 from .models import ConcreteOfAbstractModel, SimpleModel
 
@@ -314,17 +316,17 @@ class ExampleForm(forms.Form):
 
 # comment out lines to have the field show in the list
 class RestrictableExampleForm(ExampleForm):
-    example = None
-    boolean = None
-    char = None
-    regex = None
-    choice = None
-    multiple_choice = None
-    typed_choice = None
-    typed_multiple_choice = None
-    date = None
-    time = None
-    integer = None
+    # example = None
+    # boolean = None
+    # char = None
+    # regex = None
+    # choice = None
+    # multiple_choice = None
+    # typed_choice = None
+    # typed_multiple_choice = None
+    # date = None
+    # time = None
+    # integer = None
     floatField = None
     decimal = None
     duration = None
@@ -338,12 +340,59 @@ class RestrictableExampleForm(ExampleForm):
     filePath = None
     json = None
     combo = None
-    # multi_value = None
+    multi_value = None
     splite_date_time = None
     phone_keyboard = None
     model_choide = None
     multiple_model_choice = None
     multi_emails = None
+
+
+# crispy-forms package gives convenient default form styling
+class CrispyRestrictableExampleForm(RestrictableExampleForm):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.helper = FormHelper()
+        # very similar to layouts you can configure for ModelAdmin classes
+        self.helper.layout = Layout(
+            Fieldset(
+                "Legend header for simple fields",
+                # can set any HTMl attributes on the field (underscores become hyphens)
+                Field("example", autocomplete="off", data_atttribute="dataaaa"),
+                # or class or id
+                Field("boolean", css_class="special-class", css_id="special-id"),
+                # Field also supports custom templates via 'template'
+                "char",
+                "regex",
+            ),
+            Fieldset(
+                "Legend header for choice fields",
+                "choice",
+                "multiple_choice",
+                "typed_choice",
+                "typed_multiple_choice",
+            ),
+            # simple div with a class
+            Div(
+                "date",
+                "time",
+                css_class="special-div-for-styling",
+                # don't do this but illustrative
+                style="border: 1px solid black",
+            ),
+            Hidden("hidden-name", "integer"),
+            # I don't advise doing this to avoid writing HTML directly in Python
+            HTML("{% if form.errors %} <p>Operation was unsuccessful</p> {% endif %}"),
+            # name, text, options (can also use Button class with appropriate attributes)
+            Submit("submit", "Submit", css_class="btn btn-primary"),
+        )
+        # you can do more styling with Bootstrap layout objects
+        # (https://django-crispy-forms.readthedocs.io/en/latest/layouts.html#bootstrap-layout-objects)
+
+        # you can perform slice operation, 'wrap' method, and more, but those seem fairly unclear,
+        # unless searching for a specific field or set of fields using field-name indexing
+        # (form.helper["field_name"]....) or layout object class type filtering
+        # (form.helper.filter(basestring)...)
 
 
 # ModelForms map directly from models, providing the expected mapping of field to form field, and
@@ -373,7 +422,7 @@ class ConcreteOfAbstractModelForm(forms.ModelForm):
     # to these complications, it is generally riskier to override fields like this.
     field3 = forms.DateTimeField()
 
-    # Meta inner class only used for ModelForms, not normal forms 
+    # Meta inner class only used for ModelForms, not normal forms
     class Meta:
         model = ConcreteOfAbstractModel
         # do NOT use "__all__" or 'exclude' instead of listing fields explicitly since it IS a
@@ -406,10 +455,12 @@ class ConcreteOfAbstractModelForm(forms.ModelForm):
         # can access self.instance here to get the model instance with the validated form values set
         return super().clean()
 
+
 # ModelForms can be extended for restricted/extra fields by extending the Meta inner class
 class RestrictedConcreteOfAbstractModelForm(ConcreteOfAbstractModelForm):
     class Meta(ConcreteOfAbstractModelForm.Meta):
-        exclude = ["field"] 
+        exclude = ["field"]
+
 
 # simple model form classes can be created using modelform_factory()
 FactorySimpleModelForm = forms.modelform_factory(SimpleModel, fields="__all__")

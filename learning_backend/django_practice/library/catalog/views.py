@@ -4,13 +4,14 @@ from typing import Any, override
 from django.contrib.auth.decorators import login_required, permission_required
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from django.db.models.base import Model as Model
+from django.forms import BaseModelForm
 from django.http import HttpRequest, HttpResponseRedirect
 from django.shortcuts import get_object_or_404, render
 from django.urls import reverse, reverse_lazy
 from django.views import generic
 from django.views.generic import CreateView, DeleteView, UpdateView
 
-from .forms import RenewBookForm, RenewBookModelForm
+from .forms import CrispyBookForm, RenewBookForm, RenewBookModelForm
 from .models import Author, Book, BookInstance, Genre
 
 
@@ -303,14 +304,28 @@ class AuthorDelete(PermissionRequiredMixin, DeleteView):
 
 class BookCreate(PermissionRequiredMixin, CreateView):
     model = Book
-    fields = "__all__"
     permission_required = "catalog.add_book"
+    form_class = CrispyBookForm
+
+    @override
+    def get_form(self, form_class: type[BaseModelForm] | None = None) -> BaseModelForm:
+        form: CrispyBookForm = super().get_form(form_class)  # type: ignore
+        form.helper.form_action = reverse("catalog:book_create")
+        return form
 
 
 class BookUpdate(PermissionRequiredMixin, UpdateView):
     model = Book
-    fields = "__all__"
     permission_required = "catalog.change_book"
+    form_class = CrispyBookForm
+
+    @override
+    def get_form(self, form_class: type[BaseModelForm] | None = None) -> BaseModelForm:
+        form: CrispyBookForm = super().get_form(form_class)  # type: ignore
+        form.helper.form_action = reverse(
+            "catalog:book_update", args=[str(form.instance.pk)]
+        )
+        return form
 
 
 # Create/UpdateViews defaults:

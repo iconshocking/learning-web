@@ -1,9 +1,12 @@
 import datetime
+from typing import Any, override
 
+from crispy_forms.helper import FormHelper
+from crispy_forms.layout import Submit
 from django import forms
 from django.utils.translation import gettext_lazy as _
 
-from .models import BookInstance
+from .models import Book, BookInstance
 
 
 class RenewBookForm(forms.Form):
@@ -60,3 +63,54 @@ class RenewBookModelForm(forms.ModelForm):
             "due_back": _("Enter a date between now and 4 weeks (default 3).")
         }
         widgets = {"due_back": forms.widgets.Input(attrs={"type": "date"})}
+
+
+class CrispyBookForm(forms.ModelForm):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.helper = FormHelper()
+        # ID and class can be whatever you want
+        self.helper.form_id = "book-form"
+        self.helper.form_class = "crispy-book-form"
+        self.helper.form_method = "post"
+        # adds submit button
+        self.helper.add_input(Submit("submit", "Submit"))
+        self.helper.form_error_title = "Form Errors"
+
+    class Meta:
+        model = Book
+        fields = [
+            "title",
+            "author",
+            "summary",
+            "isbn",
+            "genre",
+            "language",
+            "cover_image",
+        ]
+
+    def clean_summary(self):
+        data = self.cleaned_data["summary"]
+        if data.lower().startswith("summary"):
+            raise forms.ValidationError(_("Summary cannot start with 'Summary'"))
+        return data
+
+    def clean_isbn(self):
+        data = self.cleaned_data["isbn"]
+        if len(data) < 13:
+            raise forms.ValidationError(_("ISBN must be 13 characters"))
+        return data
+
+    @override
+    def clean(self) -> dict[str, Any]:
+        # for accessibility, this puts all errors at the top of the form, in addition to next to
+        # their respective inputs
+        error_list = []
+        for key, error in self.errors.items():
+            if key is not None:
+                error_list.append(error)
+
+        for error in error_list:
+            self.add_error(None, error)
+
+        return super().clean()

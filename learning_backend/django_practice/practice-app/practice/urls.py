@@ -2,7 +2,7 @@ from django.urls import path
 from django.views.generic import DetailView
 
 from .models import SimpleModel
-from .views import ConcreteOfAbstractModelFormView, ExampleFormView, ExampleFormViewAlt, ExampleFormViewSimple, ExampleQueriesView
+from .views import ConcreteOfAbstractModelFormView, CrispyFormView, ExampleFormView, ExampleFormViewAlt, ExampleFormViewSimple, ExampleQueriesView
 
 # app_name is used to namespace the URL names, which allows for reverse URL matching without name
 # collision via changing the URL path name to "app_name:url_name"
@@ -25,6 +25,11 @@ urlpatterns = [
         "example-form-simple/",
         ExampleFormViewSimple.as_view(),
         name="example_form_simple",
+    ),
+    path(
+        "crispy-form/",
+        CrispyFormView.as_view(),
+        name="crispy_form",
     ),
     path(
         "concrete-of-abstract-model-form/<int:pk>/",

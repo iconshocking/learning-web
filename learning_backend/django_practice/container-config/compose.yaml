@@ -25,6 +25,8 @@ services:
           ignore:
             - "*.log"
           action: sync
+        - path: ../practice-app/dist/practice-0.1.0-py3-none-any.whl
+          action: rebuild
         - path: ./requirements.txt
           action: rebuild
     # can define values as array (with '-' and '=') or key-value pairs
