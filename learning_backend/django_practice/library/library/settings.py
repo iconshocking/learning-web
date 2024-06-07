@@ -58,9 +58,9 @@ CORS_ALLOW_HEADERS = [
 ]
 # purpose of this is to default preserve behavior from pre-CORS days where the server would not
 # expose any of the response headers
-CORS_EXPOSE_HEADERS = [] # default
+CORS_EXPOSE_HEADERS = []  # default
 # whether cookies are included
-CORS_ALLOW_CREDENTIALS = False # default
+CORS_ALLOW_CREDENTIALS = False  # default
 
 if DEBUG:
     # hack to allow debug toolbar to work with Docker since the IP calculation seems to fail every
@@ -261,8 +261,9 @@ def media_files_storage():
     if PROD:
         return {
             # custom storage from 'django-storages' package (actually using Cloudflare R2, which is S3 API compatible)
-            "BACKEND": "storages.backends.s3.S3Storage",
+            "BACKEND": "core.storage.UuidNameStorage",
             "OPTIONS": {
+                "class_name": "storages.backends.s3.S3Storage",
                 "access_key": os.environ.get("CLOUDFLARE_R2_S3_ACCESS_KEY_ID"),
                 "secret_key": os.environ.get("CLOUDFLARE_R2_S3_ACCESS_KEY_SECRET"),
                 # "security_token": os.environ.get("CLOUDFLARE_R2_API_TOKEN"),
@@ -276,7 +277,12 @@ def media_files_storage():
             },
         }
     else:
-        return {"BACKEND": "django.core.files.storage.FileSystemStorage"}
+        return {
+            "BACKEND": "core.storage.UuidNameStorage",
+            "OPTIONS": {
+                "class_name": "django.core.files.storage.FileSystemStorage",
+            },
+        }
 
 
 STORAGES = {

@@ -17,13 +17,13 @@
     <link rel="icon" type="image/jpeg" href="{% static "core/images/favicon.jpg" %}">
     {% comment %} Bootstrap CSS for crispy forms and CSS classes in the template {% endcomment %}
     <link href="{% static 'core/css/bootstrap.min.css' %}" rel="stylesheet">
-    <!-- Add additional CSS in static file -->
+    {% comment %} Add additional CSS in static file {% endcomment %}
     <link rel="stylesheet" href="{% static 'core/css/styles.css' %}" />
     <style>
       {% comment %} inline to have access to static template tag {% endcomment %}
       {% include "core/inlined/styles.css" %}
-      {% block style %}{% endblock style %}
     </style>
+    {% block head_extra %}{% endblock head_extra %}
   </head>
   <body>
     <div class="container-fluid">

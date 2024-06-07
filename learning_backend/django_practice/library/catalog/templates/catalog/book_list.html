@@ -2,6 +2,10 @@
 {% block title %}
   Local Library Books
 {% endblock title %}
+{% block head_extra %}
+  {% load static %}
+  <link rel="stylesheet" href="{% static "catalog/css/book_list.css" %}">
+{% endblock head_extra %}
 {% block content %}
   <h1>Book List</h1>
   {% if book_list %}
@@ -25,11 +29,11 @@
             </a>
           {% endif %}
           {% if book.cover_image and book.cover_image.url %}
-            <div>
+            <div class="cover-image">
               <img src="{{ book.cover_image.url }}"
                    alt="cover_image"
-                   height="400"
-                   width="400">
+                   height="{{ book.cover_image_height }}"
+                   width="{{ book.cover_image_width }}">
             </div>
           {% endif %}
         </li>

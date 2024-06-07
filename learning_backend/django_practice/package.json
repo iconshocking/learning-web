@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "css-watch": "postcss **/static/*/css/*.scss --base ./ --dir ./ --ext .css --watch"
+    "css-watch": "postcss library/**/static/*/css/*.scss --base ./ --dir ./ --ext .css --watch"
   },
   "keywords": [],
   "author": "",

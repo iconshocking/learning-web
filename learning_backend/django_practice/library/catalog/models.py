@@ -71,8 +71,16 @@ class Book(ExportModelOperationsMixin("book"), auto_prefetch.Model):
     )
 
     cover_image = models.ImageField(
-        "Cover Image", upload_to="cover-images/", null=True, blank=True
+        "Cover Image",
+        upload_to="cover-images/",
+        width_field="cover_image_width",
+        height_field="cover_image_height",
+        null=True,
+        blank=True,
     )
+
+    cover_image_width = models.IntegerField(null=True, blank=True, editable=False)
+    cover_image_height = models.IntegerField(null=True, blank=True, editable=False)
 
     def __str__(self):
         """String for representing the Model object."""
