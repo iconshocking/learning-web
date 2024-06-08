@@ -108,6 +108,7 @@ INSTALLED_APPS = [
     # storage)
     "django_cleanup.apps.CleanupConfig",
     "django_prometheus",
+    "django_browser_reload",
 ] + (
     [
         "debug_toolbar",
@@ -144,6 +145,7 @@ def middleware_list():
             "django.contrib.messages.middleware.MessageMiddleware",
             "django.middleware.clickjacking.XFrameOptionsMiddleware",
             "django.contrib.admindocs.middleware.XViewMiddleware",
+            "django_browser_reload.middleware.BrowserReloadMiddleware"
         ]
     )
 
