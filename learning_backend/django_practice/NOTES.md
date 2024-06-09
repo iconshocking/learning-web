@@ -134,7 +134,7 @@ Only provided bookmarklet jumps to the documentation page for the view.
 - `SECRET_KEY` - DO NOT HARDCODE OR CHECK INTO VERSION CONTROL
 - `INSTALLED_APPS` - registered applications for the project
   - When setting a custom admin site, you can disable `autodiscover()` (which searches and runs each
-    app's `admin.py` files), in cases wehre you are registering them directly within the admin
+    app's `admin.py` files), in cases where you are registering them directly within the admin
     site's by setting `django.contrib.admin.apps.SimpleAdminConfig` instead of
     `django.contrib.admin`
 - `MIDDLEWARE` - middleware that intercepts requests/responses

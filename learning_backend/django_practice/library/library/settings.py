@@ -88,9 +88,14 @@ SECURE_REDIRECT_EXEMPT = ["^metrics/$"]
 
 # this is the same order that templates/statics are searched for
 INSTALLED_APPS = [
-    "django.contrib.admin",
+    "core.apps.AllAuthCompatibleAdminConfig",
     "django.contrib.admindocs",
     "django.contrib.auth",
+    "allauth",
+    "allauth.account",
+    # if you want to use social authentication
+    # "allauth.socialaccount",
+    # "allauth.socialaccount.provicers.xxx",
     # required to support permissions associated with models and generic relation fields
     "django.contrib.contenttypes",
     "django.contrib.sessions",
@@ -145,7 +150,8 @@ def middleware_list():
             "django.contrib.messages.middleware.MessageMiddleware",
             "django.middleware.clickjacking.XFrameOptionsMiddleware",
             "django.contrib.admindocs.middleware.XViewMiddleware",
-            "django_browser_reload.middleware.BrowserReloadMiddleware"
+            "allauth.account.middleware.AccountMiddleware",
+            "django_browser_reload.middleware.BrowserReloadMiddleware",
         ]
     )
 
@@ -158,6 +164,14 @@ MIDDLEWARE = middleware_list()
 
 # Set this BEFORE initial DB migrations because it is very hard to switch to a different user model
 AUTH_USER_MODEL = "core.User"
+AUTHENTICATION_BACKENDS = [
+    # Needed to login by username in Django admin, regardless of `allauth`
+    "django.contrib.auth.backends.ModelBackend",
+    "allauth.account.auth_backends.AuthenticationBackend",
+]
+# for social accounts in 'allauth'
+SOCIALACCOUNT_PROVIDERS = []
+
 
 LOGIN_REDIRECT_URL = "/"
 LOGIN_URL = "/core/accounts/login/"
