@@ -14,5 +14,7 @@ class AllAuthCompatibleAdminConfig(AdminConfig):
     @override
     def ready(self) -> None:
         super().ready()
+        # must import this within the function to avoid error "Apps aren't loaded yet."
         from allauth.account.decorators import secure_admin_login
+
         admin.site.login = secure_admin_login(admin.site.login)  # type: ignore
