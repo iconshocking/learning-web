@@ -27,7 +27,7 @@
     {% endblock head_extra %}
   </head>
   <body>
-    <div class="container-fluid">
+    <div class="container-fluid full-container">
       <div class="row">
         <div class="col-sm-2">
           {% block sidebar %}
@@ -90,8 +90,8 @@
           {% endblock pagination %}
         </div>
       </div>
+      {% block extra_body %}
+      {% endblock extra_body %}
     </div>
-    {% block extra_body %}
-    {% endblock extra_body %}
   </body>
 </html>
