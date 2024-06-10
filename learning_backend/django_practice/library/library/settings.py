@@ -212,6 +212,9 @@ ACCOUNT_LOGIN_BY_CODE_ENABLED = False  # default
 # can customize ACCOUNT_LOGIN_BY_CODE_MAX_ATTEMPTS (default 3) and ACCOUNT_LOGIN_BY_CODE_TIMEOUT
 # (default 180 sec)
 
+# only works when confirming email immediately after signing up and tab is in the same browser 
+ACCOUNT_LOGIN_ON_EMAIL_CONFIRMATION = True  # default false
+
 # don't need to set this since Django sessions include an HMAC of the user's hashed password, so
 # changing a user's password invalidates all sessions anyway, but that is rectified by the current
 # reset view updating the hash within its session so logging back in is not required
