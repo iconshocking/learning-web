@@ -13,11 +13,17 @@ class HashOnlyManifestStaticFilesStorage(Base):
         process = super().post_process(*args, **kwargs)
         for name, hashed_name, processed in process:
             yield name, hashed_name, processed
-            # do not remove files that were not hashed, such as debug-toolbar statics
-            if processed and name != hashed_name:
-                os.remove(self.path(name))
-            else:
-                print(name, hashed_name)
+            if processed:
+                # don't need to ship scss files; better way would be to exclude them from
+                # collectstatic but this works for now
+                if name.endswith(".scss"):
+                    os.remove(self.path(name))
+                    os.remove(self.path(hashed_name))
+                elif name != hashed_name:
+                    # Django isn't detecting source map URL comments correctly, so we need to keep the
+                    # unhashed source maps
+                    if name.endswith(".map"):
+                        os.remove(self.path(name))
 
 
 # wraps a storage class passed via "class_name" option and adds a uuid to the filename to avoid
