@@ -23,7 +23,8 @@
       {% comment %} inline to have access to static template tag {% endcomment %}
       {% include "core/inlined/styles.css" %}
     </style>
-    {% block head_extra %}{% endblock head_extra %}
+    {% block head_extra %}
+    {% endblock head_extra %}
   </head>
   <body>
     <div class="container-fluid">
@@ -90,5 +91,7 @@
         </div>
       </div>
     </div>
+    {% block extra_body %}
+    {% endblock extra_body %}
   </body>
 </html>

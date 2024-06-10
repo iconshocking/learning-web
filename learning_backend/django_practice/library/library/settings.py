@@ -165,16 +165,94 @@ MIDDLEWARE = middleware_list()
 # Set this BEFORE initial DB migrations because it is very hard to switch to a different user model
 AUTH_USER_MODEL = "core.User"
 AUTHENTICATION_BACKENDS = [
-    # Needed to login by username in Django admin, regardless of `allauth`
+    # Needed to login by username in Django admin, regardless of allauth
     "django.contrib.auth.backends.ModelBackend",
     "allauth.account.auth_backends.AuthenticationBackend",
 ]
-# for social accounts in 'allauth'
+# for social accounts in'allauth
 SOCIALACCOUNT_PROVIDERS = []
+# ACCOUNT_RATE_LIMITS allows configuring allauth rate limits for auth-related actions, which already
+# has reasonable defaults. This uses the cache, so if using per-process cache, the limits will be
+# higher than expected since the user gets hopped between processes
 
+# can also be set to "email" or "username_email"
+ACCOUNT_AUTHENTICATION_METHOD = "username" # default
+# ACCOUNT_ADAPTER allows customizing the behavior of allauth with a custom adapter
 
+# used for generating URLs related to allauth, like password reset
+ACCOUNT_DEFAULT_HTTP_PROTOCOL = "http" if not HTTPS_REQUIRED else "https"
+# whether authed users should be redirected to LOGIN_REDIRECT_URL
+ACCOUNT_AUTHENTICATED_LOGIN_REDIRECTS = True # default
 LOGIN_REDIRECT_URL = "/"
 LOGIN_URL = "/core/accounts/login/"
+# prevents users from having more than one email associated with their account (other than a
+# temporary one that must be verified when requesting to change the email)
+ACCOUNT_CHANGE_EMAIL = True
+# ACCOUNT_EMAIL_CONFIRMATION_ANONYMOUS_REDIRECT_URL defaults to LOGIN_URL and
+# ACCOUNT_EMAIL_CONFIRMATION_AUTHENTICATED_REDIRECT_URL defaults to LOGIN_REDIRECT_URL
+ACCOUNT_EMAIL_CONFIRMATION_EXPIRE_DAYS = 3 # default
+# email links are confirmed via HMAC key validation, so no DB state required
+
+# sends an email when account changes are made; defaults to false
+ACCOUNT_EMAIL_NOTIFICATIONS = True
+ACCOUNT_EMAIL_REQUIRED = True # defauls to false
+ACCOUNT_EMAIL_VERIFICATION = "optional" # default is "optional"; can also be "none" or "mandatory"
+ACCOUNT_EMAIL_SUBJECT_PREFIX = "Library: "
+# whether emails are sent when reset password is requested for an email that doesn't have a matching
+# account; make sure this doesn't return an error, so as to avoid an email enumeration attack
+ACCOUNT_EMAIL_UNKNOWN_ACCOUNTS = False
+# leave this as None since setting to 1 prevents users from being able to change their email address
+ACCOUNT_MAX_EMAIL_ADDRESSES = None # default
+# ACCOUNT_FORMS allows customizing the forms used by allauth
+
+# allows for one-time use of an emailed code to login
+ACCOUNT_LOGIN_BY_CODE_ENABLED = False # default
+# can customize ACCOUNT_LOGIN_BY_CODE_MAX_ATTEMPTS (default 3) and ACCOUNT_LOGIN_BY_CODE_TIMEOUT
+# (default 180 sec)
+
+# don't need to set this since Django sessions include an HMAC of the user's hashed password, so
+# changing a user's password invalidates all sessions anyway, but that is rectified by the current
+# reset view updating the hash within its session so logging back in is not required
+ACCOUNT_LOGOUT_ON_PASSWORD_CHANGE = False # default
+# defaults to password reset done page instead of loginng in the user automatically
+ACCOUNT_LOGIN_ON_PASSWORD_RESET = False # default
+ACCOUNT_LOGOUT_REDIRECT_URL = "/" # default; defaults to LOGOUT_REDIRECT_URL if set
+# allows for not clearing the password field on form error (could be less safe)
+ACCOUNT_PASSWORD_INPUT_RENDER_VALUE = False # default
+# makes username lookup more expensive when filtering if preserved
+ACCOUNT_PRESERVE_USERNAME_CASING = False # default
+# will prioritize email uniqueness over preventing enumeration, so set to "strict" if you want to
+# allow multiple accounts to have the same email for max prevention (only one will be able to
+# verify); make sure this doesn't return a clear error to avoid enumeration
+ACCOUNT_PREVENT_ENUMERATION = True # default
+# whether reauthentication is required for sensitive actions (like changing email or password)
+ACCOUNT_REAUTHENTICATION_REQUIRED = False # default
+# ACCOUNT_REAUTHENTICATION_TIMEOUT prevents having to double authenticate in a short period of time
+
+# can be explicitly set; None shows a box the user can click
+ACCOUNT_SESSION_REMEMBER = None # default
+# can be useful for avoiding typos
+ACCOUNT_SIGNUP_EMAIL_ENTER_TWICE = False # default
+ACCOUNT_SIGNUP_PASSWORD_ENTER_TWICE = True # default
+# allows for base signup form that will be extended and which provides additional fields
+ACCOUNT_SIGNUP_FORM_CLASS = None # default
+# honeypot fields are hidden visually and via tab navigation, but are often accidentally filled in
+# by bots, and an account won't be made if the field is filled out
+ACCOUNT_SIGNUP_FORM_HONEYPOT_FIELD = "address" # defaults to None
+# only works if the flow doesn't require side steps like email verification
+ACCOUNT_SIGNUP_REDIRECT_URL = LOGIN_REDIRECT_URL # default
+# be careful disabling this
+ACCOUNT_UNIQUE_EMAIL = True # default
+
+# ACCOUNT_USER_DISPLAY lets you customize the string representation of the user model via a callable
+
+ACCOUNT_USER_MODEL_EMAIL_FIELD = "email" # default
+ACCOUNT_USER_MODEL_USERNAME_FIELD = "username" # default
+ACCOUNT_USERNAME_MIN_LENGTH = 1 # default
+# requires username even if email is used for login
+ACCOUNT_USERNAME_REQUIRED = True # default
+# path to a list of validators
+ACCOUNT_USERNAME_VALIDATORS = None # default
 
 # entry point to URLConf construction
 ROOT_URLCONF = "library.urls"

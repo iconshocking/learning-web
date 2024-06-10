@@ -337,12 +337,13 @@ Django provides some default decorators:
 - Auth:
   - `permission_required([permission_name], raise_exception=True)` (should usually set 'raise_exception' to True to avoid continual redirect to login)
   - `login_required`
+  - (provided by `allauth`) `verified_email_required`
   - `user_passes_test`
 - Caching: `cache_page`, `cache_control`, `never_cache`
 - X-frames: `xframe_options_deny/sameorigin/exempt`
 - `csrf_exempt`
 - Logging Security: `sensitive_variables([optional list of local variables])/sensitive_post_parameters([optional list of names])` (should always be at the top of the decorator chain to make sure that parameters are hidden as well since otherwise they will not be hidden in logs for outer wrapping decorators)
-  - Django default views in `auth.views` already set `sensitive_post_parameters()`
+  - Django/`allauth` default views in `auth.views` already set `sensitive_post_parameters()`
 - `require_http_methods([request types to restrict to])`
 
 ### Templates
@@ -510,25 +511,35 @@ When using relationship fields, `settings.AUTH_USER_MODEL` should be used to con
 - `Superuser` flag gives ALL permissions to user.
 - Users are related to permissions and groups via many-to-many fields (user will have all permissions granted to the groups and to themself)
 
-- Login, Logout, Password Change, and Password Reset functionality is provided by Django built-in views when using standard user models that extend `AbstractUser`.
+- It is strongly recommended to use the `allauth` package, even if only performing basic auth,
+  because it will be much easier to transition over if adding more complex auth later on.
 
-  - Add `include('django.contrib.auth.urls')` to the URLConf get default routing to:
-
-    ```
-    path/ login/ [name='login']
-    path/ logout/ [name='logout']
-    path/ password_change/ [name='password_change']
-    path/ password_change/done/ [name='password_change_done']
-    path/ password_reset/ [name='password_reset']
-    path/ password_reset/done/ [name='password_reset_done']
-    path/ reset/<uidb64>/<token>/ [name='password_reset_confirm']
-    path/ reset/done/ [name='password_reset_complete']
-    ```
-
-  - Templates are searched for in `project_name/templates/registration/`.
-    - If you want to define your templates in an app dir, you need to define your own URLConf URLs, instead of `django.contrib.auth.urls`, subclass the built-in views and set `template_name` in them to your custom location.
+  - Templates can be overridden in the `DIRS` templates directory defined in settings.
+  - Alternatively, the existing templates can be styled by redefining templates in an `allauth` subdirectory of the templates directory. This allows for quicker, but more limited styling. These templates are `elements/` for HTML elements, `layout/entry.html` for authing pages, and `layouts/manage.html` for authed users performning actions.
   - Can set default login redirect via `LOGIN_REDIRECT_URL` in settings
-  - NOTE: Django only allows logout navigation via POST to avoid users getting logged out by only navigating
+  - NOTE: Django and AllAuth by default only allow logout navigation via POST to avoid users getting logged out by only navigating (and since GET is never meant to mutate backend state).
+
+  - **Not recommended**: if you need to use default auth, login/out and password change/reset is provided by Django built-in views when using standard user models that extend `AbstractUser`.
+
+    - Templates are searched for in `project_name/templates/registration/`.
+
+      - If you want to define your templates in an app dir, you need to define your own URLConf URLs, instead of `django.contrib.auth.urls`, subclass the built-in views and set `template_name` in them to your custom location.
+
+    - Add `include('django.contrib.auth.urls')` to the URLConf get default routing to:
+
+      ```
+      path/ login/ [name='login']
+      path/ logout/ [name='logout']
+      path/ password_change/ [name='password_change']
+      path/ password_change/done/ [name='password_change_done']
+      path/ password_reset/ [name='password_reset']
+      path/ password_reset/done/ [name='password_reset_done']
+      path/ reset/<uidb64>/<token>/ [name='password_reset_confirm']
+      path/ reset/done/ [name='password_reset_complete']
+      ```
+
+    - Templates are searched for in `project_name/templates/registration/`.
+      - If you want to define your templates in an app dir, you need to define your own URLConf URLs, instead of `django.contrib.auth.urls`, subclass the built-in views and set `template_name` in them to your custom location.
 
 ### Groups
 
@@ -680,6 +691,7 @@ The usual Django production stack consists of the following:
 2. **nginx**: web server to reverse proxy requests coming into your web application; most full-featured and performant form of HTTP handling for lots of connections (optional if using a CDN with something like Whitenoise to cache static assets).
 
 3. **gunicorn**: WSGI, web server gateway interface for Python, which is a pre-forking server (creates multiple workers ahead of time to be ready when requests come in). This provides a few benefits:
+
    - Thread safety: avoids python threading performance issues since each worker process is running its own Django instance
    - Performance: fully utilize the host's CPU because a Python process is bound to a single core
    - Stability: a crashed worker will be re-spun up automatically
@@ -692,4 +704,5 @@ The usual Django production stack consists of the following:
 ## Extensions
 
 ### HTMX
+
 Library for simple HTML-like syntax for AJAX calls on even triggers that replace HTML elements. This allows for a more SPA-like experience when desired.
