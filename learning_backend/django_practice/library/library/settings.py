@@ -212,7 +212,7 @@ ACCOUNT_LOGIN_BY_CODE_ENABLED = False  # default
 # can customize ACCOUNT_LOGIN_BY_CODE_MAX_ATTEMPTS (default 3) and ACCOUNT_LOGIN_BY_CODE_TIMEOUT
 # (default 180 sec)
 
-# only works when confirming email immediately after signing up and tab is in the same browser 
+# only works when confirming email immediately after signing up and tab is in the same browser
 ACCOUNT_LOGIN_ON_EMAIL_CONFIRMATION = True  # default false
 
 # don't need to set this since Django sessions include an HMAC of the user's hashed password, so
@@ -291,9 +291,11 @@ TEMPLATES = [
                 "django.contrib.auth.context_processors.auth",
                 "django.contrib.messages.context_processors.messages",
             ],
-            # Cached template loader is enabled by default when DEBUG = False and stores compiled
-            # templates in memory to skip the file system on successive calls (does not reference
-            # CACHES setting - always in-memory)
+            # Cached template loader is enabled by default and stores compiled templates in memory
+            # to skip the file system on successive calls (does not reference CACHES setting -
+            # always in-memory). HOWEVER, for development convenience, 'runserver' cmd uses the
+            # 'file_changed' signal to clear the loader cache if a template change is detected.
+            #
             # - NOTE: built-in template tags are safe to use with cached loader, but make sure any
             #   custom tags are thread-safe (if multi-threading)
             #

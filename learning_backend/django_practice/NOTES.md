@@ -625,15 +625,44 @@ In views, you can use:
 Django supports creating emails via template as well and provides a wrapper over a SMTP (Simple Mail
 Transfer Protocol) _client_, not _server_ (you will need a service like MailChimp for that - why? spam filtering. your emails will get immediately filtered out if not coming from a reputable SMTP server).
 
-## Debugging
+## Development
 
-`django-debug-toolbar`:
+### `django-debug-toolbar`
 
 1. Install from PyPI
 2. Add`"debug_toolbar"` to `INSTALLED_APPS`
 3. Add `path("[debug_prefix]/", include("debug_toolbar.urls"))` to URLConf.
 4. Add `"debug_toolbar.middleware.DebugToolbarMiddleware"` to `MIDDLEWARE`.
 5. Add `127.0.0.1` to `INTERNAL_IPS` in settings.
+
+### Hot Reloading
+
+There are a few different config settings required to have good DX with Django hot reloading:
+
+- Using Docker:
+
+  - Use Docker Compose `watch` configuration to sync files in the container when changed on your host without rebuilding or manually syncing
+  - For Django: watch the entire project
+  - For nginx: watch the generate statics directory
+
+- Using `runserver`:
+
+  - Automatically restarts server when a Python file is changed
+  - Automatically emits `file_changed` signal when detecting a template file change, which then triggers a cache invalidation for the template cache loader
+  - Statics set no `Cache-Control` header when served by django and so will cache for a short period of time, preventing immediate updates. Therefore, implement your own 'never cache' policy:
+    1. Add `path(static_url + "<path:path>", never_cache(serve_static))` to your URLConf
+    2. Run `runserver --no-static` to prevent Django serving its own statics automatically
+  - Add `django-browser-reload` package to automatically make browser refresh when detecting a file change or server restart
+
+- Using `nginx` in front of Django:
+  - If debug **enabled**:
+    - Override `ManifestStaticFilesStorafe` to override `url` method to `return super().url(name, force=not name.startswith("debug_toolbar"))` to use hashed statics on debug. This avoids having to deal with sending environment-dependent `Cache-Control` headers in nginx.
+    - Use Docker Compose `watch` for Django service to sync `collectstatic`-generated `staticfiles.json`
+    - Create script to regenerate statics easily
+  - If debug **disabled**:
+    - Follow the debug enabled steps
+    - Disable template caching, by setting `OPTIONS.loaders` in `TEMPLATES` in settings to `["django.template.loaders.filesystem.Loader", "django.template.loaders.app_directories.Loader"]` to avoid cache loader automatically wrapping them.
+      - Recommended: don't leave this enabled when committing to keep preprod as similar to prod as possible
 
 ## Testing
 
