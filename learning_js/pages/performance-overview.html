@@ -415,7 +415,7 @@
           <li>
             <code>script defer</code> - these scripts download in parallel, BUT preserve execution
             order in the document AND do not run until the HTML has painted once (note: module
-            scripte are deferred by default). <code>DOMContentLoaded</code> does not fire until
+            scripts are deferred by default). <code>DOMContentLoaded</code> does not fire until
             after all deferred scripts complete.
           </li>
           <!-- prettier-ignore -->
@@ -449,6 +449,21 @@ document.head.append(scriptElem);</code >
         <p>
           NOTE: <code>load</code> event fires after all dependencies derived from the HTML+CSS+JS
           parse tree have downloaded (images, scripts, etc.).
+        </p>
+
+        <h4>- Dangers of inline/async scripts</h4>
+        <p>
+          <code>inline</code> scripts are inherently parser-blocking, so they prevent parsing and
+          download of anything later in the HTML while they execute.
+        </p>
+        <p>
+          But more importantly, since all JS scripts might access classes/styling from CSS higher up
+          in the HTML, they are parser-blocking at execution time until any CSS above them in the
+          HTML finishes downloading and parsing.
+        </p>
+        <p>
+          <code>defer</code> scripts avoid this issue because they will not be executed until all
+          HTML has been parsed and CSS has been downloaded / parsed.
         </p>
 
         <h3>Break up Long Tasks</h3>
@@ -486,7 +501,7 @@ document.head.append(scriptElem);</code >
           If you <em>have</em> to use JS directly for an animation, use
           <code>Window.requestAnimationFrame()</code>, usually with a <code>canvas</code> element,
           like so:
-                    <!-- prettier-ignore -->
+          <!-- prettier-ignore -->
 
           <code style="display: block; white-space: pre"
             >function loop(timestamp) {
@@ -565,8 +580,9 @@ requestAnimationFrame(loop)</code
           blocked on each other.
         </p>
         <p>
-          <em>However</em>, CSSOM construction is render-blocking, so all stylesheets that match
-          media queries for the page <em>must</em> be loaded before the initial render.
+          <em>However</em>, CSSOM construction is render-blocking, so all stylesheets seen in the
+          HTML (only 100% true if in the head of the HTML) that match media queries for the page
+          <em>must</em> be loaded before HTML up to that point can be rendered.
         </p>
 
         <p>
@@ -575,15 +591,37 @@ requestAnimationFrame(loop)</code
         </p>
 
         <p>
-          Deferred scripts (and thus <code>DOMContentLoaded</code>) are <em>meant to</em> (according
-          to the spec) wait until all render-blocking CSS has been loaded (similar to blocking
-          scripts), but this behavior is not true in all browsers yet. Therefore, if a script must
-          rely on critical CSS to be loaded, preload the script and then call it as a standard
-          blocking script at the end of the document.
+          Deferred scripts, and thus <code>DOMContentLoaded</code>, wait until all render-blocking
+          CSS has been loaded (similar to blocking scripts).
         </p>
 
         <h3>Optimizing CSS</h3>
         <ul>
+          <li class="code-background">
+            <p>Delay loading non-critical CSS.</p>
+            <ul>
+              <li>
+                For non-critical CSS, use
+                <code style="display: block"
+                  >&lt;link&gt; href="style.css" rel="preload" as="style"
+                  onload="this.onload=null;this.rel='stylesheet'"&lt;/link&gt;</code
+                >
+                since this will prevent the CSS from being render-blocking.
+              </li>
+              <li>
+                However, preloaded CSS still has high download priority, so for
+                <em>very</em> non-critical CSS, use
+                <code style="display: block"
+                  >&lt;link&gt; href="style.css" rel="stylesheet" media="print"
+                  onload="this.onload=null;this.media='all'"&lt;/link&gt;</code
+                >
+                since the browser will download the stylesheet, but will deprioritize the download
+                vs all other resources (even images/video elements and JS fetches).
+              </li>
+            </ul>
+            Default to preloading, and then test other options. <em>Always</em> profile before
+            optimizing.
+          </li>
           <li>Tree shake dead CSS (or have some other organizational method).</li>
           <li>
             Split CSS into files according to media query and non-/critical path. They will still be
@@ -656,14 +694,15 @@ requestAnimationFrame(loop)</code
         </p>
 
         <p>
-          The default behavior (usually) is synonymous and then swap to the font once downloaded
-          (known as a <dfn>FOIT</dfn>, Flash of Invisible Text). If a few seconds elapse,
+          The default behavior (usually) is render invisible text and then swap to the font once
+          downloaded (known as a <dfn>FOIT</dfn>, Flash of Invisible Text). If a few seconds elapse,
+          a fallback font will be rendered, but will still swap when the custom font is downloaded.
         </p>
         <p><code>font-display</code> can tweak this for a snappier experience:</p>
         <ul>
           <li>
             <code>block</code> (few sec block, infinite swap time) - synonymous (usually) with
-            default behavior usually but good to be explicit if this behavior is desired (causes
+            default behavior but good to be explicit if this behavior is desired (causes
             <dfn>FOIT</dfn>, Flash of Invisible Text).
           </li>
           <li>

@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <!-- This is render-blocking always -->
+    <link rel="stylesheet" href="purple.css" />
+    <!-- this will not execute until after all HTML and CSS is downloaded + parsed -->
+    <script src="deferred.js" defer></script>
+  </head>
+  <body>
+    <p>Stylesheets (`link` elements) behavior depends on the location:</p>
+    <ul>
+      <li>In the <code>head</code>, <em>render-blocking</em>.</li>
+      <li>
+        In the <code>body</code>, <em>possible</em> render-blocking and parser-blocking. Different
+        browsers may render the rest of the HTML while downloading the stylesheet or just render the
+        HTML up to the stylesheet. Either way, this behavior is inconsistent, so don't rely on it if
+        possible.
+      </li>
+    </ul>
+    <!-- this will block until purple.css finishes downloading, the prior HTML + CSS will be loaded,
+    then the script will be executed -->
+    <script src="hello-goodbye.js"></script>
+    <!-- parsing will block here until this script loads -->
+    <script src="domcontentloaded.js"></script>
+    <!-- this stylesheet will maybe render-block depending on the browser, but some will render the
+    rest of the HTML while downloading -->
+    <link rel="stylesheet" href="green.css" />
+    <p>Script behavior depends on its type:</p>
+    <ul>
+      <li>
+        <code>async</code>: not parser-blocking (until downloaded) or render-blocking. Note: module
+        scripts will also download dependencies in parallel. <strong>WARNING:</strong>
+        <code>async</code> scripts do not wait for CSS to load.
+      </li>
+      <li>
+        <code>defer</code>: not parser-blocking and runs only after HTML parsed and
+        <strong>ALL</strong> CSS finished loading. <strong>NOTE:</strong> if all the CSS finished
+        loading before the HTML finished parsing (such as when pulled from cache), the script will
+        run <em>AFTER</em> first paint.
+      </li>
+      <li>
+        normal script: parser-blocking and waits for all earlier CSS in the HTML to finish loading.
+        This means that normal scripts can be placed in the body to force HTML elements with
+        <em>at least</em> any prior styling to render by a certain point (cached CSS or fast ).
+      </li>
+    </ul>
+    <p>
+      <code>DOMContenLoaded</code> does not wait for stylesheets to load, unless there is a
+      non-async script (deferred or normal) because those scripts wait for prior CSS to load.
+    </p>
+    <p>
+      <strong>Note:</strong> <code>DOMContenLoaded</code> has nothing to do with <em>rendering</em>,
+      besides guaranteeing that all the HTML will have been rendered prior to firing. One
+      slow-loading deferred script, will prevent the event from firing until long after the page is
+      visible and all CSS is loaded.
+    </p>
+  </body>
+</html>
