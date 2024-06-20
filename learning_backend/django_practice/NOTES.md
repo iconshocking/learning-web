@@ -654,15 +654,10 @@ There are a few different config settings required to have good DX with Django h
     2. Run `runserver --no-static` to prevent Django serving its own statics automatically
   - Add `django-browser-reload` package to automatically make browser refresh when detecting a file change or server restart
 
-- Using `nginx` in front of Django:
-  - If debug **enabled**:
-    - Override `ManifestStaticFilesStorafe` to override `url` method to `return super().url(name, force=not name.startswith("debug_toolbar"))` to use hashed statics on debug. This avoids having to deal with sending environment-dependent `Cache-Control` headers in nginx.
-    - Use Docker Compose `watch` for Django service to sync `collectstatic`-generated `staticfiles.json`
-    - Create script to regenerate statics easily
-  - If debug **disabled**:
-    - Follow the debug enabled steps
-    - Disable template caching, by setting `OPTIONS.loaders` in `TEMPLATES` in settings to `["django.template.loaders.filesystem.Loader", "django.template.loaders.app_directories.Loader"]` to avoid cache loader automatically wrapping them.
-      - Recommended: don't leave this enabled when committing to keep preprod as similar to prod as possible
+- Using `nginx` in front of Django w/ debug **enabled** (much harder to configure for debug disabled):
+  - Override `ManifestStaticFilesStorafe` to override `url` method to `return super().url(name, force=not name.startswith("debug_toolbar"))` to use hashed statics on debug. This avoids having to deal with sending environment-dependent `Cache-Control` headers in nginx.
+  - Use Docker Compose `watch` for Django service to sync `collectstatic`-generated `staticfiles.json`
+  - Create script to regenerate statics easily
 
 ## Testing
 
