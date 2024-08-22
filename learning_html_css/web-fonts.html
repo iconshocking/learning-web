@@ -1,48 +1,55 @@
 <!DOCTYPE html>
 <html lang="en-us">
-
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width" />
     <title>Web font example</title>
-    <!-- Always HTML link over CSS @import since @import runs sequentially -->
-    <link href="fonts/downloaded/stylesheet.css" rel="stylesheet" type="text/css" crossorigin>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inconsolata&display=swap" rel="stylesheet">
-    <link href="styles/web-fonts.css" rel="stylesheet" type="text/css">
-</head>
+    <!-- Always HTML link over CSS @import since @import downloads sequentially instead of in parallel -->
+    <link href="fonts/downloaded/stylesheet.css" rel="stylesheet" type="text/css" crossorigin />
+    <!-- first preconnect link here is not too important since the stylesheet immediately follows
+    it, but the second is more useful since it sets up in advance the connection to fetch the font
+    URLs defined in the to-be-downloaded stylesheet (preconnect is a more generic version of
+    preload, and can be used for an origin, instead of a single/specific resource) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inconsolata&display=swap"
+      rel="stylesheet"
+    />
+    <link href="styles/web-fonts.css" rel="stylesheet" type="text/css" />
+    <style>
+      p {
+        font-weight: 900;
+        font-size: 1.5rem;
+      }
+    </style>
+  </head>
 
-<body>
-    <h1>Hipster ipsum is the best</h1>
+  <body>
+    <h1>Fonts</h1>
 
-    <p>Tacos actually microdosing, pour-over semiotics banjo chicharrones retro fanny pack portland everyday carry vinyl
-        typewriter. Tacos PBR&amp;B pork belly, everyday carry ennui pickled sriracha normcore hashtag polaroid
-        single-origin coffee cold-pressed. PBR&amp;B tattooed trust fund twee, leggings salvia iPhone photo booth health
-        goth gastropub hammock.</p>
+    <h2>Local-Hosting vs CDN</h2>
+    <p>
+      Often just as good to locally host now that browsers do not allow caching of responses for the
+      same URL across different domains (i.e., no pre-cache beneift from other sites). Regardless,
+      always preconnect or preload the necessary CSS/font origins/URLs.
+    </p>
 
-    <p>Cray food truck brunch, XOXO +1 keffiyeh pickled chambray waistcoat ennui. Organic small batch paleo 8-bit.
-        Intelligentsia umami wayfarers pickled, asymmetrical kombucha letterpress kitsch leggings cold-pressed squid
-        chartreuse put a bird on it. Listicle pickled man bun cornhole heirloom art party.</p>
+    <h2>CORS</h2>
+    <p>
+      <code>crossorigin</code> must always be present on a preconnect/preload/link for a font
+      (inline CSS <code>@font-face</code> <code>url()</code> automatically performs CORS calls)
+    </p>
 
-    <h2>It is the quaintest</h2>
-
-    <p>Bespoke green juice aesthetic leggings DIY williamsburg selvage. Bespoke health goth tote bag, fingerstache venmo
-        ennui thundercats butcher trust fund cardigan hella. Wolf vinyl you probably haven't heard of them taxidermy,
-        ugh quinoa neutra meditation asymmetrical mixtape church-key kitsch man bun occupy. Knausgaard butcher raw denim
-        ramps, offal seitan williamsburg venmo gastropub mlkshk cardigan chillwave chartreuse single-origin coffee twee.
-        Ethical asymmetrical banjo typewriter fap. Polaroid waistcoat tousled selfies four dollar toast locavore
-        thundercats. Truffaut post-ironic skateboard trust fund.</p>
-
-    <h2>No, really...</h2>
-
-    <p>Trust fund celiac farm-to-table PBR&amp;B. Brunch art party mumblecore, fingerstache cred echo park literally
-        stumptown humblebrag chambray. Mlkshk vinyl distillery humblebrag crucifix. Mustache craft beer put a bird on
-        it, irony deep v poutine ramps williamsburg heirloom brooklyn.</p>
-
-    <p>Taxidermy tofu YOLO, sustainable etsy flexitarian art party stumptown portland. Ethical williamsburg retro paleo.
-        Put a bird on it leggings yuccie actually, skateboard jean shorts paleo lomo salvia plaid you probably haven't
-        heard of them.</p>
-</body>
-
+    <h2>Flash of Invisible/Unstyled Text</h2>
+    <p>
+      Default behavior is FOIT, for multiple seconds possibly before a fallback font is applied. To
+      avoid this use <code>font-display: swap</code> (or other options), which makes the priod
+      before fallback very short.
+    </p>
+    <p>
+      Regardless, this should only really affect a user's first visit to the site since the font
+      response should be configured to cache.
+    </p>
+  </body>
 </html>
