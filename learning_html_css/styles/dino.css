@@ -1,5 +1,28 @@
 img {
+  /* img defaults to inline, so use block or inline-block to preserve dimensions in case of loading error */
+  display: block;
   width: 100%;
   height: auto;
-  border: 10px solid black;
+  max-height: 100%;
+  object-fit: contain;
+  /* make the alt text transparent if desired unless receiving 'onerror' event since some browsers
+  (Firefox) will show the alt text while loading the image */
+  color: transparent;
+  background-color: tomato;
+}
+
+div:has(img) {
+  position: relative;
+  height: auto;
+  width: 100%;
+  background-color: tomato;
+}
+
+.hide-errored-image {
+  position: relative;
+  left: -999999px;
+}
+
+.errored-image-fallback {
+  background: url("../images/icons8-image-error-96.png") no-repeat center center, tomato;
 }

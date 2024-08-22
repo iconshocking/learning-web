@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Image Example</title>
+    <link rel="stylesheet" href="styles/dino.css" />
+    <script>
+      function onErrorReplaceAlt(img) {
+        img.alt = img.alt + " loading error";
+        img.style.color = "black";
+      }
+      function onErrorReplaceSrc(img) {
+        const div = img.parentElement;
+        div.style.height = img.offsetHeight + "px";
+        img.style.display = "none";
+        img.style.objectFit = "scale-down";
+        img.addEventListener("load", () => {
+          img.style.display = "block";
+        });
+        img.src = "images/icons8-image-error-96.png";
+      }
+      function onErrorShiftAndReplaceBackground(img) {
+        img.classList.add("hide-errored-image");
+        img.parentElement.classList.add("errored-image-fallback");
+      }
+    </script>
+  </head>
+  <body>
+    <p>Correct loading</p>
+    <!-- Always set width and height in HTML to let browser compute aspect ratio (scale of values is
+    irrelevant - only the ratio matters), so CSS can set responsive dimensions for an image BEFORE
+    the image has started loading (since usually only width is defined). This reduces layout shift. -->
+    <img
+      src="images/dino-lips-or-no-lips.jpg"
+      title="did dinosaurs have lips?"
+      alt="did dinosaurs have lips?"
+      width="1400"
+      height="500"
+    />
+    <!-- Can use the img 'onerror' attribute (or via JS - wherever the original src was defined will
+    keep the code less spread) to set a different src or alt text on loading error.
+
+    Unfortunately:
+    1. alt text cannot be styled well or consistently across all browsers (*cough* Chrome with its
+       broken image icon) and
+    2. swapping the source can cause flickering across some browsers when you preserve the orignial
+       dimensions and the new source adjusts to scaling (Chrome); hiding the image until the new src loads
+       appears to work, but not sure if foolproof -->
+    <p>Failure with updated alt</p>
+    <img
+      src="images/wrong.jpg"
+      title="did dinosaurs have lips?"
+      alt="did dinosaurs have lips?"
+      width="1400"
+      height="500"
+      onerror="onErrorReplaceAlt(this);"
+    />
+    <p>Failure with replaced src</p>
+    <div>
+      <img
+        src="images/wrong.jpg"
+        title="did dinosaurs have lips?"
+        alt="did dinosaurs have lips?"
+        width="1400"
+        height="500"
+        onerror="onErrorReplaceSrc(this);"
+      />
+    </div>
+    <!-- Most robust and simplest solution I've found is to always wrap images in a div and in the
+    case of failure, shift the img far enough to the left to make it invisible (note: the alt is
+    still readable for screen readers), and set the parent div background to the error image  -->
+    <p>Failure with shifted image and div background</p>
+    <div>
+      <img
+        src="images/wrong.jpg"
+        title="did dinosaurs have lips?"
+        alt="did dinosaurs have lips?"
+        width="1400"
+        height="500"
+        onerror="onErrorShiftAndReplaceBackground(this);"
+      />
+    </div>
+  </body>
+</html>
