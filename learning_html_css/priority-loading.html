@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Priority loading</title>
+  </head>
+  <body>
+    <main>
+      <h1>Priority loading</h1>
+      <h2><code>dns-prefetch</code></h2>
+      <p>Performs DNS resolution, so only useful for different origins.</p>
+      <h2><code>preconnect</code></h2>
+      <p>
+        Performs DNS resolution, TCP connection, and TLS handshake. Only use this and
+        <code>preload</code> for critical resources to avoid bogging down important downloads with
+        establishing less important connections.
+      </p>
+      <h2><code>preload</code></h2>
+      <p>
+        Prioritizes downloading of a resource, but does not load it until referenced by other code.
+        Ideal for preloading fonts or other assets that may not be discovered until later in the
+        HTML.
+      </p>
+    </main>
+  </body>
+</html>
