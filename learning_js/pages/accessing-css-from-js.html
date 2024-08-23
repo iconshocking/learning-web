@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Accessing CSS from JS</title>
+  </head>
+  <body>
+    <main>
+      <h1>Accessing CSS from JS</h1>
+      <p>
+        <code>element.offsetHeight/Width</code> represents the actual computed current height of the
+        element in the page flow. Useful for updating CSS that requires some values to be
+        calculated.
+      </p>
+      <p>
+        <code>element.style</code> refers to the inline style attribute of the element. Therefore,
+        it should never be used to retrieve information about current CSS applied to the element:
+        use <code>Window.getComputedStyle(element)</code>. Setting CSS via JS using
+        <code>element.style</code> is fine.
+      </p>
+    </main>
+  </body>
+</html>
