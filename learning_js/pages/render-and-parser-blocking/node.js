@@ -15,16 +15,30 @@ app.get("/purple.css", (req, res) => {
   }, 2000);
 });
 
+app.get("/font.css", (req, res) => {
+  setTimeout(() => {
+    res.sendFile(__dirname + "/font.css");
+  }, 2000);
+});
+
+
 app.get("/hello-goodbye.js", (req, res) => {
   setTimeout(() => {
     res.sendFile(__dirname + "/hello-goodbye.js");
   }, 1000);
 });
 
+app.get("/PlaywriteES-Regular.ttf", (req, res) => {
+  setTimeout(() => {
+    res.sendFile(__dirname + "/PlaywriteES-Regular.ttf");
+  }, 4000);
+});
+
+
 app.get("/green.css", (req, res) => {
   setTimeout(() => {
     res.sendFile(__dirname + "/green.css");
-  }, 5000);
+  }, 8000);
 });
 
 app.get("/deferred.js", (req, res) => {
@@ -36,7 +50,7 @@ app.get("/deferred.js", (req, res) => {
 app.get("/domcontentloaded.js", (req, res) => {
   setTimeout(() => {
     res.sendFile(__dirname + "/domcontentloaded.js");
-  }, 4000);
+  }, 7000);
 });
 
 

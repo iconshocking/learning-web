@@ -1,0 +1,11 @@
+@font-face {
+  src: url("PlaywriteES-Regular.ttf") format("truetype");
+  font-family: playwrite-es;
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+body {
+  font-family: playwrite-es, sans-serif;
+}

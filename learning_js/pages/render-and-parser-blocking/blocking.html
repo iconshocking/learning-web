@@ -8,6 +8,14 @@
     <link rel="stylesheet" href="purple.css" />
     <!-- this will not execute until after all HTML and CSS is downloaded + parsed -->
     <script src="deferred.js" defer></script>
+    <!-- preloads are never render-blocking -->
+    <link rel="preload" as="font" type="font/ttf" href="PlaywriteES-Regular.ttf" crossorigin />
+    <!-- CSS url() calls are ignored for determining CSS file download completion (which is usually
+    what defines the render-blocking breakpoint), so font downloads will never block rendering.
+    Therefore, decide if FOIT or FOUT is more desirable for a user's first experience to your site
+    for fonts (via 'font-display' attribute in @font-face). The default depends on browser but
+    almost always is FOIT. -->
+    <link rel="stylesheet" href="font.css" />
   </head>
   <body>
     <p>Stylesheets (`link` elements) behavior depends on the location:</p>
