@@ -8,6 +8,12 @@ img {
   /* make the alt text transparent if desired unless receiving 'onerror' event since some browsers
   (Firefox) will show the alt text while loading the image */
   color: transparent;
+  /* background color should be set on the img and div:
+  - the img provides a background color while a) rendering the image on some browsers (like Chrome)
+    and b) for the alt text if not using the div wrapper strategy.
+  - the div provides a background color if a) using the src swap strategy during src swap or b)
+    avoiding any possibly background color flicker when using the div error background strategy
+    (cross-browser safety) */
   background-color: tomato;
 }
 
@@ -25,4 +31,10 @@ div:has(img) {
 
 .errored-image-fallback {
   background: url("../images/icons8-image-error-96.png") no-repeat center center, tomato;
+}
+
+.centered-alt {
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
 }

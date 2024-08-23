@@ -24,10 +24,19 @@
         img.classList.add("hide-errored-image");
         img.parentElement.classList.add("errored-image-fallback");
       }
+      function onErrorCenterAlt(img) {
+        onErrorReplaceAlt(img);
+        img.style.height = img.offsetHeight + "px";
+        img.style.width = img.offsetWidth + "px";
+        // for browsers that have alt text as a ::before pseudo-element, these text styles will also inherit
+        img.style.lineHeight = img.offsetHeight + "px";
+        img.style.textAlign = "center";
+      }
     </script>
   </head>
   <body>
-    <p>Correct loading</p>
+    <h1><code>img</code> loading</h1>
+    <h2>Correct loading</h2>
     <!-- Always set width and height in HTML to let browser compute aspect ratio (scale of values is
     irrelevant - only the ratio matters), so CSS can set responsive dimensions for an image BEFORE
     the image has started loading (since usually only width is defined). This reduces layout shift. -->
@@ -38,6 +47,7 @@
       width="1400"
       height="500"
     />
+    <h2>Error handling</h2>
     <!-- Can use the img 'onerror' attribute (or via JS - wherever the original src was defined will
     keep the code less spread) to set a different src or alt text on loading error.
 
@@ -47,7 +57,7 @@
     2. swapping the source can cause flickering across some browsers when you preserve the orignial
        dimensions and the new source adjusts to scaling (Chrome); hiding the image until the new src loads
        appears to work, but not sure if foolproof -->
-    <p>Failure with updated alt</p>
+    <h3>Failure with updated alt</h3>
     <img
       src="images/wrong.jpg"
       title="did dinosaurs have lips?"
@@ -56,7 +66,7 @@
       height="500"
       onerror="onErrorReplaceAlt(this);"
     />
-    <p>Failure with replaced src</p>
+    <h3>Failure with replaced src</h3>
     <div>
       <img
         src="images/wrong.jpg"
@@ -69,8 +79,8 @@
     </div>
     <!-- Most robust and simplest solution I've found is to always wrap images in a div and in the
     case of failure, shift the img far enough to the left to make it invisible (note: the alt is
-    still readable for screen readers), and set the parent div background to the error image  -->
-    <p>Failure with shifted image and div background</p>
+    still readable for screen readers), and set the parent div background to the error image. -->
+    <h3>Failure with shifted image and div background</h3>
     <div>
       <img
         src="images/wrong.jpg"
@@ -81,5 +91,57 @@
         onerror="onErrorShiftAndReplaceBackground(this);"
       />
     </div>
+    <h3>Notes if alt styling truly desired</h3>
+    <p>
+      NOT RECOMMENDED: Alt text is only a <code>::before</code> pseudo-element in some browsers
+      (like Firefox), so styling this way is not robust.
+    </p>
+    <img
+      class="centered-alt"
+      src="images/wrong.jpg"
+      title="did dinosaurs have lips?"
+      alt="did dinosaurs have lips?"
+      width="1400"
+      height="500"
+      onerror="onErrorReplaceAlt(this);"
+    />
+    <p>
+      NOT RECOMMENDED: Alt text styling with hardcoded values via
+      <code>offsetHeight/Width</code> always works but images will no longer be responsive AND
+      Chrome won't shift its annoying broken image icon, so styling should only be about the
+      appearance, rather than the positioning of the text.
+    </p>
+    <img
+      src="images/wrong.jpg"
+      title="did dinosaurs have lips?"
+      alt="did dinosaurs have lips?"
+      width="1400"
+      height="500"
+      onerror="onErrorCenterAlt(this);"
+    />
+    <h3>Delayed error loading detection</h3>
+    <p>
+      If you aren't able to listen to img elements before they might possibly fail to load an image,
+      you can also check the <code>complete</code> and <code>intrinsicWidth/Height</code> attributes
+      to determine if loading is complete and the image data is empty (either height or width of 0).
+    </p>
+    <div>
+      <img
+        id="delayed-img-error-detect"
+        src="images/wrong.jpg"
+        title="did dinosaurs have lips?"
+        alt="did dinosaurs have lips?"
+        width="1400"
+        height="500"
+      />
+    </div>
+    <script>
+      const img = document.querySelector("#delayed-img-error-detect");
+      setTimeout(() => {
+        if (img.complete && (!img.naturalWidth || !img.naturalHeight)) {
+          onErrorShiftAndReplaceBackground(img);
+        }
+      }, 3000);
+    </script>
   </body>
 </html>
