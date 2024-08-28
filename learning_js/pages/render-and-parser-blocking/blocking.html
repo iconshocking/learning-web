@@ -56,14 +56,21 @@
       </li>
     </ul>
     <p>
-      <code>DOMContenLoaded</code> does not wait for stylesheets to load, unless there is a
-      non-async script (deferred or normal) because those scripts wait for prior CSS to load.
+      <code>DOMContenLoaded</code> event fires after HTML has been fully parsed and deferred scripts
+      have run (and normal scripts since those are parser-blocking). It will <em>not</em> wait for
+      stylesheets to load UNLESS there is a non-async script (deferred or normal) because those
+      scripts block until prior CSS has loaded.
     </p>
     <p>
-      <strong>Note:</strong> <code>DOMContenLoaded</code> has nothing to do with <em>rendering</em>,
-      besides guaranteeing that all the HTML will have been rendered prior to firing. One
-      slow-loading deferred script, will prevent the event from firing until long after the page is
-      visible and all CSS is loaded.
+      <code>DOMContenLoaded</code> has nothing to do with <em>rendering</em>, besides guaranteeing
+      that all the HTML elements will have been parsed prior to firing. One slow-loading deferred
+      script, will prevent the event from firing until long after the page is visible and all CSS is
+      loaded.
+    </p>
+    <p>
+      The <code>load</code> event is what fires when all dependent resources referenced in the HTML
+      have loaded: stylesheets, scripts, iframes, and images (not video because that is usally
+      streamed as it plays), <em>except</em> images/iframes that are lazy-loaded.
     </p>
   </body>
 </html>
