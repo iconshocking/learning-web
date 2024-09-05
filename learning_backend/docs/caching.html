@@ -125,6 +125,12 @@
           <li>Do NOT set <code>private</code> unless the content is specific to a user</li>
           <li>Note: ETag doesn't really matter due to the long cache</li>
         </ul>
+        <p>
+          Note: you should consider hosting your own dependencies instead of using the library's CDN
+          (if it provides one) since it isolates you from their CDN's downtime issues, reduces the
+          chance of loading a malicious script from their CDN if they have been compromised, and
+          since browsers don't cache requests across domains anymore
+        </p>
 
         <p><strong>HTML that rarely changes:</strong></p>
         <ul>
