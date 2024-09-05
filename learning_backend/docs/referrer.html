@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>referrer</title>
+  </head>
+  <body>
+    <main>
+      <h1>Referrer</h1>
+      <p>
+        The <code>Referer</code> header (canonically misspelled) is set on the request header by the
+        browser when a user clicks on a link or the browser loads a resource, and it contains the
+        URL of the page from which the request originated. It is similar to the
+        <code>Origin</code> header, but unlike <code>Origin</code>, HTML/JS are allowed to adjust
+        the amount of detail sent in the <code>Referer</code> header at will.
+      </p>
+
+      <section>
+        <h2>Options:</h2>
+        <ul>
+          <li><code>no-reffer/-when-downgrade</code> (downgrade referring to HTTPS -> HTTP)</li>
+          <li>
+            <code>same-/origin/-when-cross-origin</code> ('same' sents no referrer on cross-origin
+            requests, 'when-cross-origin' only downgrades URL to only origin on cross-origin
+            requests)
+          </li>
+          <li>
+            strict-* (same as above but only sends when HTTPS -> HTTPS, whereas above will send
+            whenever not downgrading protocol)
+          </li>
+        </ul>
+      </section>
+
+      <p>
+        Best practice is to set an explicit
+        <code>Referrer-Policy: strict-origin-when-cross-origin</code> header in your server
+        responses (though this is the default in all modern browsers). It can also be set via the
+        <code>meta</code> element, but this is more brittle. Note: CSS inherits these settings when
+        requesting resources.
+      </p>
+
+      <p>
+        If referrer information is needed, policy can be set per element (using
+        <code>referrerpolicy</code> or <code>rel</code> attributes) or <code>fetch()</code> call.
+      </p>
+    </main>
+  </body>
+</html>
