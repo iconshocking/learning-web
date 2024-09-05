@@ -171,17 +171,28 @@
       <section>
         <p>
           Due to the BREACH vulnerability, compressed HTTPS (and HTTP, trivially) is vulnerable to
-          deciphering. Therefore gzip/brotli compression should never be used when transmitting
-          sensitive information.
+          deciphering if the following are met:
         </p>
+        <ol>
+          <li>User provided content can be reflected back in the response body (via URL).</li>
+          <li>
+            <p>A CSRF token (or other secret) is contained in the response body.</p>
+            <p>
+              NOTE: Django avoids this vulnerability by using a mask with the CSRF token, which
+              returns a different CSRF-value each time the page is loaded, but which can be reversed
+              to the original CSRF token for validation.
+            </p>
+          </li>
+        </ol>
+        <p>Compression (such as gzip/brotli) should not be used in such use cases.</p>
         <p>
           Therefore, compress text-based static content (media is already compressed), but don't
-          ever compress HTML (to avoid accidentally compressing when sensitive information is
+          compress HTML universally (to avoid accidentally compressing when sensitive information is
           present).
         </p>
         <p>
-          NOTE: compressed <em>requests</em> are never supported to avoid vulnerabilites like
-          opening a compression bomb.
+          NOTE: compressed <em>requests</em> are almost never supported to avoid
+          vulnerabilites like opening a compression bomb.
         </p>
       </section>
     </main>
