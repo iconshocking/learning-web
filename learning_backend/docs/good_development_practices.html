@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Good development practices</title>
+  </head>
+  <body>
+    <main>
+      <h1>Good development practices</h1>
+
+      <section>
+        <h2>Behavior-Driven Development (BDD) vs Test-Driven Development (TDD)</h2>
+        <p>
+          <strong>BDD</strong> is from the <em>user's</em> POV and describes expectations and
+          desires. <strong>TDD</strong> is from the <em>developer's</em> POV and focuses on
+          implementation and functionality.
+        </p>
+
+        <p>
+          BDD should be used to delineate the happy path. Note unhappy paths as the branches not
+          taken (to make sure unknowns are accounted for).
+        </p>
+        <p>
+          Rapidly prototype the happy path to uncover 'unknown unkowns', which can be added to
+          unhappy path enumeration.
+        </p>
+        <p>
+          TDD should then be used to fully flesh out the happy path, followed by the unhappy paths
+          by severity.
+        </p>
+      </section>
+    </main>
+  </body>
+</html>
