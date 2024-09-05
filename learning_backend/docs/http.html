@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>HTTP</title>
+  </head>
+  <body>
+    <main>
+      <h1>HTTP</h1>
+      <p>The default protocol for HTTP is HTTP/1.1, which is a string-based protocol.</p>
+
+      <ul>
+        <li>POST creates a new resource</li>
+        <li>
+          PUT updates the WHOLE resource (idempotent, should think of it as overwriting ALL of what
+          is already there with the new content)
+        </li>
+        <li>PATCH updates a resource partially</li>
+        <li>DELETE removes a resource</li>
+        <li>GET retrieves a resource</li>
+        <li>
+          HEAD retrieves just the header (maybe to check content-length before downloading a large
+          file)
+        </li>
+        <li>
+          OPTIONS is for determining capabilities of the server, most often used for CORS pre-flight
+          requests
+        </li>
+      </ul>
+
+      <section>
+        <h2>HTTP/2 (H/2)</h2>
+        <p>HTTP/2 improves upon HTTP/1.1 in several ways:</p>
+        <ul>
+          <li>binary protocol, so uses significantly less bytes</li>
+          <li>
+            multiplexing multiple requests over a single TCP connection, eliminating HTTP
+            head-of-line (HOL) blocking from HTTP/1.1, when a browser had used up all allowed
+            connections for a domain
+          </li>
+          <li>
+            HPACK allows header compression over TLS to be secure again (resistant to CRIME
+            attacks), reducing bytes over the wire (note: HTTP/3 also allows this using QPACK header
+            compression)
+          </li>
+        </ul>
+        <p>
+          HTTP/2 also implemented server push (a way to push additional resources to clients without
+          them asking for them yet), but it has been removed from some modern browsers and is
+          considered deprecated because it usually just wastes bandwidth since it deosn't account
+          for user/CDN-cached resources.
+        </p>
+      </section>
+
+      <section>
+        <h2>HTTP/3</h2>
+        <p>
+          NOTE: HTTP/3 is quite new (w/ no support on Safari currently) and can introduce unexpected
+          complexities and monitoriting difficulties, so enable with caution.
+        </p>
+        <p>
+          HTTP/3 uses the <strong>QUIC</strong> protocol, which changes HTTP from being over TCP to
+          UDP. The reason is to support the following upgrades from HTTP/2:
+        </p>
+        <ul>
+          <li>
+            Solve TCP and TLS HOL blocking:
+            <ul>
+              <li>
+                TCP HOL blocking by changing to UDP, which doesn't require packets to arrive in
+                order (so losing one just requires sending one additional packet)
+              </li>
+              <li>
+                <p>
+                  TLS HOL blocking by changing TLS to be applied to each UDP packet, not an entire
+                  TCP message like HTTP/2 (so decryption doesn't require all packets to have to be
+                  received)
+                </p>
+
+                <p>Note: TLS 1.3 is embedded into QUIC, so encryption is not optional.</p>
+              </li>
+            </ul>
+          </li>
+          <li>
+            <p>
+              Fewer round trip times (RTT) to establish handshake with the server because UDP
+              doesn't require a handshake like TCP does. Therefore, HTTP/3 can start requesting HTTP
+              data immediately if using TLS 1.3 with 0-RTT since there is no TCP handshake or TLS
+              handshake.
+            </p>
+          </li>
+        </ul>
+        <p>
+          These changes are meant to better handle mobile connections that very often go through
+          blips in connectivity, lose many packets, and change the IP address they are sending over
+          when changing networks / towers.
+        </p>
+      </section>
+
+      <section>
+        <h2>Network handshakes and round trip times (RTT)</h2>
+        <p>The standard protocol for fetching a resource from a URL, works as follows:</p>
+        <ol>
+          <li>DNS lookup (but this is cached after first time)</li>
+          <li>TCP handshake (1 RTT)</li>
+          <li>
+            TLS handshake (1 RTT over 1.3, 2 RTT over 1.2 but you shouldn't use TLS 1.2 unless for
+            some reason you have to)
+          </li>
+          <li>HTTP resource request</li>
+        </ol>
+        <p>So 2 RTT + DNS before being able to process the HTTP request.</p>
+
+        <p>
+          <strong>TLS 1.3 w/ 0-RTT</strong> allows for resuming a TLS session without the added TLS
+          handshake, meaning 1 RTT total (from TCP handshake) for returning user (TLS 1.2 supported
+          something similar to go from 2 RTT to 1 RTT).
+        </p>
+        <p>
+          NOTE: 0-RTT is uniquely susceptible to replay attacks because the encrypted message, if
+          intercepted, can be transmitted multiple times and be completely valid, which is a concern
+          for non-idempotent calls.
+        </p>
+      </section>
+
+      <section>
+        <h2>Streaming</h2>
+        <p>There are a few forms of stream connections:</p>
+        <ul>
+          <li>
+            Long-polling: client opens a connection and the server waits until new data is available
+            to send; the client restarts the connection after receiving the response (so not really
+            a stream)
+          </li>
+          <li>
+            HTML5 WebSockets (not HTTP, but over TCP): client opens a persistent connection that
+            allows for bidirectional streaming with the server
+          </li>
+          <li>
+            HTML5 Server Sent Events (SSE) / EventSource: client opens a persistent connection that
+            allows for server-side streaming (incoming to client, no outgoing) - <em>always</em> use
+            this over HTTP/2 to avoid eating up a usable TCP connection
+          </li>
+          <li>
+            gRPC (not HTTP): supports uni/bidirectional streams, but is only implementable on mobile
+            clients as of now (not browser)
+          </li>
+        </ul>
+      </section>
+      <section><h2>WebSockets</h2></section>
+    </main>
+  </body>
+</html>
