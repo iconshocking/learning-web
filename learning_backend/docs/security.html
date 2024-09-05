@@ -17,15 +17,25 @@
     </style>
   </head>
   <body>
-    <h1>Security</h1>
     <main>
-      <strong
-        >The #1 security technique is to never trust data from the browser (URL parameters, POST
-        bodies, HTTP headers, cookies, uploaded files, etc.)</strong
-      >
+      <h1>Security</h1>
+      <p>
+        Security should always be considered as "layered". Breaking each line of defense should only
+        provide limitedly more access, which is guarded by the remaining layers.
+      </p>
+      <p>
+        NOTE: If there are ways to circumnavigate layers, then those layers don't functionally exist
+        because one attack vector is breaking through several layers at once.
+      </p>
 
-      <h2>General Good Practices</h2>
+      <p>
+        The #1 security technique is to never blankly trust data from the browser (URL parameters,
+        POST bodies, HTTP headers, cookies, uploaded files, etc.)
+      </p>
+
       <section>
+        <!-- MARK: good practices -->
+        <h2>General Good Practices</h2>
         <ul>
           <li>Strong passwords or passkeys & 2FA</li>
           <li>HTTPS, never HTTP</li>
@@ -42,8 +52,13 @@
         </ul>
       </section>
 
-      <h2>XSS (Cross-Site Scripting)</h2>
       <section>
+        <!-- MARK: XSS -->
+        <h2>XSS (Cross-Site Scripting)</h2>
+        <p>
+          XSS is the <em>MOST</em> important security vulnerability to avoid since it means the
+          attacker can run arbitrary code.
+        </p>
         <p>
           <strong>Reflected:</strong> user content is returned by the server immediately and
           unmodified. <br />
@@ -70,8 +85,9 @@
         </p>
       </section>
 
-      <h2>SQL Injection</h2>
       <section>
+        <!-- MARK: SQL injection -->
+        <h2>SQL Injection</h2>
         <p>Always santize/escape user-provided inputs into SQL commands.</p>
         <p class="background-code">
           Malicious example:
@@ -81,8 +97,9 @@
         </p>
       </section>
 
-      <h2>CSRF (Cross-Site Request Forgery)</h2>
       <section>
+        <!-- MARK: CSRF -->
+        <h2>CSRF (Cross-Site Request Forgery)</h2>
         <p>
           Cookies are always sent regardless of the referrer, so always use a token (not in cookie
           form) to verify that the request is coming from the user through means that your site
@@ -92,16 +109,27 @@
           Ex: Someone creates a page with a hidden script that submits a Venmo
           <code>POST</code> request to send money to their account. Since cookies are sent
           regardless of the referrer, the <code>POST</code> will be successful unless the
-          <code>POST</code> requests are protected by CSRF tokens that are generated per
-          transaction.
+          <code>POST</code> requests are protected by CSRF tokens that are returned in the body of
+          response, which means the user is not vulnerable only by clicking (additional ses).
+        </p>
+        <p>
+          Note: CSRF is mostly mitigated by SameSite cookies, since with <code>"Lax"</code>, the
+          cookies are sent only on navigational GET requests (though older versions of browsers,
+          notably Chrome, may not adhere to that). But this protection fails to handle attacks from
+          subdomains (which are "same-site") if they host user-generated content (should really be
+          on a different domain altogether) or if a subdomain CNAMEs to a site out of your control
+          (vendor or something). Thus, it is generally good to still have CSRF tokens for extra
+          security, including against sloppy cookie setting.
         </p>
       </section>
 
-      <h2>Clickjacking</h2>
       <section>
+        <!-- MARK: clickjacking -->
+        <h2>Clickjacking</h2>
         <p>
-          Always set your CSP (Content Security Policy) headers to avoid your site being served in
-          an iframe on malicious sites.
+          Always set your CSP (Content Security Policy) <code>frame-ancestors</code> header to avoid
+          your site being served in an iframe on malicious sites. (<code>X-Frame-Options</code> is
+          the deprecated way to handle this.)
         </p>
         <p>
           This attack allows attackers to overlay their own content invisibly and intercept entered
@@ -111,8 +139,9 @@
         </p>
       </section>
 
-      <h2>DDOS (Distributed Denial of Service)</h2>
       <section>
+        <!-- MARK: DDOS -->
+        <h2>DDOS (Distributed Denial of Service)</h2>
         <p>
           Involved overhleming a web application's bandwidth or a certain application-level
           bottleneck.
@@ -123,14 +152,14 @@
         </p>
       </section>
 
-      <h2>Directory Traversal</h2>
       <section>
+        <h2>Directory Traversal</h2>
         Occurs when user is able to pass unsanitized file names/paths to server using navigation
         characters like <code>../</code>.
       </section>
 
-      <h2>File Inclusion</h2>
       <section>
+        <h2>File Inclusion</h2>
         <p>
           Allows for loading an unintended file on the server-side, such as not santiizing when
           allowing a user to specificy a URL/path/anything to be input to code that accepts
@@ -138,91 +167,282 @@
         </p>
       </section>
 
-      <h2>Command Injection</h2>
       <section>
+        <h2>Command Injection</h2>
         <p>Happens when unsanitized user input can be supplied to a system shell server-side.</p>
       </section>
 
+      <section>
+        <!-- MARK: compression -->
+        <h2>Compression attacks</h2>
+        <p>
+          <strong>CRIME</strong>: invalidated TLS-level compression for HTTP since the entire
+          request is compressed (headers and request), so noticing compression improvements while
+          guessing secrets a character at a time in the request was viable. (Ex.: putting 'secret=1'
+          in the body, then 'secret=2', and so on until the compressed size was smaller, then moving
+          to the next character.)
+        </p>
+        <p>
+          <strong>BREACH</strong>: via the same strategy as CRIME but for responses, invalidates
+          HTTP-level compression when user-provided content can be reflected into the response body
+          and the secret is present in both the response headers and body. (Ex.: adding
+          '?name=csrf_token=1' to a form URL that then has "Hello csrf_token=1!" in the response
+          body, and then continuing in the same way as CRIME.)
+        </p>
+        <p>Technologies that mitigate these attacks:</p>
+        <ul>
+          <li>
+            Django: includes a random mask in the CSRF token for each response, so the token changes
+            but is validatable server-side.
+          </li>
+          <li>
+            HTTP/2 and HTTP/3: HPACK (in H2) and QPACK (in H3) header compressions do not operate
+            character-by-character and such would reqiure brute force to perform the attacks.
+          </li>
+        </ul>
 
-      tls compression was outlawed (vulnerable to CRIME) because it compresses the entire response (header (csrf cookie) and content (csrf token)) but breach is for http compression (only content) and is still vulnerable
-      BREACH and CRIME attacks are able to determine client secrets in cookies one-character at a time. CRIME was for sending *requests* to a URL with (for example) 'secret=1' in the body and checking the compressed size of the request.
-      BREACH is for sending '?name=csrf_token=1' in the URL if the URL query (or body content) is reflected in the returned response (like a form that says "Hello csrf_token=1!") and checking if the compressed response is smaller.
-      HTTP2 header compression HPACK and HTTP3 QPACK is much less vulnerable to CRIME because it compresses headers in a different way (effectively immune)
-      Django mitigates BREACH by prepending a random mask to CSRF tokens per request (so the attacker can't determine the token from the compressed response). This prevents guessing the token character by character.
+        <p>
+          These are examples of "oracle" attacks, where a weakness in the system can indicate how
+          close an attacker is to their goal, which can provide a systematic way to complete the
+          attack.
+        </p>
+      </section>
 
-      CORS is who ELSE can use MY api (relaxing of security, default is SOP), i.e., granting access to others.
-      CSP is who ELSE can run content on MY page (tightening of security), locking down what you run on your page. They are sort of opposites.
-      CORS is DEFAULT secure (setting no CORS headers is equivalent to setting 'same-origin' policy), setting values is what can open security issues if you aren't specific. CORS should always be considered as opening up a vulnerability that needs to be assessed.
-      CORS is browser-level, prevents requests to your APIs from other domains. If proxied by an evil site backend (since no browser to block the cors request), it will send, but the cookies won't be seen by the evil proxy
-      CORS is inherently not able to prevent token-based security issues besides rate-limiting spam and checking for malicious indicators
-      CORS is not endpoint security, it's browser/JS security to relax SOP for your desired origins (because 'Origin' header is forbidden from being set by anything but the user-agent)
-      CORS pre-flight - OPTIONS
-      CORS doesn't apply to navigation requests (GET and most importantly POST), so it cannot prevent CSRF
-      CORS applies to fetch(), CSS web fonts, CSS shapes that use images, and WebGL textures (since the later two allow inspecting the image data from JS, which is a security risk).
-      CORS only prevents browser from reading the response, but the browser will still send the request and the server will process it (because Origin header can be spoofed, so there is no security benefit to trying to prevent it on the server side). The exception is preflight OPTIONS, which will prevent the request from being sent if the server doesn't respond with the correct headers.
+      <section>
+        <!-- MARK: cookies -->
+        <h2>Cookies</h2>
+        <p>
+          Cookies adhere to the 'same-site' policy, which is equivalent to a 'domain' policy. This
+          means that port and scheme do not matter, and subdomains are also able to set cookies for
+          parent sub/domains.
+        </p>
+        <p>There are a few important cookie security flags.</p>
 
-      No way to stop people from hosting your images, so may incur transfer costs so consider hosting them in a non-public way, requiring a token to access them or something similar
-      img/video elements have no CORS restrictions and can load anything BUT the JS cannot access their data unless crossorigin attribute is set
-      CSRF is not fully protected via SameSite cookies due to subdomains if you host user-generated content (should probably be on a different domain altogether) or the subdomains CNAMEs to a site out of your control (vendor, etc.), but otherwise does
-      Server should check origin header and reject if not allowed (this can be spoofed, but it's better than nothing in case CORS or cookie samesite was set poorly)
-      Same-Origin Policy (origin is defined as scheme-host-port) applies to iframe, link, form, img, audio/video, script
-      Same-origin also applies to local/session storage as well, but not cookies (why the flag is called 'samesite')
-      Origin header is the origin from where a request was SENT, it is present on all requests except GET/HEAD same-origin requests, but even if present it can be null in various circumstances
-      Cookie security? SameSite, Secure, HttpOnly, and Domain/Path
-      NOTE: SameSite=Strict is often not desired because it breaks the back button and external links to your site, so Lax is often used
-      Basic auth is username@passowrd
-      URL hashes are NOT sent outside the browser, so clients can use them to store data that doesn't need to be sent to the server
-      NEVER store sensitive data in local/session storage (unless it is short lived and the risk has been evaluated), only in cookies with the proper flags (secure, httponly, samesite, etc.), then implement a proxy (BFF - backend for frontend) to put it into the header if you decide at a later point you need to support non-browser use cases
-      Encryption/clever strategies does very little to stop XSS from accessing local/sessionstorage
-      XSS is the MOST important security vulnerability to avoid
-      Web worker can be used with access tokens + refresh tokens to store the access token in memory and the refresh token only in the worker (this way the browser never has access to the refresh token)
-      setting cookies: no domain = ONLY current sub/domain, domain = that domain and all subdomains (can set any parent domain), no path = applies to entire domain, path = only applies to that path and its subdirs
-      JWT is a token that is signed by the server with a secret key according to the content of the header and payload portions and can be verified by the server (with the same secret key or a public key) - this makes them tamper proof
-      Since only the key is needed to validate JWT, it avoids session horizontal scaling difficulties or having to hit authorization server for every request
-      But this makes JWT very risky since it cannot be invalidated and doesn't need authorization validation from the server, so refresh tokens are longer lived and authorization tokens are short lived
-      Refresh tokens can be invalidated, so an old auth token is only valid until it expires
-      Refresh token rotation can be implemented where a new refresh token is used each time you refresh the auth token, which can help detect if an old refresh token was stolen and to invalidate the chain but this is not foolproof and only hardens the chance of the refresh token being stolen in transit, not from XSS
-      Secrets or sensitive info should never end up in frontend applications if possible
-      BFF is a reverse proxy that holds onto sensitive info for the client, so it holds onto the refresh token and sends the client the ENCRYPTED (and preferably signed) access token and refresh token (so it is not usable by the client but can be passed to the server as needed)
-      BFF SHOULD perform client authentication (pre set up a client ID and secret with the auth provider) with the OAuth server to ensure a stolen refresh token or auth code (visible in URL) is not usable because they don't have the BFF secret
-      Clients should never need to directly interface with tokens (JWT or otherwise) - they should be passed to a user info API - so they should be kept in HttpOnly cookies which protect from XSS extraction though session riding still exists
-      the BFF being on the same domain as your frontend allows for easy cookie managament instead of 3rd party
-      Session riding is one of the largest cookie risks outside of CSRF
-      BFFs can inspect traffic to partially mitigate session riding (steps out of order, requests coming in too fast)
-      If you are already using sessions, the tokens can be stored in the session and the BFF (or whatever handles your sessions) will retrieve and pass them on requests
-      OAuth2 (1 is deprecated): resource owner (user), client (app), authorization server (3rd party auth server), resource server (3rd party API), authorization grant, redirect URI (passed by client to redirect User after grant), access token
-      Access token is for authorization (using APIs), ID token is for authentication (proving your identity/being signed in)
-      ID token should NOT be shared with 3rd party APIs since it identifies the user
-      OAuth explicit flow sends auth code (limited TTL) in redirect URL to the client, which is then exchanged for access token and refresh token (usually by a BFF server to keep the plain text tokens out of the browser)
-      OAuth implicit flow sends access token directly in redirect URL hash fragment, which is less secure because the clients have access to the tokens from the URL (though your redirect URL won't see it because hash fragments are not passed out of the browser - this was initially a protection against non-SSL servers in the early days of adoption of HTTPS)
-      OAuth Resource owner password credentials flow (DEPRECATED) and client credentials (most common for machine-to-machine communication)
-      OAuth scopes determine what the client can do with the token (read, write, etc.) / generates the consent screen the user grants (scopes are defined by the auth provider)
-      Network terminology: back channel = highly secure, front channel = much less secure
-      If you're going to use a session ID, you should sign it with a secret key to prevent tampering (HMAC is good for this)
-      Bearer token means that "if you bear the token, you have the access it provides", i.e., it is all the proof needed to perform the action being checked
-      OAuth is for authorization (no defined way to get user info from the OAuth flow), OIDC (open ID connect, OID2 is deprecated) is for authentication and is built on top of OAuth
-      OIDC declares an ID token and a UserInfo endpoint (which received a JWT) to get more complete user info (plus standardized scopes and implementation)
-      AppAuth is a library that handles the OAuth flow for mobile apps 
-      Browsers don't cache requests across domains (some also include the frame site, so you should not rely on a CDN to download libraries from a different domain, you will not get any benenfit from the user possibly having the file cached from elsewhere)
+        <section>
+          <h3>Secure</h3>
+          <p>
+            The <code>Secure</code> attribute means the browser will only send that cookie when
+            using the https protocol, which reduces MitM attacks.
+          </p>
+        </section>
 
-      HTTPS URLs are encrypted in requests/responses because they are in the header, BUT look at DNS following part
-      DNS communication is usually sent plain text via UDP to the DNS server on port 53 (hence Amazon's Route53) before establishing TLS connection with your domain (only the domain is sent, not the full URL)
-      DNS over TLS (DoT) and DNS over HTTPS (DoH) (both use TCP, not UDP) establishes an encrypted session with the DNS server, so that the domain you are querying isn't leaked (DoT is over a separate port)
-      DoT is over port 853 while DoH is over 443 (HTTPS port): this makes DoT easier for security because servers can analyze the DNS traffic specifically, where DoH is better for privacy because it is indistinguishable from standard HTTPS traffic
-      DNSSEC is a form of private/public key signing of DNS records by DNS servers to ensure that the DNS data (note: not the response itself) is not tampered with in transit
-      DNSSEC also validates that the data came from the zone it was supposed to: this is only because you can trust the public key because each higher level zone signs (with their private key) the public keys of their child zones.
-      So DNSSEC ensures authentication and integrity of the DNS data (note: the root zone has no signed public key since it has no parent, and since the root zone signs all the TLD zones' keys, an intercept at the root level would fail to validate the TLD keys and the DNS resolution would error)
-      
-      A DNS query goes from your browser to a recursive resolver, which bounces between authoritative DNS servers to get the finalized IP address to return to you: first the root servers (13 globally) then the TLD (top-level domain) servers (like .com) then the authoritative servers for the domain
-      Recursive resolvers cache the results of the DNS query for a TTL (time to live) to reduce the number of queries to the authoritative servers, which is where a cache-poisoning attack can come in where a malicious server returns a fake IP address to the recursive resolver
+        <section>
+          <h3>HttpOnly</h3>
+          <p>
+            The <code>HttpOnly</code> attribute means that JS running in the browser has no access
+            to this cookie. This should <em>always</em> be your default cookie setting unless you
+            need to relax it, and it should not be relaxed for security/auth-related cookies
+            (attempt other workarounds).
+          </p>
+        </section>
 
-      Session fixation attack is bad actor gets anonymous (or known) session id cookie, bad actor passes the session to the victim, victim logs in, if the site doesn't create a new session then the bad actor now can log in with the same session ID and is in the victim's account (fix is to always create a new session ID when a user auths)
-      Session fixation is also possible with subdomains setting cookies on the parent domain, which WILL overwrite any conflicting cookies set on the parent domain (so beware of user-generated content on subdomains)
-      '.domain' cookies (setting an explicit domain) take precedence over 'domain' cookies (no domain was set), but they don't actually overwrite them
+        <section>
+          <h3>SameSite</h3>
+          <p>
+            The <code>SameSite</code> attribute determines what the origin of the request must be
+            for the browser to send cookies for that site.
+          </p>
+          <ul>
+            <li>
+              <code>Strict</code>: browser only sends cookies when the origin of the request is of
+              the same site. This is usually too strict to be useful exempt in very specific cases
+              because it breaks sending cookies when using the back button (if coming from another
+              site) as well as when clicking on external links to your site.
+            </li>
+            <li>
+              <code>Lax</code>: browser sends cookies when origin is same-site and top-level
+              navigation requests that are <em>not</em> POSTs (i.e., only GETs). This helps mitigate
+              CSRF attacks, but should generally be combined with CSRF tokens.
+            </li>
+            <li><code>None</code>: browser always sends cookies.</li>
+          </ul>
+        </section>
 
-      NOT SECURITY:
-      delineate happy path with BDD and determine unhappy paths as the branches that weren't taken in the happy path (to make sure unknowns are covered), rapid prototype happy path to cover unknown unknowns, TDD the happy path properly and then the unhappy paths by severity
-      HTTP: POST creates a new resource, PUT updates the WHOLE resource (idempotent, should think of it as overwriting ALL of what is already there with the new content), PATCH updates a resource partially, DELETE removes a resource, GET retrieves a resource, HEAD retrieves just the header (maybe to check content-length before downloading a large file), OPTIONS is a CORS thing
+        <p>
+          To keep cookies secure, always set them with
+          <code>SameSite=Lax; Secure; HttpOnly</code> unless you have very good reason to relax
+          that.
+        </p>
+
+        <section>
+          <h3>Setting cookies</h3>
+          <p>
+            When setting cookies, all subdomains for a site (+ the root domain) can set cookies for
+            any other sub/domain.
+          </p>
+
+          <p>Domain:</p>
+          <ul>
+            <li>
+              <strong>no domain:</strong> set cookie for only the domain of the resource the request
+              is for
+            </li>
+            <li>
+              <strong>explicit domain:</strong> set cookie for the domain listed and all subdomains
+              under it (the listed domain can be for domains heirarchically above the current
+              resource of the request, but not lower or sibling)
+            </li>
+          </ul>
+
+          <p>Path:</p>
+          <ul>
+            <li>
+              <strong>no path:</strong> applies to the entire subdomain computed from the domain
+              attribute
+            </li>
+            <li>
+              <strong>explicit path:</strong> applies to only that path and its subdirectories
+            </li>
+          </ul>
+        </section>
+
+        <p>
+          Note: cookies have a total size limit in that 1) cookies should not be bigger than 4 KB
+          and 2) no domain should have more than 50, but err on the side of 20 (unclear if this
+          includes subdomains). Browsers may starting trimming earlier cookies for a site past if
+          these limits are exceeded.
+        </p>
+
+        <section>
+          <!-- MARK: session fixation -->
+          <h3>Session Fixation attack</h3>
+          <p>
+            A Session fixation attack is when a bad actor gets an anonymous (or authed) session id
+            cookie, and then the bad actor passes the session to the victim. Thus, when the victim
+            logs in, if the site didn't overwrite the session ID with a new session then the bad
+            create a new session ID when a user auths) Session fixation is also possible with actor
+            now can access the victim's account on their side by using the same session ID.
+          </p>
+          <p>To address, <em>always</em> create a new session ID when a user auths.</p>
+          <p>
+            Session fixation is also possible when subdomains set cookies on the parent domain,
+            which <em>will</em> overwrite any conflicting cookies set via the parent domain. This is
+            another reason to avoid user-generated content on subdomains.
+          </p>
+          <p>
+            Interseting note: '.domain' cookies (setting an explicit domain) take precedence over
+            'domain' cookies (no domain was set), but they don't actually overwrite them.
+          </p>
+        </section>
+      </section>
+
+      <section>
+        <!-- MARK: storage -->
+        <h2>Session/Local Storage</h2>
+        <p>
+          It is <em>never</em> advised to store important secrets in client storage, so don't do it
+          unless it somehow adds no security risk or the risk is not a concern.
+        </p>
+        <p>
+          Encryption and/or clever strategies does very little to stop XSS from accessing
+          local/session storage.
+        </p>
+      </section>
+
+      <section>
+        <!-- MARK: nav -->
+        <h2>Navigation</h2>
+        <p>
+          URLs support a maximum size of ~2000 characters across browsers, so make sure to stay
+          under that limit to avoid issues.
+        </p>
+        <p>
+          Hashes in URLs are never sent outside the browser, so servers can send redirects to
+          clients that allow for storing secret data that shouldn't be sent outside the browser
+          (though this isn't often used since URLs are encrypted anyway over HTTPS). See OAuth
+          implicit flow for an example.
+        </p>
+        <p>
+          Most web servers also support a max header size of ~8 KB, so make sure that cookies or
+          tokens do not push up against that.
+        </p>
+        <p>
+          In network security, <em>back-channel</em> communication (via your backend) is considered
+          significantly more secure than <em>front-channel</em> (communication via the user's
+          browser/application).
+        </p>
+
+        <p>HTTPS URLs are encrypted because they are in the header.</p>
+
+        <section>
+          <!-- MARK: DNS -->
+          <h3>DNS</h3>
+          <p>
+            While HTTPS URLs are encryped, the initial DNS lookup is over plaintext UDP on port 53
+            (hence Amazon's Route53 naming). This reveals only the domain of the URL in the lookup
+            (since extra DNS-routing will be performed at your IP address/es).
+          </p>
+
+          <section>
+            <!-- MARK: secure DNS (dot / doh) -->
+            <h4>DNS over TLS (DoT) / DNS over HTTPS (DoH)</h4>
+            <p>To encrypt this lookup, it can be encrypted in two ways:</p>
+            <ul>
+              <li>
+                DoT: over port 853, so easier to monitor for security since the DNS traffic is
+                isolated
+              </li>
+              <li>
+                DoH: over port 443 (HTTPS port), so more private since it is indistinguishable from
+                normal HTTPS traffic but is harder to monitor
+              </li>
+            </ul>
+            <p>
+              Note: Both these protocols use TCP instead of UDP (unless using HTTP3) and must
+              perform the encryption handshake (fewer roundtrips if using HTTP3), so there is
+              overhead to this security.
+              <em>However</em>, DNS queries are cached, so the overhead is minimized. Assess for
+              your situation.
+            </p>
+          </section>
+
+          <section>
+            <!-- MARK: cache-poisoning -->
+            <h4>Cache-poisoning</h4>
+            <p>
+              A DNS query goes from your browser to a <strong>recursive resolver</strong>, which
+              bounces between <strong>authoritative DNS servers</strong> to get the finalized IP
+              address to return to you. First the root servers (13 globally), then the TLD
+              (top-level domain) servers (like .com, etc.), then the authoritative servers for the
+              domain being queried.
+            </p>
+            <p>
+              Recursive resolvers cache the results of the DNS query for a TTL (time to live) to
+              reduce the number of queries to the authoritative servers, which is where a
+              cache-poisoning attack can come in, in which a malicious server returns a fake IP
+              address to the recursive resolver.
+            </p>
+
+            <section>
+              <!-- MARK: DNSSEC -->
+              <h5>DNSSEC</h5>
+              <p>
+                DNSSEC addresses cache-poisoning attacks by validating
+                <em>integrity</em> and <em>authentication</em> of DNS data.
+              </p>
+              <p>
+                DNSSEC is a form of private/public key signing of DNS records by DNS servers to
+                ensure:
+              </p>
+              <ul>
+                <li>
+                  that the DNS data (note: not the response itself) is not tampered with in transit
+                </li>
+                <li>
+                  that the data came from the zone it was supposed to because you can trust the
+                  public key you are provided because each higher-level zone signs (with their
+                  private key) the public keys of their child zones
+                </li>
+              </ul>
+              <p>
+                Note: the root zone has no signed public key since it has no parent, but since the
+                root zone signs all the TLD (top-level domains) zones' keys, an intercept at the
+                root level would fail to validate the TLD keys and DNS resolution would error
+              </p>
+            </section>
+          </section>
+        </section>
+      </section>
     </main>
   </body>
 </html>
