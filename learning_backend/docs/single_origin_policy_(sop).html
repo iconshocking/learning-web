@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>SOP</title>
+  </head>
+  <body>
+    <main>
+      <h2>Same-Origin Policy (SOP)</h2>
+      <p>
+        An origin is defined as the combination of protocol-host-port (ex:
+        'https://auth.google.com:443', where 'https' is the protocol, 'auth.google.com' is the host,
+        and '443' is the port - though ports are usually implied with 443 for HTTPS and 80 for
+        HTTP).
+      </p>
+
+      <p>Origin is inherited or not in certain instances:</p>
+      <ul>
+        <li>
+          inherited when opening <code>about:blank</code> pages, such as calling
+          <code>Window.open()</code> and running a script in the new window
+        </li>
+        <li><code>data:</code> URLs have a new, empty security context.</li>
+        <li>
+          <code>file:///</code> schema usually are considered "opaque origins", which means that
+          files in the same dir should not be considered from the same origin, but not all browsers
+          do this, which means a locally-opened HTML file may be able to access other files on the
+          user's device. (This is a security risk of browsers, not something that web devs need to
+          consider.)
+        </li>
+      </ul>
+
+      <p>
+        Embedded content also respects SOP: a page with a cross-origin <code>iframe</code> has
+        minimal access to its <code>Window</code>'s properties while a same-origin
+        <code>iframe</code> allows full access to its DOM. The same is true when opening up popup
+        documents.
+      </p>
+      <p>
+        Note: this is why CSRF tokens can't just be circumvented by embedding the form page first
+        and pulling the CSRF token out using JS to create a usable CSRF URL. (Tangentially,
+        <code>fetch()</code> requires CORS to avoid opaque responses, so that attack route is
+        blocked as well.)
+      </p>
+
+      <p>
+        The <code>Origin</code> header is the context origin (i.e., the page) from where a request
+        was <em>sent</em> and is present on all requests except GET/HEAD same-origin requests. Even
+        if present, it can be null in various circumstances.
+      </p>
+      <p>
+        The web is built off SOP, which states that resources from one origin are accessible only to
+        that same origin. This provides significant security by default. The two main ways in which
+        SOP is relaxed is:
+      </p>
+      <ul>
+        <li>
+          CORS, which is a loosening of security by allowing your resources to be accessed from
+          <em>other</em> origins.
+        </li>
+        <li>
+          CSP, which is a tightening of security, largely to prevent XSS, by restricting which
+          resources are callable by <em>your</em> origins (among other settings).
+        </li>
+      </ul>
+      <p>
+        Note: Same-origin policy also applies to local/session storage and IndexedDB (not cookies
+        though, which are just 'same-site', i.e., domain-based).
+      </p>
+
+      <section>
+        <!-- MARK: CORS -->
+        <h3>CORS (Cross-Origing Resource Sharing)</h3>
+        <p>
+          CORS defines which <em>other</em> origins can call <em>your</em> origin URLs from their
+          web pages, i.e., sharing <em>your</em> resources.
+        </p>
+        <p>
+          CORS is <em>default</em> secure: no CORS headers is equivalent to having a 'same-origin'
+          policy (SOP). Adding CORS headers should always be considered as opening up a
+          vulnerability that should be assessed.
+        </p>
+        <p>
+          SOP/CORS is <em>browser-level</em> and provides no protection against direct calls to your
+          origins from outside a browser: this is because while the <code>Origin</code> header is a
+          'forbidden header' in the browser (meaning it cannot be set programmatically), it is
+          trivially easy to spoof the value outside of a browser. However, this still provides a
+          great deal of security because attacks via browser are a common vector since cookies are
+          usually only sendable via the compromised victim's browser (assuming the cookies are set
+          securely). For example, an evil proxy forwarding the victim's requests to your origins
+          would not receive the cookies and so not be able to forward any cookies, thwarting most
+          attacks.
+        </p>
+        <p>
+          <strong>NOTE:</strong> SOP/CORS thus has no mitigation against non-cookie token-based
+          security. These vectors need to be handled by rate-limiting for spam and examining for
+          malicious indicators.
+        </p>
+
+        <section>
+          <h4>CORS Headers</h4>
+
+          <h5>On OPTIONS preflight request</h5>
+          <ul>
+            <li><code>Access-Control-Request-Method</code></li>
+            <li><code>Access-Control-Request-Headers</code></li>
+          </ul>
+
+          <h5>On server response</h5>
+          <ul>
+            <li>
+              <p>
+                <code>Access-Control-Allow-Origin</code>, which must match the origin of the request
+                (annoyingly only accepts a single origin, so it is on the the server to supply the
+                origin corresponding to the request)
+              </p>
+              <p>
+                <strong>NOTE:</strong> do <em>not</em> set this header to the wildcard
+                <code>*</code> since it allows your resources to be called from any origin.
+              </p>
+              <p>
+                Note: also set <code>Vary: Origin</code> header if there is more than one origin
+                that is allow-listed, to indicate that the response is dependent on the origin.
+              </p>
+            </li>
+            <li>
+              <code>Access-Control-Allow-Methods</code>, which must match the header of any
+              preflight OPTIONS request
+            </li>
+            <li>
+              <code>Access-Control-Allow-Headers</code>, which must match the headers of any
+              preflight OPTIONS request (CORS-safe headers are not required to be listed)
+            </li>
+            <li>
+              <p>
+                <code>Access-Control-Allow-Credentials</code>, which must be present in order for 1)
+                a credentialed request with a preflight to be allowed to send or 2) a simple request
+                to receive a non-opaque response (<code>fetch()</code> will only send credentials by
+                default for <code>same-origin</code> calls)
+              </p>
+
+              <p>
+                Note: credentialed calls do not allow for any CORS-response headers to be wildcard
+                <code>*</code>s.
+              </p>
+            </li>
+            <li>
+              <code>Access-Control-Expose-Headers</code>, which exposes listed headers in the
+              response to the client's JS (normally only CORS-safelisted headers are accessible)
+            </li>
+            <li>
+              <code>Access-Control-Max-Age</code>, which is how many seconds the preflight request
+              response can be cached (cache is per <em>request</em>, so trying to optimize the
+              preflight cache has limited returns).
+            </li>
+          </ul>
+        </section>
+
+        <section>
+          <h4>CORS-requiring Contexts</h4>
+          <ul>
+            <li>
+              <code>fetch()</code> (<strong>NOTE:</strong> calls can still be made using
+              <code>no-cors</code> mode, but the response will be opaque if the response doesn't
+              have a matching <code>Access-Control-Allow-Origin</code> header.)
+            </li>
+            <li>CSS web fonts</li>
+            <li>CSS shapes that use images</li>
+            <li>WebGL textures</li>
+            <li>Image/video frames drawn to canvas using <code>drawImage()</code></li>
+          </ul>
+          <p>
+            The latter three are because the image data can be inspected from JS, which is a
+            security risk.
+          </p>
+
+          <section>
+            <h5>CORS-optional Contexts</h5>
+            <p>
+              The <code>crossorigin</code> attribute can be set for a few elements to change the
+              default call to a CORS call:
+            </p>
+            <ul>
+              <li><code>img/video/audio</code>: data cannot be inspected via JS w/o CORS call</li>
+              <li><code>script</code>: limits programmatic error logging w/o CORS call</li>
+              <li>
+                <code>link</code>: depending on the type of the <code>link</code> element, non-CORS
+                calls will be discarded (such as for <code>"preload"</code> elements)
+              </li>
+            </ul>
+            <p>
+              Attribute values <code>anonymous/use-credentials</code> determine whether cookies are
+              sent in the CORS request.
+            </p>
+          </section>
+
+          <p>
+            Note: this means you can't prevent others hosting your media via CORS, so if that is
+            needed or becomes a cost problem, consider hosting them in a non-public way, requiring a
+            token to access them or something similar.
+          </p>
+        </section>
+
+        <section>
+          <h4>Preflight OPTIONS</h4>
+          <p>
+            Preflight OPTIONS requests will be sent automatically by the browser to the server
+            before performing a non-simple CORS request, and the original request will only be sent
+            if the CORS headers in the response allow for the origin, method, headers, and
+            credential state of that request.
+          </p>
+          <p>
+            Preflight requests will not be sent for 'simple' requests that have the following
+            (ignoring some extra qualifiers that are not as important):
+          </p>
+          <ul>
+            <li>GET/HEAD/POST</li>
+            <li>
+              Only some basic headers (excluding cookies, which are added to the headers by the
+              browser)
+            </li>
+            <li>
+              <code>Content-Type</code> header of either one of the base form encoding types or
+              <code>text/plain</code>.
+            </li>
+          </ul>
+
+          <p>
+            Preflight requests do not contain credentials (there are some bugs/complexities around
+            TLS certs though).
+          </p>
+
+          <p>
+            Note: preflight requests do not always work well with redirects in all browsers. There
+            are a few options to try if running into this issue:
+          </p>
+          <ul>
+            <li>Change server-side response to avoid needing preflight or redirect</li>
+            <li>Change client request to simple request to avoid preflight</li>
+            <li>
+              Make a dummy simple request to get the redirected URL, and then make the preflighted
+              to the finalized URL
+            </li>
+          </ul>
+        </section>
+
+        <section>
+          <h4>Cookies and CORS</h4>
+          <ul>
+            <li>
+              <code>Set-Cookie</code> will not set a cookie in the browser if a response fails due
+              to CORS
+            </li>
+            <li>
+              3rd-party cookies are blocked by default in many browsers now, so setting cookies in
+              cross-origin requests will generally fail
+            </li>
+            <li>
+              <code>SameSite</code> settings for cookies will apply, so cross-site cookies will need
+              to be <code>SameSite=None</code> to be sent
+            </li>
+          </ul>
+        </section>
+
+        <section>
+          <h4>CORS and CSRF</h4>
+          <p>CORS/SOP does not prevent CSRF attacks due to the folling:</p>
+          <ul>
+            <li>
+              <p>
+                Navigation requests (GET and POST via form) are not part of SOP (since most links
+                would never work then), so CORS does not apply to them.
+              </p>
+            </li>
+            <li>
+              <p>
+                Due to CORS backwards-compatability requirements, any simple GET/HEAD/POST request
+                from a CORS-requiring context is always sent <em>without</em> a preflight OPTIONS
+                request. Note: the <em>response</em> will not be successfully returned to the
+                browser unless the server responds with the correct CORS headers, but the server
+                will still <em>process</em> the request (because the server shouldn't enforce CORS).
+              </p>
+            </li>
+          </ul>
+        </section>
+      </section>
+
+      <section>
+        <!-- MARK: CSP -->
+        <h3>CSP (Content Security Policy )</h3>
+        <p>
+          CSP is which <em>other</em> origins can run content on <em>your</em> origins; i.e.,
+          (tightening of security), locking down what you run on your page (mainly to prevent XSS
+          loading malicious scripts).
+        </p>
+
+        <p>
+          The <code>Content-Security-Policy</code> header accepts directives for which domains
+          different types of content can be requested, separated by semicolons. Example:
+          <code>default-src 'self'; img-src *; media-src example.org *.example.net</code>, means all
+          content not specificed (such as <code>script-src</code>) can only be loaded from the
+          current domain, images can be loaded from any domain, and media can only be loaded from
+          the example.org or example.net sub/domains.
+        </p>
+
+        <p>
+          VERY useful for testing before rollout:
+          <code>Content-Security-Policy-Report-Only</code> allows loading of policy-conflicting
+          resources, and instead a report will be sent to the specified URL in
+          <code>Content-Security-Policy: report-to/uri: [your-endpoint]</code> (<code
+            >report-uri</code
+          >
+          is deprecated, but define both for now).
+        </p>
+      </section>
+    </main>
+  </body>
+</html>
