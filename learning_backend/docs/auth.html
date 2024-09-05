@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Auth</title>
+  </head>
+  <body>
+    <main>
+      <!-- MARK: auth -->
+      <h2>Authentication/Authorization</h2>
+      <p>
+        'Basic authentication' ususally refers to the username and password (often concatenated with
+        a colon and base64-encoded) being provided in a
+        <code>Authorization: Basic [credentials]</code> header. Sometimes it can also be
+        username@password such as when connecting to a database URL.
+      </p>
+
+      <p>
+        A <em>"Bearer"</em> token means that the holder of this token is authorized to use it (no
+        burden to prove valid possession).
+      </p>
+
+      <section>
+        <h3>Sessions</h3>
+        <p>
+          When using sessions with a session ID token, sign the token with a secret key to prevent
+          attackers from being able to arbitrarily change their session ID. HMAC (Hash-based message
+          authentication code) is good for this.
+        </p>
+      </section>
+
+      <section>
+        <!-- MARK: JWT -->
+        <h3>JWT (JSON Web Tokens)</h3>
+        <p>JWT is a token that contains three parts:</p>
+        <ul>
+          <li><strong>header:</strong> contains the type of token and signing algorithm</li>
+          <li>
+            <p>
+              <strong>payload:</strong> contains claims, which are just general information about
+              the token and the user holding the token. Claims are often used for authorization by
+              including roles. (Note: permissions are not recommended due to JWT size bloat which
+              can get trimmed in headers or URLs)
+            </p>
+            <ul>
+              <li>
+                Registered claims are standards defined publicly and include things like
+                <code>iss (issuer)</code>, <code>exp (expiration)</code>, etc.
+              </li>
+              <li>
+                Custom clains, which fall into two categories:
+                <ul>
+                  <li>
+                    <strong>public</strong>, which are pertinent publically outside your application
+                    (like email, name) and should be namespaced to your application to avoid
+                    collision or publicly registered
+                  </li>
+                  <li><strong>private</strong>, which are only relevant to your application</li>
+                </ul>
+              </li>
+            </ul>
+          </li>
+          <li>
+            signature: the signed validation of the header + payload using the server's secret key.
+          </li>
+        </ul>
+        <p>
+          JWTs can be validated by the server which can can be verified by the server using the same
+          secret key. (Note: a public key can also be used, which is recommended since asymmetric
+          keys reduce comprisable surface area to only the service that signs the JWTs.) This makes
+          them tamper-proof externally since the signature would not be valid if the header or
+          payload were changed.
+        </p>
+        <p>
+          Since only the key is needed to validate JWT (stateless), it avoids session
+          horizontal-scaling difficulties or having to hit an authorization server for every
+          request. However, this makes JWTs very risky when compromised since they cannot be
+          invalidated and instead only become invalid when they expire, which could be quite a while
+          unless you log users out very frequently (bad UX).
+        </p>
+        <p>Refresh tokens solve this issue.</p>
+
+        <p>
+          JWTs should not contain personal information (anything remotely sensitive) about a user. A
+          client should have to hit a "user info" endpoint to get any desired information about the
+          user not already accessible on the client. This adds a layer of security to PII and avoids
+          blatantly violating encryption at rest.
+        </p>
+      </section>
+
+      <section>
+        <!-- MARK: refresh tokens -->
+        <h3>Refresh Tokens</h3>
+        <p>
+          Refresh tokens are longer-lived while authentication/authorization tokens, such as JWTS,
+          are short-lived. When an auth token expires, the refresh token is used to get a new auth
+          token.
+        </p>
+        <p>
+          Refresh tokens can be invalidated, so when the short-lived auth token expires, the refresh
+          token will be rejected by the server when querying for a new one, when the user logs out,
+          or the user changes their login info.
+        </p>
+        <p>
+          <strong>Refresh token rotation</strong> enhances this security by having a new refresh
+          token be returned each time you refresh the auth token. This can help detect if an old
+          refresh token was stolen and to invalidate that entire refresh token chain. This is not
+          foolproof though if the attacker waits and begins using the token while the victim is not
+          using the site since the attacker will be able to use the refresh token apparently
+          validly. It only hardens the chance of the refresh token being stolen in transit, not from
+          clever XSS.
+        </p>
+        <p>
+          <strong>Web workers</strong> can be used with access tokens + refresh tokens to store the
+          access token in memory and the refresh token only in the worker; thus, the browser never
+          has access to the refresh token because web workers cannot be accessed by JS running in
+          the main thread.
+        </p>
+        <p>
+          This is means no persistent login though if all tabs are closed though, so this should
+          only be used for very security-sensitive applications
+        </p>
+      </section>
+
+      <section>
+        <!-- MARK: BFF -->
+        <h3>Backend For Frontend (BFF)</h3>
+        <p>
+          BFFs are reverse proxies that allow for clients to have specific
+          implementations/considerations unique to them that can be translated back-and-forth to a
+          platform-agnostic format that the backend services can understand. This increases code
+          isolation, reduces spread of code complexity, and reduces the affected surface area of
+          needing to implement different auth systems (e.g., mobile apps don't have cookies, opening
+          up an API to the public, etc.).
+        </p>
+
+        <p>
+          Secrets or sensitive info should never end up in frontend applications that cannot be
+          properly secured (or ever when possible, to reduce need to trust the client). A BFF can
+          hold onto sensitive info for the client that the client cannot keep secure.
+        </p>
+
+        <p>
+          BFFs need to be on the same domain as your client-specific APIs so that they can set
+          cookies for them.
+        </p>
+
+        <p>
+          BFFs can help prevent session riding / CSRF by inspecting for suspicious client traffic
+          (steps out of order, requests coming in too fast, etc.).
+        </p>
+      </section>
+
+      <section>
+        <!-- MARK: OAuth/OPenID -->
+        <h3>OAuth2 & OpenID Connect (OIDC)</h3>
+
+        <p>
+          <strong>OAuth2</strong> (1 is deprecated and very old now) is a means of
+          <em>authorization</em> by which an 3rd party identity provider (IdP) can provide an access
+          token to your application, such that it can perform granted actions on behalf of the user
+          that authenticated with the IdP (e.g., letting a user pull their name, contacts, etc. from
+          Google into your application).
+        </p>
+
+        <p>
+          <strong>OIDC</strong> is an <em>authentication</em> extension to OAuth2 where the IdP
+          provides an ID token that can be used to authenticate the user on your backend (such as
+          for SSO) and also a "user info" endpoint, which can be queried with the ID token.
+        </p>
+
+        <p>Terms:</p>
+        <ul>
+          <li>resource owner (the user)</li>
+          <li>resource server (IdP's API you want access to)</li>
+          <li>authorization server (IdP auth server)</li>
+          <li>client (the application)</li>
+          <li>
+            authorization grant (type of grant you will be performing: auth code, implicit, PKCE,
+            refresh token, etc.)
+          </li>
+          <li>
+            redirect URI (set beforehand with IdP and is where the auth server redirects the user
+            after authing with the IdP)
+          </li>
+          <li>
+            confidential/public clients (confidential clients can use a "client secret" due to the
+            code not being accessible publicly, like on a server)
+          </li>
+          <li>access token (for authorization)</li>
+          <li>refresh token (for fetching new access token after expiration)</li>
+          <li>
+            <p>
+              ID token (OpendIDConnect (OIDC) extension to allow for authentication on
+              <em>your</em> backend)
+            </p>
+            <p>
+              Note: ID tokens don't need to be shared with the IdP APIs, except for possibly a "user
+              info" endpoint (since it is not for authorization). It also should
+              <em>NEVER</em> be sent to the other 3rd parties because it can possibly be used to get
+              personal information about the user.
+            </p>
+          </li>
+          <li>authorization code (exchanged for tokens)</li>
+          <li>
+            scopes (defined by the IdP and defines the access the user is granting your application
+            to their account with the IdP)
+          </li>
+        </ul>
+
+        <section>
+          <!-- MARK: explicit flow -->
+          <h4>OAuth explicit flow (Auth code flow)</h4>
+          <ol>
+            <li>
+              User is directed to the auth server, where a prompt to provide login credentials to
+              that IdP is presented, along with an explanation of what permissions this is granting
+              to your application.
+            </li>
+            <li>
+              User is redirected via predefined redirect URL for your application, containing an
+              auth code query param (URL usually has limited TTL)
+            </li>
+            <li>
+              The code is then provided to the auth server's endpoint to receive an access token and
+              refresh token (and optionally an ID token)
+            </li>
+          </ol>
+
+          <p>
+            Client secrets are passed along with the auth code and refresh token calls. This is
+            agreed upon in advance with the IdP (Identity Provider) and stored securely on the
+            client. It validates a client ID and secret pair.
+          </p>
+        </section>
+
+        <section>
+          <!-- MARK: implicit flow -->
+          <h4>OAuth implicit flow (DEPRECATED)</h4>
+          <p>
+            Instead of sending an auth code back to the client, the tokens are returned directly as
+            query params in the URL hash (in the hash since this isn't sent outside of the browser
+            and was implemented before HTTPS was common, which would have encrypted the URL over the
+            wire). This was for clients that did not have a dedicated backend, but has been
+            superseded by auth code flow w/ PKCE, which is more secure.
+          </p>
+        </section>
+
+        <section>
+          <h4>OIDC hybrid flow</h4>
+          <p>
+            This is the same as OAuth explicit flow, but an ID token is returned immediately
+            alongside the auth code, so information about the user can be queried and/or associated
+            with your backend's account for the user while the auth code is still being exchanged
+            for tokens.
+          </p>
+          <p>
+            NOTE: only safe to use with confidential clients because you are revealing the ID token
+            to the client before providing security measures in auth code flow (like PKCE or nonce).
+          </p>
+        </section>
+
+        <section>
+          <!-- MARK: PKCE -->
+          <h4>Proof Key for Code Exchange (PKCE) flow</h4>
+          <p>This is the same as the auth code flow, except:</p>
+          <ol>
+            <li>
+              Client creates a random key and supplies a hashed version to the IdP redirect via
+              <code>code_challenge</code> URL param
+            </li>
+            <li>
+              Client sends un-hashed key along with auth code to IdP auth server, which checks for
+              hash match before returning tokens
+            </li>
+          </ol>
+          <p>
+            Note: PKCE doesn't guarantee that the request is legitimate; only that whoever initiates
+            the flow is the only one who can finish it. It is <em>NOT</em> protection against XSS;
+            it is protection from CSRF and auth code interception/injection (done via intent
+            interception in mobile apps).
+          </p>
+          <p>
+            Note: the <code>state</code> parameter does <em>not</em> provent auth code
+            interception/injection on mobile because an intercepted redirect intent contains the
+            <code>state</code> parameter.
+          </p>
+
+          <p>
+            SPAs and mobile apps that cannot have a BFF to be the OAuth server should use PKCE for
+            protection against auth code interception since these clients cannot store an OAuth
+            client secret securely in the application source.
+          </p>
+
+          <p>
+            PKCE can generally be included in all implementations (though
+            <code>state</code> in confidential clients is acceptable too, but it requires your
+            client to check for mismatched state instead of being able to rely on guaranteed failure
+            of the PKCE check on the IdP auth server).
+          </p>
+
+          <section>
+            <!-- MARK: OAuth security -->
+            <h5>OAuth Security</h5>
+            <ul>
+              <li>Use PKCE for public clients.</li>
+              <li>
+                If using a confidential client, either PKCE or <code>state</code> parameter must be
+                used prevent CSRF. If using <code>state</code>, it must be checked in the client to
+                make sure the state matches the one generated for the original auth redirect. PKCE
+                will be validated by the IdP auth server.
+              </li>
+              <li>
+                Generally include <code>state</code> parameter in any implementation because OAuth
+                error responses must include them, which can avoid some attack vectors from poorly
+                implemented clients (though this attack vector seems limited).
+              </li>
+              <li>
+                If using OIDC hybrid flow, use <code>nonce</code> parameter to avoid CSRF (though
+                <code>state</code> or PKCE should already handle this). <code>nonce</code>, like
+                <code>state</code>, must be checked for a match on the client.
+              </li>
+              <li>
+                Always consistently use <code>state</code> or PKCE when using both OAuth and OIDC
+                flows since some downgrade attacks are possible if your client allows flows where
+                PKCE/<code>state</code> and <code>nonce</code> parameter (OIDC) are mutually
+                exclusive in flows.
+              </li>
+            </ul>
+          </section>
+        </section>
+
+        <section>
+          <h4>Resource Owner Password Flow (DEPRECATED)</h4>
+          <p>
+            Forward user's login info for the IdP directly from your application to the IdP.
+            <em>Never</em> use this since it defeats the purpose of OAuth, to not have your
+            application see the login info for the user's account with the IdP.
+          </p>
+        </section>
+
+        <section>
+          <h4>Client Credentials Flow</h4>
+          <p>
+            Used for machine-to-machine communication, where the client is the resource owner and
+            the client is the one that needs to access the resource server.
+          </p>
+        </section>
+
+        <section>
+          <!-- MARK: oauth public clients -->
+          <h4>OAuth Public Clients</h4>
+          <p>
+            SPAs and mobile apps should use a BFF to be the OAuth server. 1) This allows using a
+            client secret, which is more secure than PKCE, and 2) this keeps the access and refresh
+            tokens stored only in an encrypted format (for mobile apps) and/or in a secure location
+            (<code>HttpOnly</code> cookies for SPAs, though these should encrypt too to avoid
+            compromise from network leak). Having these clients handle the tokens directly is
+            susceptible to XSS (SPA) or URI redirect attacks (mobile apps).
+          </p>
+          <p>
+            Note: an alternative is to use a session cookie (for SPAs) and store the cookies on the
+            server in the session, but if so, make sure the session ID cookie is signed (via HMAC
+            most likely).
+          </p>
+          <p><strong>AppAuth</strong> is a common library for SPA/mobile OAuth.</p>
+        </section>
+      </section>
+    </main>
+  </body>
+</html>
