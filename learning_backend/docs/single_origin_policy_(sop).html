@@ -203,6 +203,7 @@
         </section>
 
         <section>
+          <!-- MARK: preflight -->
           <h4>Preflight OPTIONS</h4>
           <p>
             Preflight OPTIONS requests will be sent automatically by the browser to the server
@@ -296,13 +297,149 @@
         </p>
 
         <p>
-          The <code>Content-Security-Policy</code> header accepts directives for which domains
+          The <code>Content-Security-Policy</code> header accepts directives for which origins
           different types of content can be requested, separated by semicolons. Example:
           <code>default-src 'self'; img-src *; media-src example.org *.example.net</code>, means all
           content not specificed (such as <code>script-src</code>) can only be loaded from the
-          current domain, images can be loaded from any domain, and media can only be loaded from
-          the example.org or example.net sub/domains.
+          current host, images can be loaded from any host, and media can only be loaded from the
+          example.org host or example.net sub/domains.
         </p>
+        <p>
+          NOTE: hosts that include paths that end in '/' allow access to all subpaths (ex.:
+          'example.com/api/'' will match 'example.com/api/users/new').
+        </p>
+
+        <p>
+          NOTE: CSP prevents inline scripts/styles (do <em>not</em> lift this using
+          <code>'unsafe-inline'</code>), and host-based CSP directives are considered less secure,
+          so generally use hashes and nonces to avoid both of these issues.
+        </p>
+
+        <section>
+          <h4>Hashes and Nonces</h4>
+          <p>
+            The browser provides two ways to restrict loading, specific resources unless they are
+            trustworthy: subresource integrity (hashes) and nonces. Generally,
+            <strong>nonces are preferred</strong>, unless the integrity of the resource could be in
+            question, because hashes must be calculated per-resource and have to be updated whenever
+            a resource changes. This requires a lot of overhead and a more complex request header
+            setup.
+          </p>
+          <p>
+            Additionally, the directive <code>'strict-dynamic'</code> allows for inherited trust by
+            all resources loaded by a nonce/hash-validated resource. This prevents needing to CSP
+            allow-list all additional resources that a 3rd-party script might load.
+            <strong>However,</strong> it also requires all resources, including from the
+            <code>'self'</code> origin, to use nonces/hashes, so this security measure must be
+            implemented for all resources on the page.
+          </p>
+
+          <section>
+            <!-- MARK: hashes -->
+            <h5>Subresource Integrity</h5>
+            <p>Note: Subresource integrity can be used by itself without CSP.</p>
+            <p>
+              Browsers use subresource integrity via the <code>integrity</code> attribute for script
+              and link elements so that the page only receives resources if the provided hash in the
+              attribute matches the hash of the fetched resource. Example:
+              <code>integrity="sha384-abcd1234"</code> prevents loading the resource for that
+              element if it's hash using the SHA-368 algorithm isn't "abcd1234".
+            </p>
+
+            <p>
+              NOTE: subresource integrity for external resources is a newer feature for some
+              browsers, so hashes should be accompanied by nonces for now (unless nonces are
+              unavailable due to using static assets).
+            </p>
+
+            <p>
+              This is used to allow inline scripts/links but can be difficult due to whitespace
+              mattering in the hash, so automate this as part of CI when needed regularly.
+              Alternatively, the debug console in browsers will usually show the hash of the
+              resource that was loaded, so you can copy that into the code (just make sure the
+              whitespace-stripping is the same as for prod when developing).
+            </p>
+          </section>
+
+          <section>
+            <!-- MARK: nonces -->
+            <h5>Nonces</h5>
+            <p>
+              Nonces can be defined in the CSP header via <code>'nonce-xyz123'</code>, where a
+              matching <code>nonce</code> attribute must be present on the element that is loading
+              the resource (or for inline script/style elements).
+            </p>
+            <p>
+              The nonce must be crytographically random and newly generated for each request. This
+              makes this non-viable for static SPA bundles.
+            </p>
+          </section>
+
+          <p>
+            Note: the values of the <code>integrity</code> and <code>nonce</code> attributes are not
+            readable by JS, so XSS cannot extract them.
+          </p>
+        </section>
+
+        <section>
+          <h4>Safe root CSP policy</h4>
+          <pre><code>Content-Security-Policy: 
+  script-src 'nonce-abcd1234' 'strict-dynamic' https: 'unsafe-inline';
+  object-src 'none';
+  base-uri 'self';</code></pre>
+          <p>NOTE: usage of either hashes or nonces overrides <code>'unsafe-inline'</code>.</p>
+
+          <p>This is safe for a few reasons:</p>
+          <ul>
+            <li>
+              <p>CSP-version backwards-compatability</p>
+              <ul>
+                <li>
+                  Browsers that support CSP3 recognize <code>'strict-dynamic'</code>, so
+                  nonce-validated resources and their chained resources will be loaded.
+                </li>
+                <li>
+                  Browsers that support CSP2 do not recognize <code>'strict-dynamic'</code>, but
+                  still recognize the nonce/hash, and so will load the nonce-validated resources and
+                  their chained HTTPS resources.
+                </li>
+                <li>
+                  Browsers that support CSP1 do not recognize anything nonce/hash-related, and so
+                  they will run <code>'unsafe-inline' https:</code>
+                </li>
+              </ul>
+              <p>
+                NOTE: due to this policy being largely insecure on non-CSP3 browsers, you should
+                narrow down hosts from all of HTTPS if you are a security-oriented application or
+                expect non-trivial legacy browser traffic (pre mid-2022).
+              </p>
+            </li>
+            <li>
+              <code>object-src 'none';</code> prevents loading any old plugins (like Flash) with
+              security vulnerabilities.
+            </li>
+            <li>
+              Setting <code>base-uri 'self';</code> overrides any form of HTML injection that would
+              insert a <code>base</code> element into the HTML (a very unlikely attack but doesn't
+              hurt).
+            </li>
+          </ul>
+        </section>
+
+        <section>
+          <h4>Static SPA CSP recommendation</h4>
+          <p>
+            Static SPAs can't use nonces, and remote resources do not support using hashes on some
+            browsers until fairly recently, so using <code>'strict-dynamic'</code> would prevent
+            loading of the SPA setup JS resources in those instances.
+          </p>
+          <p>
+            To solve this issue, create an inline script that adds your remote script elements, hash
+            that inline script, then add that hash to your CSP header.
+            <code>'strict-dynamic'</code> will propagate trust to the remote resources and allow a
+            static SPA to use a modern CSP.
+          </p>
+        </section>
 
         <p>
           VERY useful for testing before rollout:
@@ -312,6 +449,37 @@
             >report-uri</code
           >
           is deprecated, but define both for now).
+        </p>
+      </section>
+
+      <section>
+        <!-- MARK: mixed content -->
+        <h3>Mixed Content</h3>
+        <p>Note: do <em>not</em> allow mixed content on your page.</p>
+
+        <p>
+          Mixed content is when a secure (HTTPS) web page uses resources that would be transferred
+          over an insecure protocol (usually HTTP). All current browser disallow mixed content and
+          will notify a user that the website is not secure before loading (same as if the page
+          itself was served over HTTP).
+        </p>
+
+        <p>
+          If the user continues to the site or the page dynamically attempts to load mixed content,
+          the browser will do one of two things:
+        </p>
+        <ol>
+          <li>
+            upgrade the request to HTTPS (this is mainly only for media elements with
+            <code>src</code> attributes)
+          </li>
+          <li>block the request (this is for most things that could modify the page)</li>
+        </ol>
+
+        <p>
+          Local resources are considered secure: <code>file:</code> and loopback addresses like
+          <code>http://127.0.0.1</code> and <code>http://localhost</code>, which makes development
+          much easier.
         </p>
       </section>
     </main>
