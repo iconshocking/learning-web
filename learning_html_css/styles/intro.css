@@ -22,8 +22,8 @@ span.special {
   color: rebeccapurple;
   font-weight: lighter;
 }
-
 /* combinator by descendant */
+
 body em {
   background-color: yellow;
 }
@@ -46,8 +46,8 @@ h1 ~ p {
 a:link {
   color: pink;
 }
-
 /* selector by pseudo-class */
+
 a:visited {
   color: green;
 }
@@ -83,6 +83,16 @@ body h1 + p .special {
 /* selector by id */
 #box2-id {
   background-color: yellow;
+}
+
+/* selector by attribute existence */
+[x-custom-attr] {
+  background-color: orange;
+}
+
+/* selector by attribute value */
+[x-custom-attr="5"] {
+  background-color: blue;
 }
 
 @media (min-width: 30em) {
