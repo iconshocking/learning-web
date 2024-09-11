@@ -1,11 +1,12 @@
 body {
   background: #6c373f;
   display: flex;
-  justify-content: center;
+  flex-direction: column;
+  align-items: center;
 }
 
 #alice-container {
-  width: 90vh;
+  width: 30vw;
   display: grid;
   place-items: center;
   grid-template-areas:
@@ -24,4 +25,30 @@ body {
 
 #alice3 {
   grid-area: a3;
+}
+
+.animate {
+  /* duration - easing function (default is 'ease') - delay - iterations - play direction - fill
+  state (whether the changes should be preserved at the end of the animation, start when reversing)
+  - playing state - name */
+  animation: 1.25s ease 0.25s 5 alternate none running fadein-left;
+  overflow: hidden;
+  background-color: aqua;
+}
+
+@keyframes fadein-left {
+  0% {
+    transform: translateX(-0.6rem);
+    opacity: 0;
+    height: 0;
+    background-color: orange;
+  }
+
+  /* note: like transitions, animations require non-dynamic dimensions */
+  100% {
+    transform: translateX(0);
+    opacity: 1;
+    height: 10vh;
+    background-color: grey;
+  }
 }
