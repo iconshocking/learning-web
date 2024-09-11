@@ -69,10 +69,10 @@
                 grid-row: 3;
             } */
 
-            /* easier naming system that allows defining grid layout in a single property */
+            /* easier naming system that allows defining grid layout in a single property, where . is an empty column/row intersection */
             grid-template-areas: "header header"
             "sidebar content"
-            "footer footer";
+            ". footer";
 
             & header {
                 grid-area: header;
