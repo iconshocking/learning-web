@@ -1,0 +1,158 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Modals/Popouts</title>
+    <style>
+      h3 {
+        text-decoration: underline;
+        margin-top: 2rem;
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <h1>Modals/Popouts</h1>
+
+      <section>
+        <h2>Overlaying content</h2>
+
+        <section>
+          <h3>Using the top layer</h3>
+          <p>
+            Browsers have a <strong>top layer</strong> that contains content that is opened via
+            specific browser APIs and overlays all other content in the HTML.
+          </p>
+
+          <section>
+            <h4>Element.requestFullscreen()</h4>
+            <p>This has widespread support, but must be vendor-prefixed for mobile Safari./p></p>
+            <button onclick="this.requestFullscreen()">Fullscreen</button>
+          </section>
+
+          <section>
+            <h4>HTMLDialogElement.showModal()</h4>
+            <p>
+              This is more modern (mid-2022), so polyfill considerations should be made when
+              supporting older browsers.
+            </p>
+            <button onclick="document.querySelector('#dialogEx1').showModal()">Show modal</button>
+            <button onclick="document.querySelector('#dialogEx1').show()">
+              Show non-modal (no <kbd>esc</kbd>-handling)
+            </button>
+            <dialog id="dialogEx1"><p>Hi!</p></dialog>
+          </section>
+
+          <section>
+            <h4>HTMLElement.showPopover()</h4>
+            <p>
+              This is extremely new (2024) and should be considered as unsupported for now. It is
+              used for showing brief layouts, usually informational, that dismiss when clicking
+              anywhere in the HTML.
+            </p>
+          </section>
+
+          <p>This layer in some browsers (Chrome, for one) is rendered in a separate DOM tree.</p>
+          <p>
+            The <code>::backdrop</code> pseudo-element styles the area visible around the top layer
+            content.
+          </p>
+          <p>
+            The <code>:modal</code> pseudo-class styles the top-layer content (not for popovers).
+            (<code>:fullscreen</code> also exists.)
+          </p>
+        </section>
+
+        <section>
+          <h3>Modals/Dialogs</h3>
+          <p>
+            Dialogs/Modals refer to content that appears on top of the rest of the content on a
+            page, not in a new window.
+          </p>
+          <p>There are a few ways to do this (ordered by most to least recommended):</p>
+          <ol>
+            <li>
+              <p><code>dialog</code> HTML element</p>
+              <p>
+                Note: the absence of the <code>open</code> attribute (added when shown) hides the
+                dialog from visibility/keyboard/screen readers.
+              </p>
+              <button onclick="document.querySelector('#dialogEx2').showModal()">
+                Show dialog
+              </button>
+              <dialog id="dialogEx2"><button>1</button><button>2</button><button>3</button></dialog>
+              <ul>
+                <li>
+                  Simple showing/hiding via <code>showModal/show()</code> methods, former traps
+                  focus inside the element and latter does not
+                </li>
+                <li>
+                  Automatically sets focus to first focusable element (not the dialog itself) -
+                  consider using <code>autofocus</code> attribute to set desire focus point or just
+                  on the dialog itself (also don't add <code>tabindex</code> to dialog itself since
+                  it is not interactive).
+                </li>
+                <li>
+                  Traps focus (not from the browser bars though) by setting the
+                  <code>inert</code> attribute on elements not in the top layer.
+                </li>
+                <li>
+                  When closed, returns focus to element that was focused before dialog was opened.
+                </li>
+                <li>
+                  Automatic <kbd>esc</kbd>-key-handling for closing the element (only if opened as a
+                  modal)
+                </li>
+                <li>Note: doesn't lock scrolling of overlaid HTML</li>
+              </ul>
+            </li>
+          </ol>
+        </section>
+      </section>
+
+      <section>
+        <h2>Opening new tabs/windows</h2>
+        <p>
+          Generally, opening new tabs is discouraged because it can be annoying to users and
+          browsers may block the popup. Therefore, try to avoid using <code>Window.open()</code>,
+          and especially not with the <code>"popup"</code> argument, which opens an actual new
+          minimal window.
+        </p>
+        <button onclick="window.open('https://google.com');">Window.open()</button>
+        <button onclick="window.open('https://google.com', '_blank', 'popup');">
+          Window.open() popup
+        </button>
+
+        <p>Instead use <code>a</code> (anchor) elements with the desired target.</p>
+        <ul>
+          <li>
+            <code>_self</code> opens links in same browser context:
+            <a href="https://google.com" target="_self">Google</a>
+          </li>
+          <li>
+            <code>_blank</code> opens links in new tabs (note: this implicitly sets
+            <code>rel='noopener'</code> for modern browsers, but it doesn't hurt to enforce it still
+            to protect older browsers):
+            <a href="https://google.com" target="_blank" rel="noopener">Google</a>
+          </li>
+          <li>
+            <code>_parent</code> acts like <code>_self</code> except when in an iframe, which
+            attempts to navigate the parent:
+            <a href="https://google.com" target="_parennt">Google</a>
+          </li>
+          <li>
+            <code>_top</code> attempts navigation of top parent:
+            <a href="https://google.com" target="_self">Google</a>
+          </li>
+        </ul>
+
+        <p>
+          If instead you need to go to a new URL in the current window/tab programmatically, do so
+          via JS.
+        </p>
+        <button onclick="window.location.href='https://google.com'">Google time!</button>
+      </section>
+    </main>
+  </body>
+</html>
