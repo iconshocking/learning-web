@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>visibility</title>
+  </head>
+  <body>
+    <main>
+      <h1>Visibility</h1>
+      <p>Hiding elements can be achieved in a few ways with different purposes.</p>
+      <ul>
+        <li>
+          <code>display: none</code> - this fully remove the element from the DOM and is a good
+          default, but be careful using this with animations/transitions
+        </li>
+        <li>
+          <p>
+            <code>visibility: hidden</code> - this keeps the element in the DOM and document flow
+            (i.e., there is still space held for it in the layout) but simply hides rendering it
+            (useful for animations/transitions)
+          </p>
+          <p>NOTE: Also hides content from screen readers.</p>
+        </li>
+        <li>
+          <code>hidden</code> HTML attribute - <em>NOT </em> recommended since
+          <code>display</code> values in CSS will override it.
+        </li>
+        <li>
+          <code>content-visibility: hidden</code> - this is a very new CSS property and is not
+          recommended at the moment, due to limited support.
+        </li>
+      </ul>
+    </main>
+  </body>
+</html>

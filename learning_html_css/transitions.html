@@ -1,113 +1,207 @@
 <!DOCTYPE html>
 <html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Document</title>
     <style>
-        .box {
-            display: flex;
-            flex-wrap: wrap;
-            align-items: center;
-            justify-content: flex-end;
-            align-content: flex-start;
-            color: white;
-            border-style: solid;
-            border-width: 1px;
-            width: 100px;
-            height: 100px;
-            background-color: #0000ff;
-            transition:
-                width 2s,
-                height 2s,
-                background-color 2s,
-                rotate 2s;
-        }
+      .box {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: flex-end;
+        align-content: flex-start;
+        color: white;
+        border-style: solid;
+        border-width: 1px;
+        width: 100px;
+        height: 100px;
+        background-color: #0000ff;
+        transition: width 2s, height 2s, background-color 2s, rotate 2s;
+      }
 
-        p {
-            border: 1px solid green;
-            margin: 0px;
-            padding: 0px;
-            text-align: center;
-        }
+      p {
+        border: 1px solid green;
+        margin: 0px;
+        padding: 0px;
+        text-align: center;
+      }
 
-        .box:hover {
-            background-color: #ffcccc;
-            width: 200px;
-            height: 200px;
-            rotate: 180deg;
-        }
+      .box:hover {
+        background-color: #ffcccc;
+        width: 200px;
+        height: 200px;
+        rotate: 180deg;
+      }
 
-        nav {
-            display: flex;
-            gap: 0.5rem;
-        }
+      nav {
+        display: flex;
+        gap: 0.5rem;
+      }
 
-        a {
-            flex: 1;
-            background-color: #333;
-            color: #fff;
-            border: 1px solid;
-            padding: 0.5rem;
-            text-align: center;
-            text-decoration: none;
-            transition: all 0.5s ease-out;
-        }
+      a {
+        flex: 1;
+        background-color: #333;
+        color: #fff;
+        border: 1px solid;
+        padding: 0.5rem;
+        text-align: center;
+        text-decoration: none;
+        transition: all 0.5s ease-out;
+      }
 
-        a:hover,
-        a:focus {
-            background-color: #fff;
-            color: #333;
-        }
+      a:hover,
+      a:focus {
+        background-color: #fff;
+        color: #333;
+      }
 
-        .ball {
-            border-radius: 25px;
-            width: 50px;
-            height: 50px;
-            background: #c00;
-            position: absolute;
-            top: 0;
-            left: 0;
-            transition: transform 0.4s 500ms;
+      .ball {
+        border-radius: 25px;
+        width: 50px;
+        height: 50px;
+        background: #c00;
+        position: absolute;
+        top: 0;
+        left: 0;
+        transition: transform 0.4s 500ms;
+      }
+
+      .dynamic-height {
+        transition: height 1s;
+
+        &.expand {
+          height: 100px;
         }
+      }
+
+      .fixed-height {
+        height: 20px;
+        transition: height 1s;
+
+        &.expand {
+          height: 100px;
+        }
+      }
+
+      .discrete-transition {
+        display: block;
+        height: 40px;
+        opacity: 1;
+        overflow: hidden;
+        transition: all 2s;
+      }
+
+      .discrete-transition-with-starting-style {
+        display: block;
+        height: 40px;
+        opacity: 1;
+        overflow: hidden;
+        /* allow discrete is required to transition display/content-visibility (latter is not shown here) */
+        transition: all 2s allow-discrete;
+
+        /* starting-style sets the style for when an element is added to the DOM.
+        - NOTE: this means that it is required when trying to transition from 'display: none' since
+          that element is not part of the DOM beforehand.
+        - NOTE: this also means that this is the style set upon initial load, which will trigger the
+          transition to the visible style (thus, 'visibility' is much easier to work with than
+          'display' for transitions) */
+        @starting-style {
+          height: 0;
+          opacity: 0;
+        }
+      }
+
+      .new-state-visibility {
+        visibility: hidden;
+        height: 10px;
+        opacity: 0.1;
+      }
+
+      .new-state-display {
+        display: none;
+        height: 10px;
+        opacity: 0.1;
+      }
     </style>
-</head>
+  </head>
 
-<body>
+  <body>
     <div class="box">
-        <p>i spin</p>
-        <p style="height: 40px; padding: auto">me too</p>
-        <p>oh yes</p>
-        <p>and me</p>
-        <p>i'm last</p>
+      <p>i spin</p>
+      <p style="height: 40px; padding: auto">me too</p>
+      <p>oh yes</p>
+      <p>and me</p>
+      <p>i'm last</p>
     </div>
 
     <nav>
-        <a href="#">Home</a>
-        <a href="#">About</a>
-        <a href="#">Contact Us</a>
-        <a href="#">Links</a>
+      <a href="#">Home</a>
+      <a href="#">About</a>
+      <a href="#">Contact Us</a>
+      <a href="#">Links</a>
     </nav>
 
     <p>Click anywhere to move the ball</p>
     <div id="foo" class="ball"></div>
 
     <script>
-        const f = document.getElementById("foo");
-        document.addEventListener(
-            "click",
-            (ev) => {
-                f.style.transform = `translateY(${ev.clientY - 25}px)`;
-                f.style.transform += `translateX(${ev.clientX - 25}px)`;
-            },
-            false,
-        );
+      const f = document.getElementById("foo");
+      document.addEventListener(
+        "click",
+        (ev) => {
+          f.style.transform = `translateY(${ev.clientY - 25}px)`;
+          f.style.transform += `translateX(${ev.clientX - 25}px)`;
+        },
+        false
+      );
 
-        f.addEventListener("transitionrun", () => console.log("transition run"), true);
-        f.addEventListener("transitionstart", () => console.log("transition begin"), true);
-        f.addEventListener("transitionend", () => console.log("transition end"), true);
+      f.addEventListener("transitionrun", () => console.log("transition run"), true);
+      f.addEventListener("transitionstart", () => console.log("transition begin"), true);
+      f.addEventListener("transitionend", () => console.log("transition end"), true);
     </script>
-</body>
 
+    <br />
+    <br />
+    <p>
+      Transitions/animations require computable values to transition between (0, px, vh, etc.), and
+      they will simply jump to the end state when using content-dependent values (fit-content,
+      min-content, etc.). This often means that the current height of the element must be calculated
+      and replaced inline with a fixed value before transitioning/animating and re-referenced for
+      each transition/animation.
+    </p>
+
+    <p
+      class="fixed-height"
+      onclick="document.querySelector('.fixed-height').classList.toggle('expand');"
+    >
+      Example fixed height
+    </p>
+    <p
+      class="dynamic-height"
+      onclick="document.querySelector('.dynamic-height').classList.toggle('expand');"
+    >
+      Example dynamic height
+    </p>
+
+    <br />
+    <br />
+    <p>
+      Note: Transitions/animations <em>do</em> work with <code>visibility</code>, but not with
+      <code>display</code>. You can enable support for the latter with the
+      <code>transition-behavior: allow-discrete</code> option, but this is very new (2024 and not
+      across all browsers yet), so do not rely on it (Chrome does support).
+    </p>
+    <button
+      onclick="document.querySelector('.discrete-transition').classList.toggle('new-state-visibility');
+      document.querySelector('.discrete-transition-with-starting-style').classList.toggle('new-state-display');"
+    >
+      Click me
+    </button>
+    <p class="discrete-transition">Example discrete transition w/ visibility</p>
+    <p class="discrete-transition-with-starting-style">
+      Example discrete transition w/ display (requires <code>@starting-style</code> rule and does
+      not work in some browsers.)
+    </p>
+  </body>
 </html>
