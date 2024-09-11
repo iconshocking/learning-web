@@ -442,6 +442,24 @@
             </section>
           </section>
         </section>
+
+        <section>
+          <!-- MARK: rel="noopener" -->
+          <h3>Reverse Tabnabbing</h3>
+          <p>
+            When navigating to a new page via link/form and <code>target="_blank"</code>, in
+            non-modern browsers, the new tab has access to a limited version of the properties of
+            the Window object of the originating tab, specifically the
+            <code>location</code> property that allows the new tab to navigate the originating tab
+            (possibly somewhere malicious).
+          </p>
+          <p>
+            This is virtually fixed in all modern browsers by
+            <code>target="_blank"</code> implicitly setting <code>rel="noopener"</code>, which
+            prevents access to the originating tab's Window object, but it doesn't hurt to be
+            explicit when dealing with older browsers.
+          </p>
+        </section>
       </section>
     </main>
   </body>
