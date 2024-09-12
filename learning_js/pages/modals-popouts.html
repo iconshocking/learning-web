@@ -82,6 +82,7 @@
                 Show dialog
               </button>
               <dialog id="dialogEx2"><button>1</button><button>2</button><button>3</button></dialog>
+              <p>Pros:</p>
               <ul>
                 <li>
                   Simple showing/hiding via <code>showModal/show()</code> methods, former traps
@@ -105,6 +106,41 @@
                   modal)
                 </li>
                 <li>Note: doesn't lock scrolling of overlaid HTML</li>
+              </ul>
+            </li>
+            <li>
+              <p>
+                Hidden element at the top level of the <code>body</code> w/
+                <code>z-index</code> that is programmatically shown
+              </p>
+              <p>Example:</p>
+              <pre><code>&lt;body style="position: relative;"&gt;
+  &lt;main&gt;
+    &lt;div class="modal" style="z-index: 1;"&gt;&lt;/div&gt;
+    &lt;div class="content" style="position: relative; z-index: 0;"&gt;&lt;/div&gt;
+  &lt;/main&gt;
+&lt;/body&gt;</code></pre>
+              <ul>
+                <li>
+                  Pros: this makes sure the modal with be in the root-stacking context so the
+                  z-indices will work correctly
+                </li>
+                <li>Cons: Requires manual handling of all focus/accessibility needs</li>
+              </ul>
+            </li>
+            <li>
+              <p>
+                Programmatic or hidden element adjacent to modal-triggering element and has
+                <code>position: fixed</code> w/ positive <code>z-index</code>
+              </p>
+              <p>Cons:</p>
+              <ul>
+                <li>Requires manual handling of all focus/accessibility needs</li>
+                <li>Can be trapped in a nested-stacking index and not properly overlay</li>
+                <li>
+                  Lack of obvious modal-designated element makes less clear to developers what
+                  element is the modal
+                </li>
               </ul>
             </li>
           </ol>
