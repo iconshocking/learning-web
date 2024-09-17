@@ -52,3 +52,8 @@ body {
     background-color: grey;
   }
 }
+
+/* NOTE: the same animation cannot be reused once it has run to completion, so setting a reverse
+animation using the same original animation but played in reverse will not animate unless the
+element did not still have the original animation set on it via CSS selector at the time of swapping
+to the reverse animation (the same applies to animations via JS, I think). */
