@@ -7,6 +7,10 @@ const port = 8000;
 const server = http.createServer(function (req, res) {
   // Set the response HTTP header
   res.writeHead(200, { "Content-Type": "text/plain" });
+  // alternative:
+  // - res.statusCode = 200;
+  // - res.setHeader("Content-Type", "text/plain");
+
   // Send the response body
   res.end("Hello World\n");
 });
