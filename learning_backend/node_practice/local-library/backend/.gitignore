@@ -1,0 +1,4 @@
+# ignore any generated JS files for node
+**/*.js
+# keep the public folder
+!/public/js/**/*.js
