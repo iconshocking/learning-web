@@ -6,7 +6,7 @@ import router from "./express-simple-router.js";
 // traditional way is to name the express application as "app"
 const app = express();
 app.use(logger("dev"));
-const port = 3000;
+const port = 3001;
 
 app.listen(port, function () {
   console.log(`Example app listening on port ${port}!`);
@@ -66,6 +66,15 @@ app.use("/errors", (req, res, next) => {
 app.use("/errors", (err, req, res, next) => {
   console.log("error catcher");
   next(err);
+});
+app.use("/errors/intercept", (err, req, res, next) => {
+  // delegate to the default error handler if headers have already been sent (i.e., the response has
+  // already been started, such as for a stream)
+  if (res.headersSent) {
+    return next(err);
+  }
+  res.status(500);
+  res.send("i stole the final error from default handler");
 });
 // express has a default error handler at the bottom of the handler stack that 1) logs the error and
 // stack trace to the node console and 2) returns it to the client. (Set NODE_ENV to 'production' to
