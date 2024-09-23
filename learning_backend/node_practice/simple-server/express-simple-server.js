@@ -29,7 +29,7 @@ app.use("/middleware", function (req, res, next) {
 // routers work like sub-applications, with a separate root route
 app.use("/about", router);
 
-// static serving is the only middleware that is built-in
+// static serving is the only middleware that is built-in (but many middlewares are maintained by the express team)
 // - serves files from the local 'statics' directory, preserving the directory structure in the path
 app.use("/media", express.static("statics"));
 // - NOTE: the static middleware will pass to the next handler if no resource is found (to support
