@@ -3,16 +3,17 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "dev": "nodemon ./app/server.ts",
+    "devstart": "DEBUG=express-locallibrary:* nodemon ./app/server.ts",
     "lint": "tsc --noEmit && eslint",
     "build": "tsc -b",
     "start": "node ./app/server.js"
   },
   "dependencies": {
-    "cookie-parser": "~1.4.4",
-    "debug": "~2.6.9",
-    "express": "~4.16.1",
-    "morgan": "~1.9.1"
+    "cookie-parser": "~1.4.6",
+    "debug": "~4.3.7",
+    "express": "~4.21.0",
+    "http-errors": "^2.0.0",
+    "morgan": "~1.10.0"
   },
   "devDependencies": {
     "@eslint/js": "^9.11.0",
