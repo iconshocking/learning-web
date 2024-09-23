@@ -19,7 +19,7 @@ app.use(function (req, res, next) {
   console.log("general middleware");
   next();
 });
-// can restrict to a specific route
+// can restrict to a specific route prefix (i.e., this applies to all routes that start with "/middleware")
 app.use("/middleware", function (req, res, next) {
   console.log("route-specific middleware");
   next();
