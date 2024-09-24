@@ -257,17 +257,19 @@
           <p>
             <strong>Environment</strong> variables are accessible during image building
             <em>and</em> within the container runtime, <strong>BUT</strong> you cannot pass
-            environment variables when building an image. Therefore, to use environment variables in
-            the Dockerfile itself, you must either hardcode the <code>ENV</code> variable or set its
-            value via an <code>ARG</code> variable.
+            environment variables <em>into</em> a Dockerfile. Therefore, to use environment
+            variables in the Dockerfile itself, you must either hardcode the
+            <code>ENV</code> variable in the Dockerfile or set the ENV value via an
+            <code>ARG</code> variable, which will be auto-populated if the same <code>arg</code> is
+            defined in the docker compose file.
           </p>
 
           <p>
-            NOTE: you cannot export environment variables from
+            NOTE: you cannot export environment variables into the buildtime environment from the
             <code>RUN</code> commands because each instruction in a Dockerfile runs in its own
             layer, where the files of the previous layer are copied over but not any env variables /
-            state. Therefore, you must run multiple commands in a single
-            <code>RUN</code> instruction to use custom environment variables.
+            state. Therefore, you would need to run multiple commands in a single
+            <code>RUN</code> instruction to use custom environment variables within those commands.
           </p>
 
           <p>
@@ -310,12 +312,14 @@
             <code>docker compose --env-file [file array]</code> are <em>ONLY</em> relevant to
             <em>compose</em> files; variables defined here will be automatically loaded by Docker
             compose before running any CLI command for a compose file and substituted into the
-            compose file. These variables are <strong>not</strong> arg or env variables.
+            compose file, wherever there is <code>${VARIABLE_NAME}</code> syntax. These are
+            <strong>not</strong> arg/env variables, but they can be used to set those via
+            substitution.
           </p>
 
           <p>You can only inject <strong>args</strong> via:</p>
           <ul>
-            <li>command line</li>
+            <li>command line (<code>--build-arg</code> with compose or normal docker CLI)</li>
             <li>
               compose file (which can inject the value from a .env file into the compose file using
               substitution)
@@ -328,8 +332,8 @@
           </p>
           <ul>
             <li>
-              <code>env_file</code> defines env files to load into ENV variables in two different
-              places, depending on the command: - into the build the iage.
+              <code>env_file</code> defines env files that will export all their variables into the
+              container runtime environment.
             </li>
             <li>
               <code>environment</code> attribute can also be used, but ideally you don't want to mix
@@ -341,6 +345,34 @@
               Environment variables are also imported from the shell and have the
               <em>highest</em> precedence except for using <code>-e</code> to pass variables
               explicitly.
+            </li>
+          </ul>
+        </section>
+
+        <section style="border: 1px black solid; padding: 1rem">
+          <h3>Quick variable re-rundown</h3>
+          <ul>
+            <li>
+              <code>--env-file</code> and <code>.env</code>: substitute values into Docker compose
+              files
+            </li>
+            <li>
+              <code>env_file</code> and <code>environment</code> within Docker compose file (or
+              <code>-e</code> with Docker non-compose CLI): injects env variables into container
+              runtime
+            </li>
+            <li>
+              <code>args</code> within Docker compose file (or <code>--build-arg</code> w/ CLI):
+              injects build-only arguments into Dockerfiles
+            </li>
+            <li>
+              <code>ARG</code> within Dockerfile: build-only argument that only exists while
+              creating the image from the Dockerfile (so cannot be used in
+              <code>RUN/ENTRYPOINT</code>)
+            </li>
+            <li>
+              <code>ENV</code> within Dockerfile: Dockerfile build <em>and</em> container runtime
+              variables that must be populated by Dockerfile <code>ARG</code>s (or hardcoded)
             </li>
           </ul>
         </section>
