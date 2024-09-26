@@ -1,0 +1,53 @@
+name: "library-express"
+services:
+  express:
+    container_name: express
+    build:
+      context: ../backend
+      dockerfile: ../container-config/Dockerfile-express
+      target: dev
+    develop:
+      watch:
+        - path: ../backend
+          target: /backend
+          ignore:
+            - node_modules
+          action: sync
+    env_file:
+      - ./git-safe/.safe.env
+    ports:
+      - 127.0.0.1:3000:3000
+    depends_on:
+      mongo:
+        condition: service_healthy
+
+  mongo:
+    container_name: mongo
+    image: mongo:7.0.14-jammy
+    volumes:
+      - mongo-data:/data/db
+    env_file:
+      - ./git-safe/.safe.env
+    # standard mongo port plus access from host for easy local access
+    ports:
+      - 127.0.0.1:27017:27017
+    healthcheck:
+      test: ["CMD", "mongosh", "--eval", "db.adminCommand('ping').ok"]
+      interval: 5s
+      timeout: 5s
+      retries: 3
+      start_period: 5s
+
+  mongo-admin:
+    container_name: mongo-admin
+    image: mongo-express
+    ports:
+      - 127.0.0.1:8081:8081
+    environment:
+      ME_CONFIG_MONGODB_AUTH_USERNAME: $MONGO_INITDB_ROOT_USERNAME
+      ME_CONFIG_MONGODB_AUTH_PASSWORD: $MONGO_INITDB_ROOT_PASSWORD
+      ME_CONFIG_MONGODB_URL: mongodb://$MONGO_INITDB_ROOT_USERNAME:$MONGO_INITDB_ROOT_PASSWORD@mongo:27017/
+      # 127.0.0.1 is the only host that can access the admin interface, so don't need auth
+      ME_CONFIG_BASICAUTH_ENABLED: "false"
+volumes:
+  mongo-data:
