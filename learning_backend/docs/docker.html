@@ -576,6 +576,16 @@
         </ul>
       </section>
 
+      <section>
+        <h2>Context</h2>
+        <p>
+          <strong>NOTE:</strong> the build context when runnning a Docker file (via cli or compose)
+          must always be the highest directory accessed in the Dockerfile. Trying to navigate to a
+          parent/sibling directory of the build context directory will result in confusing missing
+          file/directory errors.
+        </p>
+      </section>
+
       <h2>Debugging</h2>
       <section>
         <h3>Interactivity</h3>
