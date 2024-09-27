@@ -4,9 +4,13 @@
  * Module dependencies.
  */
 
-import debug from "debug";
+import { debug as debugBase} from "debug";
 import http from "http";
 import app from "./app";
+
+export function debug(namespace?: string) {
+  return debugBase("express-library" + (namespace ? `:${namespace}` : ""));
+}
 
 /**
  * Get port from environment and store in Express.
@@ -82,5 +86,5 @@ function onError(error: Error & { syscall?: string; code?: string }) {
 function onListening() {
   const addr = server.address();
   const bind = typeof addr === "string" ? "pipe " + addr : "port " + addr?.port;
-  debug("Listening on " + bind);
+  debug()("Listening on " + bind);
 }

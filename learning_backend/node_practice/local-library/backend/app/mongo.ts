@@ -1,8 +1,10 @@
-import { Db, MongoClient, ServerApiVersion } from "mongodb";
+import { MongoClient, ServerApiVersion } from "mongodb";
+import { debug as rootDebug } from "./server";
+
+const debug = rootDebug("node-mongo");
 
 class MongoDB {
   private client: MongoClient;
-  private db?: Db;
 
   constructor() {
     // mongo automatically reconnects upon actions that fail due to a lost connection
@@ -19,7 +21,14 @@ class MongoDB {
       }
     );
   }
+
+  getDb() {
+    return this.client.db(process.env.MONGO_INITDB_DATABASE);
+  }
+
+  logMongoError(err: unknown) {
+    debug(JSON.stringify(err, null, 2));
+  }
 }
 
-const mongo = new MongoDB();
-export default mongo;
+export default new MongoDB();

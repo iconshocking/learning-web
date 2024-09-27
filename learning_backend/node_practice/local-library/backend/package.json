@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "devstart": "DEBUG=express-locallibrary:* tsx watch ./app/server.ts",
+    "devstart": "DEBUG=express-library:* tsx watch ./app/server.ts",
     "lint": "tsc --noEmit && eslint",
     "build": "tsc -b",
     "start": "NODE_ENV=production node ./app/server.js"
