@@ -15,11 +15,20 @@ services:
           action: sync
     env_file:
       - ./git-safe/.safe.env
+    environment:
+      # tsx does not handle watching for live-reloading when on networked environments (like Docker,
+      # at least on Mac) properly, so need to activate polling:
+      # https://github.com/privatenumber/tsx/issues/266
+      # - note: if this becomes too taxing on the system, we should consider using nodemon+ts-node
+      #   since it doesn't seem to have the issue. (watch w/ sync+restart is not an acceptable
+      #   alternative with an auto-saving IDE because Docker appears to queue the update events,
+      #   which can lead to a long chain of the container restarting)
+      - CHOKIDAR_USEPOLLING=true
     ports:
       - 127.0.0.1:3000:3000
-    depends_on:
-      mongo:
-        condition: service_healthy
+    # depends_on:
+    #   mongo:
+    #     condition: service_healthy
 
   mongo:
     container_name: mongo
@@ -31,12 +40,15 @@ services:
     # standard mongo port plus access from host for easy local access
     ports:
       - 127.0.0.1:27017:27017
-    healthcheck:
-      test: ["CMD", "mongosh", "--eval", "db.adminCommand('ping').ok"]
-      interval: 5s
-      timeout: 5s
-      retries: 3
-      start_period: 5s
+    # NOTE: only re-enable healthcheck and depends_on if you need to start waiting for mongo
+    # successfully
+
+    # healthcheck:
+    #   test: ["CMD", "mongosh", "--eval", "db.adminCommand('ping').ok"]
+    #   interval: 5s
+    #   timeout: 5s
+    #   retries: 3
+    #   start_period: 5s
 
   mongo-admin:
     container_name: mongo-admin
@@ -49,5 +61,9 @@ services:
       ME_CONFIG_MONGODB_URL: mongodb://$MONGO_INITDB_ROOT_USERNAME:$MONGO_INITDB_ROOT_PASSWORD@mongo:27017/
       # 127.0.0.1 is the only host that can access the admin interface, so don't need auth
       ME_CONFIG_BASICAUTH_ENABLED: "false"
+    # depends_on:
+    #   mongo:
+    #     condition: service_healthy
+
 volumes:
   mongo-data:
