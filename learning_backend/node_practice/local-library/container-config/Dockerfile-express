@@ -1,6 +1,7 @@
 FROM node:20.17.0-slim AS base
 RUN npm install -g pnpm
-COPY . /backend
+COPY ./backend/package.json /backend/
+COPY ./backend/pnpm-lock.yaml /backend/
 WORKDIR /backend
 EXPOSE 8000
 
@@ -14,8 +15,10 @@ RUN --mount=type=cache,id=express-deps,target=/pnpm/store pnpm install --frozen-
 FROM prod-deps AS prod
 COPY --from=prod-deps /backend/node_modules /backend/node_modules
 RUN pnpm build
+COPY ./backend ./
 CMD [ "pnpm", "start" ]
 
 FROM dev-deps AS dev
 COPY --from=dev-deps /backend/node_modules /backend/node_modules
+COPY ./backend ./
 CMD [ "pnpm", "devstart" ]

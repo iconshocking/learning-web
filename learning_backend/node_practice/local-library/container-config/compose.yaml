@@ -3,8 +3,8 @@ services:
   express:
     container_name: express
     build:
-      context: ../backend
-      dockerfile: ../container-config/Dockerfile-express
+      context: ..
+      dockerfile: ./container-config/Dockerfile-express
       target: dev
     develop:
       watch:
