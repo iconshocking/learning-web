@@ -121,13 +121,7 @@ log("\nOBJECTS");
   console.log(symb in object);
   // 'in' also supports checking for private properties without crashing if called
 
-  // ONLY OWN enumerable properties (NOT inherited fromhvmJKALSDFJLKA;SDF
-  
-  
-  
-  
-  
-  prototype chain)
+  // ONLY OWN enumerable properties (NOT inherited from prototype chain)
   log(Object.keys(object)); // can also use Object.keys()/values(), but none return symbol properties
   // object spread (...) is the only other option that only returns enumerable properties only
 
