@@ -212,3 +212,44 @@ log("\nSTRING OPERATIONS");
   console.log(string.replace(/string/g, "strung")); // must use global regexp to replace all occurrences
   console.log([...string].reverse().join("")); // reverse string (also join())
 }
+
+log("\nMAPS");
+// Maps (and sets) make no guarantee for access times that are O(1) (though they are often are),
+// just that they are sub-linear
+
+// Maps should be used over a plain object for hashing type needs:
+// - the keys are enumerable (and in insertion order) and map has a size property
+// - the keys can be any type, not just strings or symbols
+// - maps have no keys in their prototype chain, so their is no risk of collision or prototype
+//   pollution attacks (if using user input as keys)
+{
+  const test = function () {};
+  const map = new Map([
+    ["key", "value"],
+    [1, 2],
+  ]);
+  map.set(test, "has a function key");
+  console.log(map.get("key"));
+  console.log(map.has("key"));
+  map.delete("key");
+  console.log(map.size);
+  console.log(map.get(test));
+  for (let [key, value] of map) {
+    console.log(key, value);
+  }
+  map.clear();
+  console.log(map.size);
+}
+
+log("\nSETS");
+// Sets have the same benefits as maps but only support keys
+{
+  const set = new Set([1, 2, 3]);
+  console.log(set.has(1));
+  set.add(4);
+  console.log(set.size);
+  set.delete(4);
+  console.log(set.size);
+  set.clear();
+  console.log(set.size);
+}
