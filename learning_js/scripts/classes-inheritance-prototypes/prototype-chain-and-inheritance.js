@@ -86,7 +86,7 @@ When called with 'new', the constructor function:
   1. creates a new plain JS object, which will be used as 'this' in the constructor function
   2. sets the [[Prototype]] of the new object to the constructor's 'prototype' property
   3. runs the constructor function with the instance-bound 'this'
-  4. returns the instance (UNLESS the constructor explicit writtens, which replaces the instance -
+  4. returns the instance (UNLESS the constructor explicit returns, which replaces the instance -
      NOT recommended since it is confusing/unusual)
 */
 {
