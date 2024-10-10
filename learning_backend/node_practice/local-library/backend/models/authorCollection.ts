@@ -100,6 +100,10 @@ type Author = {
 
 const debug = rootDebug("authors");
 
+// All books are nested underneath author since this locally collates all books by an author (and
+// copies), which is the most common use case. Other use cases are searching for books by genre,
+// title, genre, which is just as easily done using the same collection via indexing on those
+// fields.
 class AuthorWithBooksCollection {
   static async init() {
     const db = mongo.getDb();
