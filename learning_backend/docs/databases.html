@@ -83,6 +83,12 @@
         </p>
       </section>
 
+      <p>
+        Note: in both types of DBs, it is preferable to leave missing fields missing/null, rather
+        than using an empty value. This is especially true for NoSQL since including the value
+        requires the key name to be stored too, bloating space much more than in a relational DB.
+      </p>
+
       <section>
         <h2>B-trees</h2>
         <p>
