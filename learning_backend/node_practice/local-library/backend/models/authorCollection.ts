@@ -176,7 +176,7 @@ class AuthorWithBooksCollection {
         { _id: new ObjectId(authorId), "books._id": new ObjectId(bookId) },
         {
           $push: {
-            // $ indicated this is matching against an array field
+            // $ indicates this is matching against an array field
             "books.$.copies": { _id: new ObjectId(), status: "maintenance" },
           },
         }
