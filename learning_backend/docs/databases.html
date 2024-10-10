@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Databases</title>
+  </head>
+  <body>
+    <main>
+      <h1>Databases</h1>
+
+      <section>
+        <h2>SQL (Relational database management system, aka RDBMS)</h2>
+
+        <ul>
+          <li>
+            Database contains tables which contain columns, which is queried with a SQL-like
+            language to return rows/records.
+          </li>
+          <li>Have a predefined schema, which is helpful for maintaining data consistency.</li>
+          <li>
+            Data <em>related</em> to a different table is usually tracked via a foreign key, which
+            references the primary key for a row in a different table
+          </li>
+          <li>
+            Related data is queried via JOIN statements which perform queries according to key
+            expression across the desired tables (this is highly optimized to be performant)
+          </li>
+          <li>
+            Some SQL DBs (like Postgres), also support JSON fields whose key-values can be indexed
+            using GIN indices (Generalized Inverted Index), which are like a table of contents that
+            is also implemented with B-trees ("inverted" because a single row now can appear in many
+            places in the table of contents)
+          </li>
+        </ul>
+
+        <p>Organization: data determines the structure, not the queries</p>
+        <p>Pros: Enforces data consistency via schema.</p>
+        <p>Cons: Has more difficulty scaling horizontally than NoSQL due to JOINs.</p>
+
+        <p>Best general choice: <strong>PostgreSQL</strong></p>
+      </section>
+
+      <section>
+        <h2>NoSQL (Non-relational DB, aka document store)</h2>
+
+        <p>
+          Note: key-value store refers to a storage system where the value is an opaque string and
+          only keys are indexable (like in Redis). These usually serve a different purpose than a
+          traditional DB.
+        </p>
+
+        <ul>
+          <li>
+            Database contains tables/collections which contain what are often referred to as
+            documents (records), which is queried with a language dependent on the DB.
+          </li>
+          <li>
+            Sometimes has a predefined schema (Cassandra), but often does not, allowing for
+            arbitrary document structure within the same table.
+          </li>
+          <li>
+            In order to keep data collated (located together), NoSQL DBs often use denormalization
+            (duplication) of data that is unlikely to change and/or nesting sub-documents within a
+            document when convenient or the data of the parent document is likely to change.
+          </li>
+          <li>
+            This data collation prevents NoSQL DBs from needing to perform JOIN-type operations,
+            which they are not optimized to do.
+          </li>
+        </ul>
+
+        <p>Organization: intended queries determine the structure, to collate the data</p>
+        <p>
+          Pros: Scales horizontally better than relational DBs because data for queries is located
+          together and only requires querying a single record in a distributed DB
+        </p>
+        <p>Cons: Data consistency can become very difficult to enforce or restore if broken</p>
+
+        <p>
+          No best general choice; all depends on use case and/or ecosystem/platform you are already
+          using.
+        </p>
+      </section>
+
+      <section>
+        <h2>B-trees</h2>
+        <p>
+          Databases are indexed using B-trees (technically B+ trees since they have many real-world
+          benefits over B-trees).
+        </p>
+
+        <p>
+          B-trees are self-<strong>b</strong>alanced n-ary trees that contain large numbers of keys
+          within a single node to minimize tree height and thus I/O due to disk access jumps.
+        </p>
+
+        <p>B+-trees add the following to B-trees:</p>
+        <ul>
+          <li>Only leaf nodes store data while internal nodes store keys only</li>
+          <li>
+            Internal nodes only store keys, means that leaf nodes must duplicate the key to go
+            alongside the value
+          </li>
+          <li>Leaf nodes form a linked list for efficient range-based queries</li>
+          <li>Very high fan-out (more children per node, 100+)</li>
+          <li>
+            Due to not needing to store data in internal nodes, more keys fit into a page of memory
+          </li>
+        </ul>
+
+        <p>
+          The benefit of a B/+-tree is that while more operations need to be performed to retrieve
+          the key-value from the node that contains it (along with many other key-values), the high
+          fanout means less I/O is needed to reach that correct node.
+        </p>
+        <p>
+          Also, the size of the data that fits into a node will usually be optimized to fit into the
+          memory page size of the system, so operations to narrow down keys within the node are very
+          fast due to all data being in contiguous memory.
+        </p>
+      </section>
+
+      <section>
+        <h2>Data lake</h2>
+
+        <p>
+          Data lakes usually store un-structured, raw data (can be coming from many sources in many
+          forms for many purposes) as individual files.
+        </p>
+        <p>
+          Data lakes often store files with names/paths according to when they were uploaded to the
+          lake.
+        </p>
+        <p>
+          This time-related storage allows for processing data on a rolling or queued basis, where a
+          delay in the availability of the data is not an issue.
+        </p>
+        <p>
+          Data lakes can also be the store for the data after processing, often moving the data to
+          an appropriate different path in the data lake; however, data lakes are not optimized for
+          fast access except at the individual file level.
+        </p>
+        <p>
+          Data lakes also allow for retroactive re-processing of data by keeping all raw data, such
+          as in case of ETL bugs or changed of metrics the company is interested in.
+        </p>
+      </section>
+    </main>
+  </body>
+</html>
