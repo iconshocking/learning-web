@@ -1,37 +1,31 @@
 import express from "express";
-import { ObjectId } from "mongodb";
-import AuthorCollection from "../models/authorCollection";
-import BookCollection from "../models/bookCollection";
-import mongo from "../app/mongo";
-import debug from "debug";
+import AuthorCollection, { Author } from "../models/authorCollection";
+import { Book, default as BookCollection } from "../models/bookCollection";
 
 const router = express.Router();
 
 /* GET home page. */
 router.get("/", async function (req, res) {
-  let response: any = "ERROR";
+  let response;
   try {
-    const authorName = "John Arbuckle";
-    const authorResp = await AuthorCollection.addAuthor({
-      _id: new ObjectId(),
-      name: authorName,
+    const author = new Author({
+      name: "John Arbuckle",
       date_of_birth: new Date("1978-07-28"),
     });
-    const authorId = authorResp.insertedId;
-    const bookId = new ObjectId();
-    await BookCollection.addBook(authorId, {
-      _id: bookId,
+    await AuthorCollection.addAuthor(author);
+    const book = new Book({
       title: "Garfield at Large",
-      author_name: authorName,
+      author_name: author.document.name,
       summary: "Garfield's first book",
     });
-    await BookCollection.addBookCopy(bookId);
-    const book = await BookCollection.fetchBook(bookId);
-    response = JSON.stringify(book, null, 2);
-  } catch (e: any) {
-    console.log(e)
+    await BookCollection.addBook(author.document._id, book);
+    await BookCollection.addBookCopy(book.document._id);
+    const fetchBook = await BookCollection.fetchBook(book.document._id);
+    response = JSON.stringify(fetchBook?.document, null, 2);
+  } catch (e: unknown) {
+    console.log(e);
   } finally {
-    res.send(response);
+    res.send(response ?? "No response by end - ERROR");
   }
 });
 

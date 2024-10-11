@@ -1,6 +1,7 @@
 import { Collection, ObjectId } from "mongodb";
 import mongo from "../app/mongo";
 import { debug as rootDebug } from "../app/server";
+import { Optional } from "../utils/type";
 import AuthorCollection from "./authorCollection";
 
 const BookCopySchema = {
@@ -23,11 +24,24 @@ const BookCopySchema = {
   },
 };
 
-type BookCopy = {
+type BookCopyMongo = {
   _id: ObjectId;
-  status: "available" | "maintenance" | "loaned" | "reserved";
+  status: BookCopyStatus;
   due_back?: Date;
 };
+
+type BookCopyStatus = "available" | "maintenance" | "loaned" | "reserved";
+
+class BookCopy {
+  document: BookCopyMongo;
+
+  constructor(base?: BookCopyMongo) {
+    this.document = base ?? {
+      _id: new ObjectId(),
+      status: "available",
+    };
+  }
+}
 
 const BookSchema = {
   bsonType: "object",
@@ -65,14 +79,24 @@ const BookSchema = {
   },
 };
 
-export type Book = {
+type BookMongo = {
   _id: ObjectId;
   title: string;
   author_name: string;
   summary?: string;
   genre?: string[];
-  copies?: BookCopy[];
+  copies?: BookCopyMongo[];
 };
+
+export class Book {
+  document: BookMongo;
+  copies?: BookCopy[];
+
+  constructor(base: Optional<BookMongo, "_id">) {
+    this.document = { ...base, _id: base?._id ?? new ObjectId() };
+    this.copies = base.copies?.map((copy) => new BookCopy(copy));
+  }
+}
 
 const debug = rootDebug("books");
 
@@ -113,24 +137,25 @@ class BookCollection {
     }
   }
 
-  static collection(): Collection<Book> {
+  static collection(): Collection<BookMongo> {
     return mongo.getDb().collection("books");
   }
 
   static addBook(authorId: ObjectId, book: Book) {
-    if (!book.summary) {
-      delete book.summary;
+    const document = book.document;
+    if (!document.summary) {
+      delete document.summary;
     }
-    if (!book.genre) {
-      delete book.genre;
+    if (!document.genre) {
+      delete document.genre;
     }
     // only create copies after initial book creation to keep the API simple
-    delete book.copies;
+    delete document.copies;
 
     return this.collection()
-      .insertOne(book)
+      .insertOne(document)
       .then(() => {
-        return AuthorCollection._addBookTitle(authorId, book.title);
+        return AuthorCollection._addBookTitle(authorId, document.title);
       })
       .catch((error) => {
         mongo.logMongoError(error);
@@ -139,15 +164,23 @@ class BookCollection {
   }
 
   static addBookCopy(bookId: ObjectId) {
+    const copy = new BookCopy();
     return this.collection()
       .updateOne(
         { _id: bookId },
         {
           $push: {
-            copies: { _id: new ObjectId(), status: "maintenance" },
+            copies: copy.document,
           },
         }
       )
+      .then((result) => {
+        if (result.modifiedCount) {
+          return copy;
+        } else {
+          throw new Error("Book ID not found for copy?");
+        }
+      })
       .catch((error) => {
         mongo.logMongoError(error);
         throw error;
@@ -168,6 +201,7 @@ class BookCollection {
     return this.collection()
       .find({ _id: bookId })
       .next()
+      .then((book) => (book ? new Book(book) : null))
       .catch((error) => {
         mongo.logMongoError(error);
         throw error;

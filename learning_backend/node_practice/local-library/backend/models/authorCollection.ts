@@ -1,6 +1,7 @@
 import { Collection, ObjectId } from "mongodb";
 import mongo from "../app/mongo";
 import { debug as rootDebug } from "../app/server";
+import { Optional } from "../utils/type";
 
 const AuthorSchema = {
   bsonType: "object",
@@ -33,13 +34,21 @@ const AuthorSchema = {
   },
 };
 
-type Author = {
+type AuthorMongo = {
   _id: ObjectId;
   name: string;
   date_of_birth: Date;
   date_of_death?: Date;
   book_titles?: string[];
 };
+
+export class Author {
+  document: AuthorMongo;
+
+  constructor(base: Optional<AuthorMongo, "_id">) {
+    this.document = { ...base, _id: base?._id ?? new ObjectId() };
+  }
+}
 
 const debug = rootDebug("authors");
 
@@ -75,18 +84,25 @@ class AuthorCollection {
     }
   }
 
-  static collection(): Collection<Author> {
+  static collection(): Collection<AuthorMongo> {
     return mongo.getDb().collection("authors");
   }
 
   static addAuthor(author: Author) {
-    if (!author.date_of_death) {
-      delete author.date_of_death;
+    const document = author.document;
+    if (!document.date_of_death) {
+      delete document.date_of_death;
     }
-    delete author.book_titles;
+    delete document.book_titles;
 
     return this.collection()
-      .insertOne(author)
+      .insertOne(document)
+      .then((res) => {
+        if (res.acknowledged) {
+          return author;
+        }
+        throw new Error("Failed to insert author");
+      })
       .catch((error) => {
         mongo.logMongoError(error);
         throw error;
