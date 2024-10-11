@@ -1,7 +1,7 @@
 import { Collection, ObjectId } from "mongodb";
 import mongo from "../app/mongo";
 import { debug as rootDebug } from "../app/server";
-import { Optional } from "../utils/type";
+import { Optional } from "utility-types";
 import AuthorCollection from "./authorCollection";
 
 const BookCopySchema = {
