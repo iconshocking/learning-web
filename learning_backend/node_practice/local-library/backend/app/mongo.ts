@@ -15,7 +15,8 @@ class MongoDB {
       {
         serverApi: {
           version: ServerApiVersion.v1,
-          strict: true,
+          // disable strict in order to use text indexes
+          strict: false,
           deprecationErrors: true,
         },
       }

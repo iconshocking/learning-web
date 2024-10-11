@@ -2,75 +2,14 @@ import { Collection, ObjectId } from "mongodb";
 import mongo from "../app/mongo";
 import { debug as rootDebug } from "../app/server";
 
-const BookCopySchema = {
-  bsonType: "object",
-  required: ["status"],
-  properties: {
-    _id: {
-      bsonType: "objectId",
-      description: "must be an objectid",
-    },
-    status: {
-      bsonType: "string",
-      enum: ["available", "maintenance", "loaned", "reserved"],
-      description: "must be a one of allowed values",
-    },
-    due_back: {
-      bsonType: "date",
-      description: "must be a date",
-    },
-  },
-};
-
-type BookCopy = {
-  _id: ObjectId;
-  status: "available" | "maintenance" | "loaned" | "reserved";
-  due_back?: Date;
-};
-
-const BookSchema = {
-  bsonType: "object",
-  required: ["title"],
-  properties: {
-    _id: {
-      bsonType: "objectId",
-      description: "must be an objectid",
-    },
-    title: {
-      bsonType: "string",
-      description: "must be a string and is required",
-    },
-    summary: {
-      bsonType: "string",
-      description: "must be a string",
-    },
-    genre: {
-      bsonType: "array",
-      items: {
-        bsonType: "string",
-      },
-      description: "must be an array of genre strings",
-    },
-    copies: {
-      bsonType: "array",
-      items: BookCopySchema,
-      description: "must be an array of book copies",
-    },
-  },
-};
-
-type Book = {
-  _id: ObjectId;
-  title: string;
-  summary?: string;
-  genre?: string[];
-  copies?: BookCopy[];
-};
-
 const AuthorSchema = {
   bsonType: "object",
-  required: ["name", "date_of_birth"],
+  required: ["_id", "name", "date_of_birth"],
   properties: {
+    _id: {
+      bsonType: "objectId",
+      description: "objectId is required",
+    },
     name: {
       bsonType: "string",
       description: "must be a string and is required",
@@ -83,31 +22,31 @@ const AuthorSchema = {
       bsonType: "date",
       description: "must be a date",
     },
-    books: {
-      bsonType: ["array"],
-      items: BookSchema,
-      description: "must be an array of book objects",
+    // duplicated for ease of querying and unlikely to change
+    book_titles: {
+      bsonType: "array",
+      items: {
+        bsonType: "string",
+      },
+      description: "must be an array of strings",
     },
   },
 };
 
 type Author = {
+  _id: ObjectId;
   name: string;
   date_of_birth: Date;
   date_of_death?: Date;
-  books?: Book[];
+  book_titles?: string[];
 };
 
 const debug = rootDebug("authors");
 
-// All books are nested underneath author since this locally collates all books by an author (and
-// copies), which is the most common use case. Other use cases are searching for books by genre,
-// title, genre, which is just as easily done using the same collection via indexing on those
-// fields.
-class AuthorWithBooksCollection {
+class AuthorCollection {
   static async init() {
     const db = mongo.getDb();
-    // create/update collection with validation schema
+    // create/update collection with validation schema and indices
     try {
       const exists = await db.listCollections({ name: "authors" }).hasNext();
       if (!exists) {
@@ -125,6 +64,11 @@ class AuthorWithBooksCollection {
         });
       }
       debug(!exists ? "Created collection" : "Adjusted collection validation schema");
+      // pre-existing indices are skipped and not recreated
+      await AuthorCollection.collection().createIndexes([
+        { key: { _id: 1 } },
+        { key: { name: "text" } },
+      ]);
     } catch (error) {
       mongo.logMongoError(error);
       throw error;
@@ -139,52 +83,10 @@ class AuthorWithBooksCollection {
     if (!author.date_of_death) {
       delete author.date_of_death;
     }
-    delete author.books;
+    delete author.book_titles;
 
     return this.collection()
       .insertOne(author)
-      .catch((error) => {
-        mongo.logMongoError(error);
-        throw error;
-      });
-  }
-
-  static addBook(authorId: string, book: Book) {
-    if (!book.summary) {
-      delete book.summary;
-    }
-    if (!book.genre) {
-      delete book.genre;
-    }
-    // only create copies after initial book creation to keep the API simple
-    delete book.copies;
-
-    return this.collection()
-      .updateOne(
-        { _id: new ObjectId(authorId) },
-        {
-          $push: {
-            books: book,
-          },
-        }
-      )
-      .catch((error) => {
-        mongo.logMongoError(error);
-        throw error;
-      });
-  }
-
-  static addBookCopy(authorId: string, bookId: string) {
-    return this.collection()
-      .updateOne(
-        { _id: new ObjectId(authorId), "books._id": new ObjectId(bookId) },
-        {
-          $push: {
-            // $ indicates this is matching against an array field
-            "books.$.copies": { _id: new ObjectId(), status: "maintenance" },
-          },
-        }
-      )
       .catch((error) => {
         mongo.logMongoError(error);
         throw error;
@@ -200,8 +102,19 @@ class AuthorWithBooksCollection {
         throw error;
       });
   }
+
+  static _addBookTitle(authorId: ObjectId, bookTitle: string) {
+    return this.collection().updateOne(
+      { _id: authorId },
+      {
+        $push: {
+          book_titles: bookTitle,
+        },
+      }
+    );
+  }
 }
 
-AuthorWithBooksCollection.init();
+AuthorCollection.init();
 
-export default AuthorWithBooksCollection;
+export default AuthorCollection;
