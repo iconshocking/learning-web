@@ -53,6 +53,13 @@ app.all("/", function (req, res, next) {
 app.get("/", function (req, res) {
   res.send("Hello World!");
 });
+// route parameters are defined with a colon and must consist of (a-Z, 0-9, _, -)
+// - routes with parameteres should be defined after routes without parameters to ensure precedence
+app.get("/params?/:param1/:param2", function (req, res) {
+  res.send("params:" + req.params.param1 + "," + req.params.param2);
+});
+// can also use regex but recommended to stick to strings for readability
+
 
 // ERROR HANDLING
 // - NOTE: 404 errors are not considered errors by Express, so they must be handled explicitly
