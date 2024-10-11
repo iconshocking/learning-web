@@ -27,10 +27,23 @@
             expression across the desired tables (this is highly optimized to be performant)
           </li>
           <li>
+            JOIN-ing is much less performant when it has to go across shards (scaled horizontally to
+            different machines), so you usually need to define a single shard column that exists
+            across multiple tables that is the column used for the JOIN (such as author ID in an
+            author table and book table). This reduces needing to JOIN across shards for common
+            queries.
+          </li>
+          <li>
             Some SQL DBs (like Postgres), also support JSON fields whose key-values can be indexed
             using GIN indices (Generalized Inverted Index), which are like a table of contents that
             is also implemented with B-trees ("inverted" because a single row now can appear in many
             places in the table of contents)
+          </li>
+          <li>
+            Text search often also uses GIN indices to support token text search. Note: this only
+            supports whole-token or prefix matching, not searching within a word. Also, an ICU
+            tokenizer is needed to properly support languages that don't use spaces to separate
+            words or have other Unicode considerations.
           </li>
         </ul>
 
@@ -60,17 +73,27 @@
             arbitrary document structure within the same table.
           </li>
           <li>
-            In order to keep data collated (located together), NoSQL DBs often use denormalization
-            (duplication) of data that is unlikely to change and/or nesting sub-documents within a
-            document when convenient or the data of the parent document is likely to change.
+            In order to keep related data located together, NoSQL DBs often use 1) denormalization
+            (duplication) of related data that is unlikely to change and/or 2) nesting sub-documents
+            within a document when convenient for the query or the data of the parent document is
+            likely to change.
           </li>
           <li>
-            This data collation prevents NoSQL DBs from needing to perform JOIN-type operations,
+            This data locality prevents NoSQL DBs from needing to perform JOIN-type operations,
             which they are not optimized to do.
           </li>
+          <li>
+            Normalizing data (using IDs to reference across collections/tables) should only be done
+            when there are complex relationships, queries can vary greatly, and/or data is likely to
+            change in ways that would be difficult/costly to update across many documents.
+          </li>
+          <li>NoSQL DBs usually support text-search GIN indices as well, like most SQL DBs</li>
         </ul>
 
-        <p>Organization: intended queries determine the structure, to collate the data</p>
+        <p>
+          Organization: intended queries determine the structure, to keep queried data together
+          locally
+        </p>
         <p>
           Pros: Scales horizontally better than relational DBs because data for queries is located
           together and only requires querying a single record in a distributed DB
@@ -81,12 +104,34 @@
           No best general choice; all depends on use case and/or ecosystem/platform you are already
           using.
         </p>
+
+        <p>
+          NOTE: indexes in NoSQL (at least in MongoDB) index at the document level for the
+          collection/table, so indexing a deeply nested field (like an sub-document ID in array
+          nested within another sub-document array) does not optimize for returning that
+          sub-document from <em>within</em> that document, only returning the document that
+          <em>contains</em> that matching sub-document. This can cause performance issues for very
+          large arrays (sub-document must still be found if projecting only the sub-document to be
+          returned) or large documents in general (entire document must be loaded into memory). This
+          knowledge can help guide your collection/table structure.
+        </p>
       </section>
 
       <p>
         Note: in both types of DBs, it is preferable to leave missing fields missing/null, rather
         than using an empty value. This is especially true for NoSQL since including the value
         requires the key name to be stored too, bloating space much more than in a relational DB.
+      </p>
+
+      <p>
+        <strong>Covering indexes / covered queries</strong> are queries that can be returned
+        entirely via information in the indexes. Limiting projections to only needed fields for
+        queries combined with a covering index simprove read performance and can reduce the overhead
+        of JOIN-type queries
+      </p>
+
+      <p>
+        Indices slow <em>write</em> operations in DBs, so beware of over-indexing unless needed.
       </p>
 
       <section>
