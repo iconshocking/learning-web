@@ -101,6 +101,8 @@ class BookCollection {
       await BookCollection.collection().createIndexes([
         { key: { _id: 1 } },
         { key: { genre: 1 } },
+        // only one text index is allowed per collection, so searching one specific field must
+        // either be filtered out after the query or queried without using '$text/$search' operators
         { key: { title: "text", author_name: "text" } },
         { key: { "copies._id": 1 } },
         { key: { "copies.status": 1 } },
