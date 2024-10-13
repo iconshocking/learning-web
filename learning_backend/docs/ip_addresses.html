@@ -33,6 +33,25 @@
           <code>[1::1]:8080</code> makes clear that 8080 is the port and not part of the IPv6
           address).
         </p>
+        <p>
+          Additionally, IPv4 and IPv6 protocol are not compatible, so a network that is only IPv4
+          cannot access IPv6 addresses without the use of either:
+        </p>
+        <ul>
+          <li>
+            6to4 protocol (allow IPv4 network to encode IPv6) + public relay servers (middleman
+            between native IPv6 network and 6to4)
+            <strong>(for IPv4 network that wants to talk to IPv6)</strong>
+          </li>
+          <li>
+            6in4 tunneling protocol
+            <strong
+              >(for IPv6 network that wants to be reachable from IPv4 networks, so requires a IPv4
+              address to be reachable)</strong
+            >
+          </li>
+          <li>Other protocols, but accomplish similar goals</li>
+        </ul>
       </section>
 
       <h2>Important Addresses</h2>
