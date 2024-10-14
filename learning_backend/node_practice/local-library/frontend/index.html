@@ -1,13 +1,57 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
   <head>
-    <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Vite + React + TS</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content="Local Library" />
+    <!-- used to set background color for pull-to-refresh on mobile Safari -->
+    <meta name="theme-color" content="rgb(255 255 255)" />
+    <link
+      rel="apple-touch-icon"
+      sizes="180x180"
+      href="./src/assets/images/favicon/apple-touch-icon.png"
+    />
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="32x32"
+      href="./src/assets/images/favicon/favicon-32x32.png"
+    />
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="16x16"
+      href="./src/assets/images/favicon/favicon-16x16.png"
+    />
+    <title>Local Library</title>
+    <link rel="stylesheet" href="./src/assets/css/bootstrap.min.css" />
+    <script type="module" src="./src/assets/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="./src/assets/css/bootstrap-overrides.css" />
+    <link
+      rel="preload"
+      as="font"
+      type="font/ttf"
+      href="./src/assets/fonts/Libre_Franklin/LibreFranklin-VariableFont_wght.ttf"
+      crossorigin="anonymous"
+    />
+    <link rel="stylesheet" href="./src/assets/css/base.css" />
+    <style>
+      /* inline to reduce flashing if user reloads page */
+      .books-background {
+        background: url("./src/assets/images/bookshelf.png") top right no-repeat round,
+          var(--books-background-color);
+        background-attachment: fixed;
+      }
+
+      @media (max-width: 720px) {
+        .books-background {
+          background: var(--books-background-color);
+        }
+      }
+    </style>
   </head>
-  <body>
+  <body class="books-background">
     <div id="root"></div>
-    <script type="module" src="/src/main.tsx"></script>
+    <script type="module" src="./src/main.tsx"></script>
   </body>
 </html>
