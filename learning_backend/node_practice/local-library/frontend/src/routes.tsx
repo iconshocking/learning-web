@@ -1,7 +1,8 @@
 import { ReactNode } from "react";
+import Home from "./pages/Home";
 
 export const routerPathsMap = new Map<string, { path: string; element: ReactNode; title?: string }>([
-  ["home", { path: "/", element: <p>1</p>, title: "Home" }],
+  ["home", { path: "/", element: <Home></Home>, title: "Home" }],
   ["authors", { path: "/authors", element: <p>2</p>, title: "All authors" }],
   ["books", { path: "/books", element: <p>3</p>, title: "All books" }],
   ["all-borrowed", { path: "/all-borrowed", element: <p>4</p>, title: "All borrowed" }],
