@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useRef } from "react";
 import { NavLink, Outlet } from "react-router-dom";
 import { pathRequiresAuthSet, routerPathsMap } from "../routes";
 
@@ -8,10 +8,12 @@ function BaseLayout(props: React.HTMLAttributes<HTMLElement> & { username?: stri
   }, []);
 
   const navCollapsed = sessionStorage.getItem("navbarExpanded") !== "true";
+  const expanderRef = useRef<HTMLDivElement>(null);
   const expander = (
     <div
       className={"collapse navbar-collapse" + (!navCollapsed ? " show" : "")}
       id="navbar-toggler-target"
+      ref={expanderRef}
     >
       <ul className="navbar-nav me-auto mb-2 mt-2 mb-lg-0 mt-lg-0">
         {Array.from(routerPathsMap.entries(), (nameAndPath) => {
@@ -44,8 +46,7 @@ function BaseLayout(props: React.HTMLAttributes<HTMLElement> & { username?: stri
       aria-label="Toggle navigation"
       onClick={() => {
         // expanding if the height is 0
-        // @ts-expect-error: offsetHeight is a valid property
-        const open = document.body.querySelector("#navbar-toggler-target")?.offsetHeight === 0;
+        const open = expanderRef.current?.offsetHeight === 0;
         sessionStorage.setItem("navbarExpanded", open.toString());
       }}
     >
