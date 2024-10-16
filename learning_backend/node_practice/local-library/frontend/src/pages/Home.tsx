@@ -1,11 +1,11 @@
-import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import { useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
 import readerImg from "../assets/images/reader.jpg";
 import "../assets/styles/home.css";
 import { useHeadTitle } from "../hooks/useHeadTitle";
-import { routerPathsMap } from "../routes";
 import { getQueryOptions } from "../queries/queries";
+import { routerPathsMap } from "../routes";
 
 function Home() {
   useHeadTitle("Local Library Home");
@@ -75,8 +75,8 @@ function Home() {
               <ul className="my-auto">
                 <li>
                   <p>
-                    <strong>{JSON.stringify(testQuery.data)} authors,</strong> spanning languages from French
-                    to Hindi.
+                    <strong>{JSON.stringify(testQuery.data)} authors,</strong> spanning languages
+                    from French to Hindi.
                   </p>
                 </li>
                 <li>
