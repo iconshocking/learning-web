@@ -2,7 +2,12 @@
 
 import { NextFunction, Request, Response } from "express";
 
-const allowedOrigins = ["http://localhost:3000", "http://localhost:3001"];
+const allowedOrigins = [
+  // accessed from within the dev container
+  "http://localhost:3000",
+  // vite dev server
+  "http://localhost:5173",
+];
 
 export default function cors(req: Request, res: Response, next: NextFunction): void {
   const origin = req.headers.origin as string | undefined;
