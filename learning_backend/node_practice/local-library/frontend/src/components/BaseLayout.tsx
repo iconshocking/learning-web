@@ -1,5 +1,5 @@
 import React, { useEffect, useRef } from "react";
-import { NavLink, Outlet } from "react-router-dom";
+import { NavLink , Outlet } from "react-router-dom";
 import { pathRequiresAuthSet, routerPathsMap } from "../routes";
 
 function BaseLayout(props: React.HTMLAttributes<HTMLElement> & { username?: string }) {

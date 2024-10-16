@@ -16,15 +16,30 @@ app.use(logger("dev"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
-app.use(express.static(path.join(__dirname, "public")));
 app.use(cors);
 
 app.get("/", function (req, res) {
   res.redirect("/catalog");
 });
-app.use("/catalog", indexRouter, authorRouter, bookRouter, genreRouter, bookCopyRouter);
+const staticsPath = path.join(__dirname, "dist");
+app.use(
+  "/catalog",
+  express.static(staticsPath, {
+    index: ["index.html"],
+    maxAge: "1d",
+    setHeaders: (res, file) => {
+      if (path.extname(file) === ".html") {
+        res.setHeader("Cache-Control", "public, max-age=0");
+      }
+    },
+  })
+);
+
+app.use("/api", indexRouter, authorRouter, bookRouter, genreRouter, bookCopyRouter);
+
 // catch 404 and forward to error handler
 app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
   next(createError(404));
 });
+
 export default app;

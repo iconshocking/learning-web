@@ -6,8 +6,8 @@ import { routerPathsMap } from "./routes";
 
 const router = createBrowserRouter([
   {
-    path: "/",
-    element: <BaseLayout />,
+    path: "/catalog",
+    element: <BaseLayout></BaseLayout>,
     children: Array.from(routerPathsMap.entries(), (nameAndPath) => nameAndPath[1]),
   },
 ]);
