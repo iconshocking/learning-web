@@ -1,14 +1,18 @@
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
 import readerImg from "../assets/images/reader.jpg";
+import "../assets/styles/home.css";
 import { useHeadTitle } from "../hooks/useHeadTitle";
 import { routerPathsMap } from "../routes";
-import "../assets/styles/home.css";
+import { getQueryOptions } from "../queries/queries";
 
 function Home() {
   useHeadTitle("Local Library Home");
 
-  const lateFadeInRef = useRef<HTMLParagraphElement>(null); 
+  const testQuery = useQuery(getQueryOptions(["author-count"]));
+
+  const lateFadeInRef = useRef<HTMLParagraphElement>(null);
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -30,7 +34,7 @@ function Home() {
 
     return () => {
       observer.disconnect();
-    }
+    };
   }, []);
 
   return (
@@ -71,8 +75,8 @@ function Home() {
               <ul className="my-auto">
                 <li>
                   <p>
-                    {/* <strong>{{ num_authors }} authors,</strong> spanning languages from French to */}
-                    Hindi.
+                    <strong>{JSON.stringify(testQuery.data)} authors,</strong> spanning languages from French
+                    to Hindi.
                   </p>
                 </li>
                 <li>
@@ -82,9 +86,7 @@ function Home() {
                   </p>
                 </li>
                 <li>
-                  <p>
-                    {/* <strong>{{ num_instances }} copies</strong> on the shelves. */}
-                  </p>
+                  <p>{/* <strong>{{ num_instances }} copies</strong> on the shelves. */}</p>
                 </li>
               </ul>
             </div>
