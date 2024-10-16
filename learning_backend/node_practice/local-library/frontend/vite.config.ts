@@ -9,7 +9,7 @@ export default defineConfig({
       output: {
         manualChunks: {
           // Define custom chunks to be code-split from the bundle for better caching/loading
-          bootstrap: ["assets/css/bootstrap.min.css", "assets/js/bootstrap.min.js"],
+          bootstrap: ["./src/assets/styles/bootstrap.min.css", "./src/assets/js/bootstrap.bundle.min.js"],
         },
       },
     },
